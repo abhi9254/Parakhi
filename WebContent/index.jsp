@@ -1,6 +1,7 @@
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="com.google.api.client.auth.oauth2.Credential"%>
-<%@ page import="org.abhi.parakhi.MySQL_dao"%>
+<%@page import="java.util.List,java.util.ArrayList"%>
+<%@ page import="org.abhi.parakhi.MySQL_dao,org.abhi.parakhi.SheetsAPI"%>
 <%@page
 	import="com.google.api.client.googleapis.auth.oauth2.GoogleCredential"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -25,10 +26,6 @@
 <!-- Theme skin -->
 <link id="t-colors" href="template_files/default.css" rel="stylesheet" />
 
-<!-- boxed bg -->
-<!-- 
-<link id="bodybg" href="template_files/bg1.css" rel="stylesheet"
-	type="text/css" /> -->
 
 <style>
 .leftSection {
@@ -110,6 +107,17 @@
 </style>
 
 <script>
+	function setActiveProj(proj_id, proj_nm) {
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?setProj=1&proj_id=" + proj_id
+				+ "&proj_nm=" + proj_nm, true)
+		x.send(null)
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+
+			}
+		}
+	}
 	function myFunction() {
 		// Declare variables
 		var input, filter, ul, li, a, i;
@@ -144,7 +152,7 @@
 		x.send(null)
 		x.onreadystatechange = function() {
 			if (x.readyState == 4) {
-				document.getElementById("makeQuery").innerHTML = x.responseText
+				document.getElementById("makeQuery").innerHTML = x.responseText;
 			}
 		}
 	}
@@ -190,7 +198,7 @@
 									+ cols[j] + "</a>" + ",";
 						}
 						document.getElementById(elems[i].id).innerHTML = finalCols
-								.substring(0, finalCols.length - 1)
+								.substring(0, finalCols.length - 1);
 
 					}
 				}
@@ -237,15 +245,17 @@
 			document.getElementById(url_type + "_name").innerHTML = "Empty url";
 
 		else {
-			document.getElementById(url_type + "_name").innerHTML = "Retrieving spreadsheet details..";
+			//	document.getElementById(url_type + "_name").innerHTML = "Retrieving spreadsheet details..";
 			spreadsheet_id = document.getElementById(url_type + "_url").value;
+			document.getElementById(url_type + "_url").value = "Retrieving spreadsheet details..";
 			var x = new XMLHttpRequest()
-			x.open("GET", "index_ajax2.jsp?spreadsheet_id=" + spreadsheet_id,
-					true)
+			x.open("GET", "index_ajax2.jsp?title=1&spreadsheet_id="
+					+ spreadsheet_id, true)
 			x.send(null)
 			x.onreadystatechange = function() {
 				if (x.readyState == 4) {
-					document.getElementById(url_type + "_name").innerHTML = x.responseText
+					//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+					document.getElementById(url_type + "_url").value = x.responseText;
 				}
 			}
 		}
@@ -260,6 +270,34 @@
 			document.getElementById("excel").style.display = "inline-block";
 		}
 	}
+
+	function getTestSheets() {
+		var sel_proj = document.getElementById("selected_project").value;
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?testsheets=1&p_id=" + sel_proj, true)
+		x.send(null)
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+				document.getElementById("selected_testsheet").innerHTML = x.responseText;
+				document.getElementById("selected_worksheet").innerHTML = "<option selected disabled>Worksheet Name</option>";
+			}
+		}
+
+	}
+	function getWorkSheets() {
+		var sel_ts = document.getElementById("selected_testsheet").value;
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?worksheets=1&s_id=" + sel_ts, true)
+		x.send(null)
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+				document.getElementById("selected_worksheet").innerHTML = x.responseText;
+
+			}
+		}
+	}
 </script>
 </head>
 <body>
@@ -270,37 +308,38 @@
 		<!-- start header -->
 		<header>
 		<div class="navbar navbar-inverse navbar-static-top">
+			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+			</label>
 			<%
-				Credential credential = (Credential) getServletContext().getAttribute("credential");
-				//	credential=null;
-				//		if (credential == null) {
-				//			//String refreshToken = new MySQL_dao().getUserToken((String) request.getSession().getAttribute("user_id"));
-				//			String refreshToken = (String)getServletContext().getAttribute("rtoken");
-				//			credential = new GoogleCredential().setRefreshToken(refreshToken);
-				//			getServletContext().setAttribute("credential",credential);
-				//			getServletContext().setAttribute("token",credential.getAccessToken());
-				//		}
-				//		out.println(credential);
+				Credential credential = (Credential) request.getSession().getAttribute("credential");
+
 				Long active_time = null;
 				if (credential != null)
 					active_time = credential.getExpiresInSeconds();
 				if (active_time != null && active_time > 0) {
 			%>
 
-			<label style="color: white">Token status: <%=request.getSession().getAttribute("user_id")%>,
-				Active <%=(active_time) / 60%> min
+			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
+				Token: Active <%=(active_time) / 60%> min
 			</label>
 			<%
 				} else {
 			%>
-			<label style="color: white">Token status: <%=request.getSession().getAttribute("user_id")%>,
-				Inactive
+			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
+				Token: Inactive
 			</label>
 			<%
 				}
 			%>
+
 			<div class="container" style="float: right; color: white">
-				<div class="navbar-header"></div>
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target=".navbar-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
@@ -322,9 +361,13 @@
 							<ul class="dropdown-menu">
 								<li><a target="_blank"
 									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-										Sheet</a></li>
+										Test Sheet</a></li>
+								<li><a target="_blank"
+									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+										STM</a></li>
 								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
 										Sheet</a></li>
+								<li><a href="">Verify DDLs</a></li>
 							</ul></li>
 						<li class="dropdown"><a href="cross_section.jsp"
 							style="color: white">Cross Section</a></li>
@@ -393,17 +436,13 @@
 				preparedStatement.close();
 			%>
 		</ul>
+		<div id='clipboard'
+			style="border: 1px solid black; float: right; height: 500px; width: 200px">Clipboard</div>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-6">
-
-
-
-
-					<form action="Query" method="post">
-
-
+					<form action="Query" method="post" style="margin-top: 10px">
 						<div class="panel" id="main_panel"
 							style="height: 200px; width: 600px; display: inline-block">
 							<div id="makeQuery" class="panel panel-body"
@@ -426,21 +465,14 @@
 						<input class="btn btn-success btn-lg" type="submit"
 							style="display: inline-block; vertical-align: top; height: 200px; width: 80px"
 							value="Fire" />
-
-
-
 					</form>
 					<button style="display: inline-block" onclick="editQuery();">Toggle
 						Edit</button>
 				</div>
-
 			</div>
 		</div>
 
 
-		<!-- javascript
-   ================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
 		<div class="modal fade" id="onSwitchModal" role="dialog"
 			style="display: none; margin-top: 60px;">
 			<div class="modal-heading"
@@ -462,7 +494,8 @@
 						%>
 						<h4>
 							<a title="<%=rsProj.getString(3)%>"
-								href="index.jsp?q=<%=rsProj.getString(1)%>" style="color: white"><%=rsProj.getString(2)%></a>
+								href="index.jsp?q=<%=rsProj.getString(1)%>" style="color: white"
+								onclick="setActiveProj('<%=rsProj.getString(1)%>','<%=rsProj.getString(2)%>')"><%=rsProj.getString(2)%></a>
 						</h4>
 						<%
 							}
@@ -582,17 +615,36 @@
 				</div>
 				<div class="panel panel-body">
 					<form action='rerunSheet.jsp' method='post'>
-						<input type="text" class="form-control" name="pname"
-							placeholder="Project Name" /> <br> <br> <input
-							type="text" name="s_id" class="form-control" style="float: right"
-							placeholder="Worksheet Name" /><br> <br> <input
-							type="text" name="q_range" class="form-control"
-							placeholder="Queries Range" style="float: right" /><br> <br>
-						<input type="text" name="op_range" class="form-control"
-							placeholder="Output Range" style="float: right" /><br> <br>
-						<input type="checkbox" name='p_exec' value="p_exec"
-							style="float: left"> &nbsp;Parallel Exec <br> <br>
-						<input type="submit" value="Rerun" class="btn btn-info"> <br>
+						<select class="form-control" placeholder="select project"
+							id="selected_project" onchange="getTestSheets()">
+							<option selected disabled>Project Name</option>
+							<%
+								MySQL_dao ob = new MySQL_dao();
+								List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
+								for (String[] p : projects) {
+							%>
+							<option value="<%=p[0]%>"><%=p[1]%></option>
+							<%
+								}
+							%>
+						</select> <br> <select class="form-control" id="selected_testsheet"
+							name="selected_testsheet" onchange="getWorkSheets()">
+							<option selected disabled>Test Sheet</option>
+						</select><br> <select class="form-control" id="selected_worksheet"
+							name="selected_worksheet">
+							<option selected disabled>Worksheet Name</option>
+						</select> <br> <br> <input type="text" name="q_range"
+							class="form-control" placeholder="* Queries Range"
+							style="float: right" /><br> <br> <input type="text"
+							name="op_range" class="form-control" placeholder="Output Range"
+							style="float: right" /><br> <br> Override Date <input
+							class="form-control" type="text" placeholder="Start"
+							style="width: 15%; display: inline" /> <input type="text"
+							class="form-control" placeholder="End"
+							style="width: 15%; display: inline" /><br> <br> <input
+							type="checkbox" name='p_exec' value="p_exec" style="float: left">
+						&nbsp;Parallel Exec <br> <br> <input type="submit"
+							value="Rerun" class="btn btn-info"> <br>
 					</form>
 				</div>
 				<div class="modal-footer">

@@ -14,6 +14,16 @@
 <script src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script src="/Parakhi/js/bootstrap.min.js"></script>
 <script>
+	function delCredentials(user_id) {
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?del_user_id=" + user_id, true)
+		x.send(null)
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				document.getElementById("del_result").innerHTML = x.responseText;
+			}
+		}
+	}
 	function testConnection() {
 		document.getElementById("con_test").innerHTML = "Checking.."
 		connection_url = document.getElementById("connection_url").value;
@@ -46,7 +56,6 @@
 		}
 
 	}
-	
 
 	function fetchSheetDetails() {
 
@@ -57,13 +66,28 @@
 			document.getElementById("sheet_name").innerHTML = "Retrieving spreadsheet details..";
 			spreadsheet_id = document.getElementById("sheet_url").value;
 			var x = new XMLHttpRequest()
-			x.open("GET", "index_ajax2.jsp?spreadsheet_id=" + spreadsheet_id,
-					true)
+			x.open("GET", "index_ajax2.jsp?title=1&spreadsheet_id="
+					+ spreadsheet_id, true)
 			x.send(null)
 			x.onreadystatechange = function() {
 				if (x.readyState == 4) {
 					document.getElementById("sheet_name").innerHTML = x.responseText;
 				}
+			}
+			document.getElementById("sheet_ws").innerHTML = "Checking worksheets..";
+			fetchWorksheets();
+		}
+	}
+	function fetchWorksheets() {
+
+		spreadsheet_id = document.getElementById("sheet_url").value;
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?ws=1&spreadsheet_id=" + spreadsheet_id,
+				true)
+		x.send(null)
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				document.getElementById("sheet_ws").innerHTML = x.responseText;
 			}
 		}
 	}
@@ -94,6 +118,7 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
+
 					<li class="dropdown"><a href="#" class="dropdown-toggle "
 						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
 						data-close-others="false" style="color: white">Project <span
@@ -161,14 +186,21 @@
 	<div style="margin-left: 10px">
 		<h4>Test Sheets connection</h4>
 		<input type="text" id="sheet_url" placeholder="Sheet url"
+			value="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE/edit#gid=247511847"
 			style="width: 800px; display: inline-block" /> <input type="button"
 			value="Inspect" onclick="fetchSheetDetails()" /> <br>
 		<div id="sheet_name"></div>
+		<div id="sheet_ws"></div>
 		<br> <br>
 	</div>
 	<div id="authorization-div" style="display: none"></div>
-	<form action="Oauth2Servlet">
-	<input type="submit" value="Authorize"/>
+	<form action="Oauth2Servlet" style="display: inline">
+		<input type="submit" value="Authorize" />
 	</form>
+	<form action="delCredentials" style="display: inline">
+		<input type="submit" value="Delete Saved Creds" />
+	</form>
+
+
 </body>
 </html>

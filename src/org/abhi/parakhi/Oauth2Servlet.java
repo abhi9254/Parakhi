@@ -1,21 +1,16 @@
 package org.abhi.parakhi;
 
-import java.io.File;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeServlet;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpTransport;
@@ -26,11 +21,10 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
-import org.abhi.parakhi.MySQL_dao;
 
 public class Oauth2Servlet extends AbstractAuthorizationCodeServlet {
 
-	// private final Logger log = Logger.getLogger(this.getClass());
+	private static final long serialVersionUID = 1L;
 
 	public final static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
@@ -40,31 +34,29 @@ public class Oauth2Servlet extends AbstractAuthorizationCodeServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String user = null;
+		try {
+			user = getUserId(request);
+		} catch (ServletException e1) {
+			e1.printStackTrace();
+		}
+		if (getCredential().getRefreshToken() != null)
+			System.out.println("Refresh token for user '" + user + "' found in stored credentials");
+		else
+			System.out.println("Refresh token for user '" + user
+					+ "' not found in stored credentials.Revoke access & delete the stored credentials.");
+		System.out.print("Getting Access token: ");
 
-		// Credential cred = (Credential)
-		// request.getServletContext().getAttribute("credential");
-		// System.out.println("Current context cred token: " + cred);
-		// System.out.println("Current context access token: "+
-		// request.getAttribute("token"));
-		getCredential().refreshToken();
-		request.getServletContext().setAttribute("credential", getCredential());
-		request.getServletContext().setAttribute("token", getCredential().getAccessToken());
-		System.out.println("Auth success. Token: " + getCredential().getAccessToken());
-
-		/**
-		 * // File cred_file = new java.io.File(System.getProperty("user.home"),
-		 * // ".credentials/sheets.googleapis.com-Parakhi/StoredCredential"); //
-		 * System.out.println(cred_file.getName()); GoogleCredential cred =
-		 * null;
-		 * 
-		 * if (request.getServletContext().getAttribute("token") != null) cred =
-		 * new GoogleCredential().setAccessToken((String)
-		 * request.getServletContext().getAttribute("token")); else { MySQL_dao
-		 * ob = new MySQL_dao(); cred = new
-		 * GoogleCredential().setAccessToken(ob.getUserToken(request.getSession(
-		 * ).getId())); } System.out.println(
-		 * "Creds loaded in context.Expire in " + cred.getExpiresInSeconds());
-		 */
+		try {
+			if (getCredential().refreshToken()) {
+				System.out.println("Success");
+				request.getSession().setAttribute("credential", getCredential());
+				request.getSession().setAttribute("token", getCredential().getAccessToken());
+			} else
+				System.out.println("Failed");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		response.sendRedirect(OauthCommon.SERVLET_CONTEXT + "/index.jsp");
 	}
 
@@ -88,14 +80,6 @@ public class Oauth2Servlet extends AbstractAuthorizationCodeServlet {
 
 		if (token != null)
 			cred = new GoogleCredential().setAccessToken(token);
-		// cred = new GoogleCredential().setAccessToken(token)
-		// else {
-		// MySQL_dao ob = new MySQL_dao();
-		// cred = new
-		// GoogleCredential().setAccessToken(ob.getUserToken(user_id));
-		// System.out.println("Context token is null. Fetched token from MySQL
-		// for "+user_id);
-		// }
 
 		try {
 			// System.out.println("In method getSheetTitle with context token "
@@ -113,19 +97,28 @@ public class Oauth2Servlet extends AbstractAuthorizationCodeServlet {
 		}
 	}
 
-	public List<String> getWorksheets(GoogleCredential credential, String spreadsheetId) throws IOException {
-		// Build a new authorized API client service.
-		Sheets service = new Sheets.Builder(Oauth2Servlet.HTTP_TRANSPORT, Oauth2Servlet.JSON_FACTORY, credential)
-				.setApplicationName("Parakhi").build();
+	public List<String> getWorksheets(String user_id, String token, String spreadsheetId) throws IOException {
+		GoogleCredential cred = null;
 
-		Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
-		List<Sheet> worksheets = spreadsheet.getSheets();
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
 
-		List<String> worksheets_info = new ArrayList<String>(worksheets.size());
-		for (Sheet worksheet : worksheets) {
-			worksheets_info.add(worksheet.getProperties().getIndex(), worksheet.getProperties().getTitle());
+		try {
+			// Build a new authorized API client service.
+			Sheets service = new Sheets.Builder(Oauth2Servlet.HTTP_TRANSPORT, Oauth2Servlet.JSON_FACTORY, cred)
+					.setApplicationName("Parakhi").build();
+
+			Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
+			List<Sheet> worksheets = spreadsheet.getSheets();
+
+			List<String> worksheets_info = new ArrayList<String>(worksheets.size());
+			for (Sheet worksheet : worksheets) {
+				worksheets_info.add(worksheet.getProperties().getIndex(), worksheet.getProperties().getTitle());
+			}
+			return worksheets_info;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-		return worksheets_info;
 	}
-
 }

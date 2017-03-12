@@ -28,45 +28,13 @@ public class Oauth2ServletCallback extends AbstractAuthorizationCodeCallbackServ
 	@Override
 	protected void onSuccess(HttpServletRequest req, HttpServletResponse resp, Credential credential)
 			throws ServletException, IOException {
-		// System.out.println("Token obtained: "+credential.getAccessToken());
-		// System.out.println("Refresh token: " + credential.getRefreshToken() +
-		// " Listener: "+credential.getRefreshListeners());
-		// System.out.println("Success.Token expires in " +
-		// credential.getExpiresInSeconds().toString() + " seconds");
-
-		// req.getServletContext().setAttribute("token",
-		// credential.getAccessToken());
-		// req.getServletContext().setAttribute("rtoken",
-		// credential.getRefreshToken());
-		// req.getServletContext().setAttribute("credential", credential);
-
-		// MySQL_dao ob = new MySQL_dao();
-		// if(!ob.checkUserExists(OauthCommon.getUserId(req)))
-		// ob.insertIntoUsers(OauthCommon.getUserId(req),credential.getAccessToken(),credential.getRefreshToken());
-		// else
-		// ob.updateIntoUsers(OauthCommon.getUserId(req),credential.getAccessToken(),credential.getRefreshToken());
-
-		// try {
-		// Sheets service = new Sheets.Builder(Oauth2Servlet.HTTP_TRANSPORT,
-		// Oauth2Servlet.JSON_FACTORY, credential)
-		// .setApplicationName("Parakhi").build();
-		// Spreadsheet spreadsheet =
-		// service.spreadsheets().get("16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE")
-		// .execute();
-		// String title = spreadsheet.getProperties().getTitle();
-		// System.out.println(title);
-
 		resp.sendRedirect(OauthCommon.SERVLET_CONTEXT + "/Oauth2Servlet");
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
-
 	}
 
 	@Override
 	protected void onError(HttpServletRequest req, HttpServletResponse resp, AuthorizationCodeResponseUrl errorResponse)
 			throws ServletException, IOException {
-		throw new RuntimeException("grrrrrrrrrr: " + errorResponse);
+		throw new RuntimeException("Error: " + errorResponse);
 	}
 
 	@Override

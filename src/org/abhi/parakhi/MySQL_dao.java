@@ -58,6 +58,36 @@ public class MySQL_dao {
 		return projects;
 	}
 
+	public List<String[]> getTestsheets(int p_id) {
+		ResultSet resultSet = null;
+		List<String[]> ts = new ArrayList<String[]>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT test_sheet_id,test_sheet_title FROM parakhi.mytestsheets WHERE project_id ="
+					+ p_id;
+			resultSet = statement.executeQuery(query);
+			String[] s;
+			while (resultSet.next()) {
+				s = new String[3];
+				s[0] = resultSet.getString(1);
+				s[1] = resultSet.getString(2);
+				ts.add(s);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ts;
+	}
+
 	public List<String[]> getCases(int project_id) {
 
 		ResultSet resultSet = null;
@@ -346,18 +376,18 @@ public class MySQL_dao {
 	}
 
 	public List<String> traceTblNm_for_Src_Tbls(String tbl_nm) {
-		System.out.println("in tbl trace dao");
+		// System.out.println("in tbl trace dao");
 		List<String> db_nms = new ArrayList<String>();
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 			String query = "select DISTINCT CONCAT(source_db_nm,'.',source_tbl_nm,' ',source_col_nm) from parakhi.mystms where CONCAT(TRIM(target_db_nm),'.',TRIM(target_tbl_nm)) = '"
 					+ tbl_nm + "'";
-			 System.out.println(query);
+			// System.out.println(query);
 			ResultSet resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				db_nms.add(resultSet.getString(1));
-				 System.out.println("Added " + resultSet.getString(1));
+				// System.out.println("Added " + resultSet.getString(1));
 			}
 
 			connection.close();
@@ -367,7 +397,7 @@ public class MySQL_dao {
 		return db_nms;
 
 	}
-	
+
 	public List<String> traceTblNm_for_Src_Cols(String trace_tbl_nm, String src_tbl_nm) {
 		System.out.println("in col trace dao");
 		List<String> tbl_nms = new ArrayList<String>();
@@ -375,12 +405,12 @@ public class MySQL_dao {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 			String query = "select DISTINCT source_col_nm from parakhi.mystms where CONCAT(TRIM(target_db_nm),'.',TRIM(target_tbl_nm)) = '"
-					+ trace_tbl_nm + "' AND CONCAT(source_db_nm,'.',source_tbl_nm)='" +src_tbl_nm+"'";
-			 System.out.println(query);
+					+ trace_tbl_nm + "' AND CONCAT(source_db_nm,'.',source_tbl_nm)='" + src_tbl_nm + "'";
+			System.out.println(query);
 			ResultSet resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				tbl_nms.add(resultSet.getString(1));
-				 System.out.println("Added " + resultSet.getString(1));
+				System.out.println("Added " + resultSet.getString(1));
 			}
 
 			connection.close();
@@ -389,9 +419,8 @@ public class MySQL_dao {
 		}
 		return tbl_nms;
 
-	}	
-	
-	
+	}
+
 }
 
 class Cases {

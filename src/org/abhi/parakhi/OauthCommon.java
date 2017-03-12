@@ -59,7 +59,6 @@ public class OauthCommon {
 			id = current_user;
 		else
 			id = req.getSession().getId();
-		// log.debug("Session id is " + id);
 		return id;
 	}
 }

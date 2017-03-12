@@ -3,7 +3,7 @@
 	pageEncoding="UTF-8"%>
 
 <%@ page
-	import="java.io.PrintWriter,java.sql.DriverManager,java.sql.Connection,java.sql.ResultSet,java.sql.ResultSetMetaData,java.sql.Statement,java.sql.SQLException"%>
+	import="java.io.PrintWriter,java.sql.DriverManager,java.sql.Connection,java.sql.ResultSet,java.sql.ResultSetMetaData,java.sql.Statement,java.sql.SQLException,java.util.regex.Matcher,java.util.regex.Pattern"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -29,13 +29,54 @@
 	});
 </script>
 <script>
+	function pushToSheet2() {
+		
+		var query = document.getElementById('query').innerHTML;
+		var row_c = document.getElementById('res_tbl').rows.length;
+		
+		var i = 0, j = 0;
+		var str = "";
+
+		for (i = 0; i < row_c; i++) {
+			str = str + "\n";
+
+			var cell_c = document.getElementById("res_tbl").rows[i].cells.length;
+
+			for (j = 0; j < cell_c - 1; j++) {
+
+				var x = document.getElementById("res_tbl").rows[i].cells
+						.item(j).innerHTML;
+
+				str = str + x + "\t";
+
+			}
+
+		}
+		
+		var x = new XMLHttpRequest();
+		var params = "query="+query+"&result="+str;
+		x.open("POST", "index_ajax2.jsp", true);
+		
+		x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		x.onreadystatechange = function() {
+		    if(x.readyState == 4 && x.status == 200) {
+		        alert(x.responseText).trim();
+		    }
+		}
+		x.send(params);
+	}
+
+	function previewTraceQuery(tbl_nm) {
+
+		var query_element = document.getElementById('query_' + tbl_nm).style.display
+		if (query_element == 'none')
+			document.getElementById('query_' + tbl_nm).style.display = 'inline'
+		else
+			document.getElementById('query_' + tbl_nm).style.display = 'none'
+	}
+
 	function traceRows(tbl_nm) {
-
-		var header_row = document.getElementById("row_0").cells;
-		var headers = [];
-		for (i = 1; i < header_row.length - 1; i++)
-			headers.push(header_row[i].innerHTML);
-
+		//	alert("in func " + tbl_nm)
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?trace_tbl_nm=" + tbl_nm, true)
 		x.send(null)
@@ -45,9 +86,16 @@
 						.trim();
 			}
 		}
+		traceRows2();
 	}
 
 	function traceRows2() {
+		var header_row = document.getElementById("row_0").cells;
+		var headers = [];
+		for (i = 1; i < header_row.length - 1; i++)
+			headers.push(header_row[i].innerHTML);
+
+		//alert(headers);
 
 		var tbl_nms_text = document.getElementById("src_db_nms").innerHTML;
 		var tbl_nms = tbl_nms_text.split(',');
@@ -77,25 +125,154 @@
 		//alert(tbl_arr)
 		var track_creator = '';
 		for (i = 0; i < tbl_arr.length; i++) {
-			track_creator += "<form action='Query' method='post' target='_blank' id='"+tbl_arr[i]+"'><label>" + tbl_arr[i]
-					+ "</label><br></form><br>";
+			track_creator += "<form action='Query' method='post' target='_blank' id='"+tbl_arr[i]+"'><label>"
+					+ tbl_arr[i] + "</label><br></form><br>";
 
 		}
 		document.getElementById("tracker").innerHTML = track_creator;
 
-		for (i = 0; i < tbl_nms.length; i++) {
-			//alert("in outer loop")
-			var str = tbl_nms[i]
-			var tbl_nm = str.substring(0, str.indexOf(' '))
-			var col_nm = str.substring(str.indexOf(' ') + 1)
+		//create checkboxes for only those columns in resultset which are in stm, with a defined source
+		for (h = 0; h < headers.length; h++) {
+			for (i = 0; i < tbl_nms.length; i++) {
+				//alert("in outer loop")
+				var str = tbl_nms[i]
+				//split to get tbl nms from stm
+				var tbl_nm = str.substring(0, str.indexOf(' '))
+				//split to get col nms from stm
+				var col_nm = str.substring(str.indexOf(' ') + 1)
 
-			document.getElementById(tbl_nm).innerHTML += "<input type='checkbox' name='cols"+"' value='"+col_nm+"' checked='true'>"
-					+ col_nm;
-
+				if (headers[h] == col_nm) {
+					document.getElementById(tbl_nm).innerHTML += "<input type='checkbox' style='display:inline-block' id='checkboxes_"
+							+ tbl_nm
+							+ "' name='cols_"
+							+ tbl_nm
+							+ "' value='"
+							+ col_nm
+							+ "' checked='true' onchange=traceCols('"
+							+ tbl_nm + "')></input>" + col_nm;
+				}
+			}
 		}
-		for (i = 0; i < tbl_arr.length; i++) {
 
-			document.getElementById(tbl_arr[i]).innerHTML += "<input type='text' style='display:none' name = 'query_text' value='select * from "+tbl_arr[i]+"'/><input type='submit' value='Trace' class='btn btn-info' style='float: right'>"
+		traceRows3(tbl_arr);
+	}
+
+	function traceRows3(tbl_arr) {
+
+		for (i = 0; i < tbl_arr.length; i++) {
+			var tbl_nm = tbl_arr[i];
+
+			//	if (document.getElementById('query_' + tbl_nm) != null)
+			//		document.getElementById('query_' + tbl_nm).style.display = 'none'
+			var checkboxes;
+			if (tbl_nm != '') {
+				checkboxes = document.getElementsByName('cols_' + tbl_arr[i]);
+				//alert(tbl_nm + checkboxes.length)
+			}
+			var dummy = 'dummy'
+			if (checkboxes.length != 0) {
+				var query = "select * from " + tbl_arr[i]
+				for (c = 0; c < checkboxes.length && checkboxes[c].checked; c++) {
+					if (c == 0)
+						query += " WHERE " + checkboxes[0].value + " = '"
+								+ dummy + "'"
+					else
+						query += " AND " + checkboxes[c].value + " = '" + dummy
+								+ "'"
+				}
+				//turn display: inline to debug
+				document.getElementById(tbl_nm).innerHTML += "<pre style=display:none id=query_"+tbl_nm+" name = query_text>"
+						+ query
+						+ "</pre><input type='submit' value='Trace' class='btn btn-info' style='float: right; display:inline-block'><input type='button' value='Preview' onclick=previewTraceQuery('"
+						+ tbl_nm
+						+ "') class='btn' style='float: right;display:inline-block'/>"
+
+			}//document.getElementById('query_'+tbl_nm).style.display='inline'
+		}
+	}
+
+	function traceCols(tbl_nm) {
+		var checkboxes;
+		var checked = [];
+
+		//get headers of resultset
+		var header_row = document.getElementById("row_0").cells;
+		var headers = [];
+		for (i = 1; i < header_row.length - 1; i++)
+			headers.push(header_row[i].innerHTML);
+		//	alert(headers)
+
+		// get selected rows via checkbox
+		var data_rows = document.getElementsByName("trace");
+		var data_rows_id = [];
+		for (i = 0; i < data_rows.length; i++) {
+			if (data_rows[i].checked)
+				data_rows_id.push(data_rows[i].value);
+		}
+
+		//alert(data_rows_id)
+
+		if (tbl_nm != '') {
+
+			var query = "select * from " + tbl_nm
+			checkboxes = document.getElementsByName('cols_' + tbl_nm);
+			for (c = 0; c < checkboxes.length; c++) {
+				if (checkboxes[c].checked) {
+					checked.push(checkboxes[c].value)
+					//	alert('pushed' + checkboxes[c].value)
+				}
+			}
+
+			if (checked.length != 0) {
+				for (d = 0; d < data_rows_id.length; d++) {
+					var data_row = document.getElementById(data_rows_id[d]).cells
+					for (h = 0; h < checked.length; h++) {
+						if (h == 0) {
+							for (j = 0; j < headers.length; j++) {
+								if (checked[0] == headers[j]) {
+									if (d == 0)
+										query += " WHERE \n(" + checked[0]
+												+ " = '"
+												+ data_row[j + 1].innerHTML
+												+ "'"
+									else
+										query += "\n(" + checked[0] + " = '"
+												+ data_row[j + 1].innerHTML
+												+ "'"
+									if (checked.length == 1
+											&& d != data_rows_id.length - 1)
+										query += ") OR"
+									if (checked.length == 1
+											&& d == data_rows_id.length - 1)
+										query += ")"
+									break;
+								}
+							}
+
+						} else {
+							for (j = 0; j < headers.length; j++) {
+								if (checked[h] == headers[j]) {
+									query += " AND " + checked[h] + " = '"
+											+ data_row[j + 1].innerHTML + "'"
+									if (h == checked.length - 1
+											&& d != data_rows_id.length - 1)
+										query += ") OR"
+									if (h == checked.length - 1
+											&& d == data_rows_id.length - 1)
+										query += ")"
+									break;
+								}
+							}
+						}
+					}
+				}
+				//	alert(query)
+				document.getElementById('query_' + tbl_nm).innerHTML = query;
+			}
+
+			else
+				document.getElementById('query_' + tbl_nm).innerHTML = '';
+
 		}
 	}
 </script>
@@ -160,8 +337,6 @@ ul.tab li a:focus, .active {
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<!-- <a class="navbar-brand" href="index.html"><img
-						src="template_files/img/logo.png" alt="" width="199" height="52" /></a> -->
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
@@ -209,31 +384,44 @@ ul.tab li a:focus, .active {
 	<input type="button" name="back" class="back-button" value="< Back"
 		onclick="history.back()">
 	<!-- Push function defined in google api js -->
-	<input type="button" id="push-div" onclick="pushToSheet()"
+	<input type="button" id="push-div" onclick="pushToSheet2()"
 		class="push-button" style="display: inline" value="Push Result">
 	<!-- Do not change this buttons ID -->
 	<button id="authorize-div" class="push-button" style="display: none"
 		onclick="handleAuthClick(event)">Authorize to push</button>
-	<button id="trace-div" class="push-button" style="display: inline"
-		href="" data-toggle="modal" data-target="#traceModal">Trace</button>
 
-	<pre id="output" style="display: inline"></pre>
+	<button id="trace-div" class="push-button" style="display: inline"
+		href="" onmouseover="traceRows2()" data-toggle="modal"
+		data-target="#traceModal">Trace</button>
+
+	<pre id="output" style="display: none">Working..</pre>
 	<br>
 	<br>
+	<%
+		String query = request.getAttribute("user_query").toString();
+		String queried_tbl;
+
+		Pattern pattern = Pattern.compile("from (.+?)\\.(.+?)\\b");
+		Matcher matcher = pattern.matcher(query);
+		if (matcher.find())
+			queried_tbl = matcher.group().substring(matcher.group().indexOf(' ') + 1);
+		else
+			queried_tbl = null;
+	%>
 	<ul class="tab">
 		<li><a href="javascript:void(0)" class="tablinks"
 			onclick="openTab(event, 'Query')" id="defaultOpen">Query</a></li>
 		<li><a href="javascript:void(0)" class="tablinks"
-			onclick="openTab(event, 'Result')">Result</a></li>
+			onclick="openTab(event, 'Result')"
+			onmouseover="traceRows('<%=queried_tbl%>')">Result</a></li>
 		<li><a href="javascript:void(0)" class="tablinks"
 			onclick="openTab(event, 'Log')">Log</a></li>
 	</ul>
 
 	<div id="Query" class="tabcontent">
-		<%
-			String query = request.getAttribute("user_query").toString();
-		%>
+
 		<pre id="query"><%=query%></pre>
+		<pre id="queried_tbl" style="display: none"><%=queried_tbl%></pre>
 	</div>
 
 	<div id="Result" class="tabcontent" style="overflow-x: auto">
@@ -258,6 +446,7 @@ ul.tab li a:focus, .active {
 					%><th class="header">Trace</th>
 				</tr>
 			</thead>
+
 
 
 			<tbody>
@@ -305,31 +494,12 @@ ul.tab li a:focus, .active {
 					<h4 class="modal-title">Trace Rows</h4>
 				</div>
 				<div class="panel panel-body">
+					<!-- stores stm source tbls,cols -->
+					<label id="src_db_nms" style="display: none">src_db_nms</label>
 
-					<label id="src_db_nms">src_db_nms</label><br>
-					<button onclick="traceRows('db_gold.gold_product_sku')">fetch</button>
-					<br>
-					<div id="tracker">tracker</div>
-					<button onclick="traceRows2()">fetch</button>
-					<br>
+					<div id="tracker"></div>
 
-			<!--  		<form action='trace.jsp' method='post'>
-						<label>db_stage.raw_sku</label><br> <input type="checkbox"
-							name='cols1' value="sku_id"> sku_id <input
-							type="checkbox" name='cols1' value="sku_nm"> sku_nm <input
-							type="submit" value="Trace" class="btn btn-info"
-							style="float: right"> <br>
-					</form>
-					<br>
-					<form action='trace.jsp' method='post'>
-						<label>db_stage.raw_product</label><br> <input
-							type="checkbox" name='cols2' value="product_id">
-						product_id <input type="checkbox" name='cols2' value="dept_nm">
-						dept_nm <input type="checkbox" name='cols2' value="price">
-						price <input type="submit" value="Trace" class="btn btn-info"
-							style="float: right"> <br>
-					</form>
-		-->		</div>
+				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>

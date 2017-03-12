@@ -110,15 +110,17 @@ function writeRecord(query, str, pos) {
 	}).then(function(response) {
 		var updatedRange = response.result;
 		if (updatedRange.updatedCells > 0) {
-			appendPre('Num cells updated: ' + updatedRange.updatedCells);
+			document.getElementById('output').innerHTML= updatedRange.updatedCells +' cells updated';
 		} else {
-			appendPre('No data updated.');
+			document.getElementById('output').innerHTML= 'No data updated';
 		}
 	},
 
 	function(response) {
-		appendPre('Error: ' + response.result.error.message);
+		document.getElementById('output').innerHTML= 'Error: ' + response.result.error.message;
+		document.getElementById('push-div').style.display = 'inline';
 	})
+	document.getElementById('output').style.display = 'inline';
 }
 
 function pushToSheet() {

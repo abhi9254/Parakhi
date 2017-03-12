@@ -1,120 +1,148 @@
 package org.abhi.parakhi;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
-import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+//import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+//import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
+//import com.google.api.client.auth.oauth2.Credential;
+//import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+//import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+
+//import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.sheets.v4.SheetsScopes;
+//import com.google.api.client.util.store.FileDataStoreFactory;
+//import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.*;
 import com.google.api.services.sheets.v4.Sheets;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.List;
+import java.util.Calendar;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.hive.jdbc.HiveResultSetMetaData;
 import org.apache.hive.jdbc.HiveStatement;
 
-public class SheetsAPI{
+public class SheetsAPI {
 
 	private static final String APPLICATION_NAME = "Parakhi";
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
-			".credentials/sheets.googleapis.com-Parakhi");
+	// private static final java.io.File DATA_STORE_DIR = new
+	// java.io.File(System.getProperty("user.home"),
+	// ".credentials/sheets.googleapis.com-Parakhi");
 
-	private static FileDataStoreFactory DATA_STORE_FACTORY;
+	// private static FileDataStoreFactory DATA_STORE_FACTORY;
 	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
 	private static HttpTransport HTTP_TRANSPORT;
-	private static final List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS);
+	// private static final List<String> SCOPES =
+	// Arrays.asList(SheetsScopes.SPREADSHEETS);
 
 	static {
 		try {
 			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+			// DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
 		} catch (Throwable t) {
 			t.printStackTrace();
 			System.exit(1);
 		}
 	}
 
-	public static Credential authorize() throws IOException {
-		// Load client secrets.
-		InputStream in = SheetsAPI.class.getResourceAsStream("client_secret.json");
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+	public String getSheetTitle(String user_id, String token, String spreadsheetId) {
+		GoogleCredential cred = null;
 
-		// Build flow and trigger user authorization request.
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-				clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY).setAccessType("offline")
-						.setApprovalPrompt("force").build();
-		//LocalServerReceiver lsr = new LocalServerReceiver();
-		//LocalServerReceiver lsr = new LocalServerReceiver.Builder().setHost("mydomain.do/Parakhi").setPort(8080).build();
-		AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
-		authorizationUrl.setRedirectUri("http://localhost:8080/Parakhi/getAuthCode");
-		
-		System.out.println(authorizationUrl.build().toString());
-		//System.out.println(lsr.getRedirectUri());
-		//Credential credential = new AuthorizationCodeInstalledApp(flow, lsr).authorize("user");
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
 
-		//System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-		//return credential;
-		return null;
-	}
+		try {
+			Sheets service = new Sheets.Builder(Oauth2Servlet.HTTP_TRANSPORT, Oauth2Servlet.JSON_FACTORY, cred)
+					.setApplicationName(APPLICATION_NAME).build();
+			Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
+			String title = spreadsheet.getProperties().getTitle();
+			// System.out.println(title);
 
-
-	public static Sheets getSheetsService() throws IOException {
-		Credential credential = authorize();
-		return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME)
-				.build();
-	}
-
-	public String getSheetTitle(String spreadsheetId) throws IOException {
-		// Build a new authorized API client service.
-		Sheets service = getSheetsService();
-
-		Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
-		String title = spreadsheet.getProperties().getTitle();
-		return title;
-	}
-
-	public List<String> getWorksheets(String spreadsheetId) throws IOException {
-		// Build a new authorized API client service.
-		Sheets service = getSheetsService();
-		Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
-		List<Sheet> worksheets = spreadsheet.getSheets();
-
-		List<String> worksheets_info = new ArrayList<String>(worksheets.size());
-		for (Sheet worksheet : worksheets) {
-			worksheets_info.add(worksheet.getProperties().getIndex(), worksheet.getProperties().getTitle());
+			return title;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.toString();
 		}
-		return worksheets_info;
 	}
 
-	public int[] getLastRowCol(String spreadsheetId, String worksheet_nm) {
-		// Build a new authorized API client service.
+	public List<String> getWorksheets(String user_id, String token, String spreadsheetId) throws IOException {
+		GoogleCredential cred = null;
+
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
+
+		try {
+			// Build a new authorized API client service.
+			Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME)
+					.build();
+
+			Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
+			List<Sheet> worksheets = spreadsheet.getSheets();
+
+			List<String> worksheets_info = new ArrayList<String>(worksheets.size());
+			for (Sheet worksheet : worksheets) {
+				worksheets_info.add(worksheet.getProperties().getIndex(), worksheet.getProperties().getTitle());
+			}
+			return worksheets_info;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public String getLastCol(String token, String spreadsheetId, String worksheet_nm) {
+		GoogleCredential cred = null;
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
+		int last_col = 0;
+		try {
+			Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME)
+					.build();
+			Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
+			List<Sheet> worksheets = spreadsheet.getSheets();
+			for (Sheet worksheet : worksheets) {
+				String ws_title = worksheet.getProperties().getTitle();
+				// System.out.println("Entered for loop with *" + worksheet_nm +
+				// "* and *" + ws_title + "*");
+				if (worksheet_nm.equals(ws_title)) {
+					List<List<String>> data = readSheetData(token, spreadsheetId, ws_title + "!A1:Z");
+					for (List<String> row : data) {
+						int last_cell = row.size();
+						if (last_cell > last_col)
+							last_col = last_cell;
+					}
+				}
+			}
+			String col = String.valueOf((char) (last_col + 65));
+			// System.out.println("Next col: " + col);
+			return col;
+		} catch (Exception ex) {
+			System.out.println(ex.toString());
+			return null;
+		}
+	}
+
+	public int[] getLastRowCol(String token, String spreadsheetId, String worksheet_nm) {
+		GoogleCredential cred = null;
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
+
 		int[] last_row_col = new int[2];
 
 		try {
-			Sheets service = getSheetsService();
+			Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME)
+					.build();
 			Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
 			List<Sheet> worksheets = spreadsheet.getSheets();
 			int last_row = 0;
@@ -124,7 +152,7 @@ public class SheetsAPI{
 				// System.out.println("Entered for loop with *" + worksheet_nm +
 				// "* and *" + ws_title + "*");
 				if (worksheet_nm.equals(ws_title)) {
-					List<List<String>> data = readSheetData(spreadsheetId, ws_title + "!A1:P");
+					List<List<String>> data = readSheetData(token, spreadsheetId, ws_title + "!A1:Z");
 					last_row = data.size();
 					for (List<String> row : data) {
 						int last_cell = row.size();
@@ -144,9 +172,44 @@ public class SheetsAPI{
 		}
 	}
 
-	public List<List<String>> readSheetData(String spreadsheetId, String range) throws IOException {
+	public int getLastRow(String token, String spreadsheetId, String worksheet_nm) {
+		GoogleCredential cred = null;
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
+
+		int last_row = 0;
+
+		try {
+			Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME)
+					.build();
+			Spreadsheet spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
+			List<Sheet> worksheets = spreadsheet.getSheets();
+
+			for (Sheet worksheet : worksheets) {
+				String ws_title = worksheet.getProperties().getTitle();
+				if (worksheet_nm.equals(ws_title)) {
+					List<List<String>> data = readSheetData(token, spreadsheetId, ws_title + "!A1:Z");
+					last_row = data.size();
+				}
+			}
+			//System.out.println("Next row: " + (last_row + 1));
+			return last_row + 1;
+		}
+
+		catch (Exception ex) {
+			System.out.println(ex.toString());
+			return last_row;
+		}
+	}
+
+	public List<List<String>> readSheetData(String token, String spreadsheetId, String range) throws IOException {
 		// Build a new authorized API client service.
-		Sheets service = getSheetsService();
+		GoogleCredential cred = null;
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
+
+		Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME)
+				.build();
 
 		ValueRange readResponse = service.spreadsheets().values().get(spreadsheetId, range).execute();
 		List<List<Object>> readOutput = readResponse.getValues();
@@ -165,10 +228,15 @@ public class SheetsAPI{
 		return readOutput_;
 	}
 
-	public int writeSheetData(List<List<Object>> writedata, String spreadsheetId, String majorDimension, String range)
-			throws IOException {
+	public int writeSheetData(List<List<Object>> writedata, String token, String spreadsheetId, String majorDimension,
+			String range) throws IOException {
 		// Build a new authorized API client service.
-		Sheets service = getSheetsService();
+		GoogleCredential cred = null;
+		if (token != null)
+			cred = new GoogleCredential().setAccessToken(token);
+
+		Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName(APPLICATION_NAME)
+				.build();
 
 		ValueRange vr = new ValueRange().setValues(writedata).setMajorDimension(majorDimension);
 		UpdateValuesResponse upd_res = service.spreadsheets().values().update(spreadsheetId, range, vr)
@@ -191,15 +259,15 @@ public class SheetsAPI{
 		try {
 			Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
 			HiveStatement stmt = (HiveStatement) con.createStatement();
-
+			Calendar cal = Calendar.getInstance();
 			for (List<String> row : queries) {
 				String query = row.get(0);
 				ResultSet res = stmt.executeQuery(query);
 				HiveResultSetMetaData rsmd = (HiveResultSetMetaData) res.getMetaData();
 				int columnsNumber = rsmd.getColumnCount();
 				int dot_pos = rsmd.getColumnName(1).indexOf(".") + 1;
-
-				StringBuilder op = new StringBuilder("\n ");
+				
+				StringBuilder op = new StringBuilder(cal.getTime()+ "\n\n ");
 				for (int i = 1; i <= columnsNumber; i++) {
 					op.append("\t" + rsmd.getColumnName(i).substring(dot_pos));
 				}
@@ -226,10 +294,12 @@ public class SheetsAPI{
 		return results;
 	}
 
-	public void rerunSheet(String spreadsheetId, String queries_range, String output_range) throws IOException {
+	public void rerunSheet(String token, String spreadsheetId, String worksheet_id, String queries_range,
+			String output_range) throws IOException {
 
-		List<List<String>> queries = readSheetData(spreadsheetId, queries_range);
-		writeSheetData(execHiveQueries(queries), spreadsheetId, "COLUMNS", output_range);
+		List<List<String>> queries = readSheetData(token, spreadsheetId, queries_range);
+		writeSheetData(execHiveQueries(queries), token, spreadsheetId, "COLUMNS", output_range);
+
 	}
 
 }

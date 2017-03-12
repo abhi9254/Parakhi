@@ -39,7 +39,8 @@ public class CreateProject extends HttpServlet {
 		SheetsAPI ob = new SheetsAPI();
 
 		// String stm_title = ob.getSheetTitle(stm_sheet_id);
-		List<List<String>> parse_headers = ob.readSheetData(stm_sheet_id, selected_ws[0] + "!A1:M4");
+		List<List<String>> parse_headers = ob.readSheetData((String) request.getSession().getAttribute("token"),
+				stm_sheet_id, selected_ws[0] + "!A1:M4");
 		// Reading headers of STM
 		StringBuilder s = new StringBuilder("");
 		for (List<String> row : parse_headers) {
@@ -52,7 +53,8 @@ public class CreateProject extends HttpServlet {
 		// Read source databases and tables from STM by interactive
 		// column-selection
 		String src_range = selected_ws[0] + "!A4:K12";
-		List<List<String>> stm = ob.readSheetData(stm_sheet_id, src_range);
+		List<List<String>> stm = ob.readSheetData((String) request.getSession().getAttribute("token"), stm_sheet_id,
+				src_range);
 
 		// Map<String,String> db_col_pairs = new HashMap<String,String>();
 		// for(List<String> row:src_db_cols){

@@ -27,7 +27,7 @@
 		}
 	}
 	if (request.getParameter("trace_tbl_nm") != null && request.getParameter("src_tbl_nm") != null) {
-		
+
 		String trace_tbl_nm = request.getParameter("trace_tbl_nm");
 		String src_tbl_nm = request.getParameter("src_tbl_nm");
 		MySQL_dao ob = new MySQL_dao();
@@ -102,7 +102,8 @@
 		}
 	}
 
-	if (request.getParameter("spreadsheet_id") != null && !request.getParameter("spreadsheet_id").equals("")) {
+	if (request.getParameter("spreadsheet_id") != null && !request.getParameter("spreadsheet_id").equals("")
+			&& request.getParameter("title") != null) {
 		Pattern p = Pattern.compile("spreadsheets/d/.*/");
 		Matcher m = p.matcher(request.getParameter("spreadsheet_id"));
 		String stm_sheet_id;
@@ -110,23 +111,45 @@
 
 		if (m.find()) {
 			stm_sheet_id = m.group().substring(15, m.group().length() - 1);
-			//	SheetsAPI ob = new SheetsAPI();
 			Oauth2Servlet ob2 = new Oauth2Servlet();
 			try {
 				stm_title = ob2.getSheetTitle(request.getSession().getAttribute("user_id").toString(),
-						(String) request.getServletContext().getAttribute("token"), stm_sheet_id);
-				//	stm_title = ob.getSheetTitle(stm_sheet_id);
-				outRes.println("<br>Found Spreadsheet: " + stm_title + "<br><br>");
-
-				//		List<String> ws = new ArrayList<String>(ob2.getWorksheets((GoogleCredential)request.getServletContext().getAttribute("credential"),stm_sheet_id));
-				//		outRes.println("Select worksheets to import: <br>");
-				//		for (String s : ws) {
-				//			outRes.println("<input type='checkbox' name='ws' value='" + s + "'> " + s);
-				//			int[] last_row_col = ob.getLastRowCol(stm_sheet_id, s);
-				//			outRes.println("/ Last row: " + last_row_col[0] + "," + last_row_col[1]);
-				//		}
+						(String) request.getSession().getAttribute("token"), stm_sheet_id);
+				outRes.println(stm_title);
 			} catch (Exception ex) {
 				outRes.println("Error in fetching title. " + ex.toString());
+			}
+		} else {
+			outRes.print("Cannot parse url. Please enter a valid Google Spreadsheet link");
+		}
+	}
+
+	if (request.getParameter("spreadsheet_id") != null && !request.getParameter("spreadsheet_id").equals("")
+			&& request.getParameter("ws") != null) {
+		Pattern p = Pattern.compile("spreadsheets/d/.*/");
+		Matcher m = p.matcher(request.getParameter("spreadsheet_id"));
+		String stm_sheet_id;
+		String stm_title;
+		if (m.find()) {
+			stm_sheet_id = m.group().substring(15, m.group().length() - 1);
+			//Oauth2Servlet ob2 = new Oauth2Servlet();
+			SheetsAPI ob = new SheetsAPI();
+			try {
+				List<String> ws = new ArrayList<String>(
+						ob.getWorksheets(request.getSession().getAttribute("user_id").toString(),
+								(String) request.getSession().getAttribute("token"), stm_sheet_id));
+				//outRes.println("Select worksheets to import: <br>");
+				for (String s : ws) {
+					outRes.println("<input type='checkbox' name='ws' value='" + s + "'> " + s);
+					//	int[] last_row_col = ob.getLastRowCol((String) request.getSession().getAttribute("token"),
+					//			stm_sheet_id, s);
+					//	outRes.println("/ Last row: " + last_row_col[0] + "," + last_row_col[1]);
+					String last_col = ob.getLastCol((String) request.getSession().getAttribute("token"),
+							stm_sheet_id, s);
+					outRes.println("/ Last col: " + last_col);
+				}
+			} catch (Exception ex) {
+				outRes.println("Error in fetching worksheets. " + ex.toString());
 
 			}
 
@@ -134,4 +157,81 @@
 			outRes.print("Cannot parse url. Please enter a valid Google Spreadsheet link");
 		}
 	}
+
+	//function: get testsheets for p_id
+	if (request.getParameter("p_id") != null && !request.getParameter("p_id").equals("")
+			&& request.getParameter("testsheets") != null) {
+		int p_id = Integer.parseInt(request.getParameter("p_id"));
+		MySQL_dao ob = new MySQL_dao();
+		outRes.println("<option selected disabled>Test Sheet</option>");
+		try {
+			List<String[]> ts = new ArrayList<String[]>(ob.getTestsheets(p_id));
+			for (String s[] : ts) {
+				outRes.println("<option value='" + s[0] + "'> " + s[1] + "</option");
+			}
+		} catch (Exception ex) {
+			outRes.println(ex.toString());
+
+		}
+	}
+	//function: get worksheets for s_id
+	if (request.getParameter("s_id") != null && !request.getParameter("s_id").equals("")
+			&& request.getParameter("worksheets") != null) {
+		String s_id = request.getParameter("s_id");
+		SheetsAPI ob = new SheetsAPI();
+		outRes.println("<option selected disabled>Worksheet Name</option>");
+		try {
+			List<String> ws = new ArrayList<String>(
+					ob.getWorksheets((String) request.getSession().getAttribute("user_id"),
+							(String) request.getSession().getAttribute("token"), s_id));
+			for (String s : ws) {
+				outRes.println("<option value='" + s + "'> " + s + "</option>");
+			}
+		} catch (Exception ex) {
+			outRes.println(ex.toString());
+
+		}
+	}
+
+	if (request.getParameter("query") != null && request.getParameter("result") != null) {
+		List<List<Object>> push_rows = new ArrayList<List<Object>>();
+		List<Object> push_row = new ArrayList<Object>();
+		push_row.add(request.getParameter("query"));
+		push_row.add("");
+		push_row.add("");
+		push_row.add(request.getParameter("result").trim());
+		push_rows.add(push_row);
+
+		SheetsAPI ob = new SheetsAPI();
+		int last_row = ob.getLastRow((String) request.getSession().getAttribute("token"),
+				"16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE", "Second");
+		ob.writeSheetData(push_rows, (String) request.getSession().getAttribute("token"),
+				"16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE", "ROWS", "Second!F" + last_row);
+		outRes.println("Success");
+
+	}
+
+	if (request.getParameter("setProj") != null && request.getParameter("proj_id") != null) {
+		request.getSession().setAttribute("proj_id", request.getParameter("proj_id"));
+		request.getSession().setAttribute("proj_nm", request.getParameter("proj_nm"));
+	}
+	if (request.getParameter("tbl_nms") != null && request.getParameter("db_nm") != null
+			&& request.getParameter("db_nm") != "") {
+		int proj_id = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+		MySQL_dao ob = new MySQL_dao();
+		String[] tbls = ob.getDbTblNames(proj_id, request.getParameter("db_nm"));
+		outRes.println("<option selected disabled value=''>Table</option>");
+		for (String tbl : tbls)
+			outRes.println("<option value='" + tbl + "'>" + tbl + "</option>");
+	}
+	
+	if (request.getParameter("col_nms") != null && request.getParameter("tbl_nm") != null
+			&& request.getParameter("db_nm") != null) {
+		MySQL_dao ob = new MySQL_dao();
+		List<String[]> cols = ob.getTbl_Columns(request.getParameter("db_nm"),request.getParameter("tbl_nm"));
+		outRes.println("Columns: <br> ");
+		for (String[] col : cols)
+			outRes.println("<input type='checkbox' name='cols' value="+col[0]+">"+col[0]+"<br>");
+	}
+	
 %>
