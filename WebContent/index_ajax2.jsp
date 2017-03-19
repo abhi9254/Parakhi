@@ -224,14 +224,30 @@
 		for (String tbl : tbls)
 			outRes.println("<option value='" + tbl + "'>" + tbl + "</option>");
 	}
-	
+
 	if (request.getParameter("col_nms") != null && request.getParameter("tbl_nm") != null
 			&& request.getParameter("db_nm") != null) {
 		MySQL_dao ob = new MySQL_dao();
-		List<String[]> cols = ob.getTbl_Columns(request.getParameter("db_nm"),request.getParameter("tbl_nm"));
+		List<String[]> cols = ob.getTbl_Columns(request.getParameter("db_nm"), request.getParameter("tbl_nm"));
 		outRes.println("Columns: <br> ");
 		for (String[] col : cols)
-			outRes.println("<input type='checkbox' name='cols' value="+col[0]+">"+col[0]+"<br>");
+			outRes.println("<input type='checkbox' name='cols' value=" + col[0] + ">" + col[0] + "<br>");
 	}
-	
+
+	if (request.getParameter("tasks") != null) {
+		MySQL_dao ob = new MySQL_dao();
+		List<String[]> tasks = new ArrayList<String[]>(ob.getTasks());
+		StringBuilder t = new StringBuilder("");
+		for (String[] task : tasks) {
+			if("100".equals(task[1]))
+				t.append("<h4>" + task[0]
+						+ ": Rerun Sheet Task</h4><div class='progress'><div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='100'aria-valuemin='0' aria-valuemax='100' style='width:100%'>Complete</div></div>");	
+			else	
+			t.append("<h4>" + task[0]
+					+ ": Rerun Sheet Task</h4><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='"
+					+ task[1] + "'aria-valuemin='0' aria-valuemax='100' style='width: " + task[1] + "%'>"
+					+ task[1] + "%</div></div>");
+		}
+		outRes.println(t);
+	}
 %>

@@ -192,7 +192,7 @@ public class SheetsAPI {
 					last_row = data.size();
 				}
 			}
-			//System.out.println("Next row: " + (last_row + 1));
+			// System.out.println("Next row: " + (last_row + 1));
 			return last_row + 1;
 		}
 
@@ -248,6 +248,12 @@ public class SheetsAPI {
 
 		List<List<Object>> results = new ArrayList<List<Object>>();
 		List<Object> result = new ArrayList<Object>();
+		int total = queries.size();
+		int done = 0;
+		int task_id = 110886;
+
+		MySQL_dao ob = new MySQL_dao();
+		ob.updateTaskProgress(task_id, 0);
 
 		String driverName = "org.apache.hive.jdbc.HiveDriver";
 
@@ -266,8 +272,8 @@ public class SheetsAPI {
 				HiveResultSetMetaData rsmd = (HiveResultSetMetaData) res.getMetaData();
 				int columnsNumber = rsmd.getColumnCount();
 				int dot_pos = rsmd.getColumnName(1).indexOf(".") + 1;
-				
-				StringBuilder op = new StringBuilder(cal.getTime()+ "\n\n ");
+
+				StringBuilder op = new StringBuilder(cal.getTime() + "\n\n ");
 				for (int i = 1; i <= columnsNumber; i++) {
 					op.append("\t" + rsmd.getColumnName(i).substring(dot_pos));
 				}
@@ -281,6 +287,8 @@ public class SheetsAPI {
 				}
 				result.add(op.toString());
 				res.close();
+				done++;
+				ob.updateTaskProgress(task_id, (done * 100) / total);
 			}
 
 			stmt.close();

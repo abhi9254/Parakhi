@@ -20,6 +20,7 @@
 <link href="template_files/bootstrap.min.css" rel="stylesheet" />
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/chosen.min.css" type="text/css">
 <link href="template_files/bootstrap_multiselect.min.css"
 	rel="stylesheet" type="text/css" />
 
@@ -94,15 +95,17 @@
 }
 
 #myInput {
-	background-image: url('css/search.jpg');
+	background-image: url('css/search.svg');
+	background-size: 22px 22px;
 	/* Add a search icon to input */
 	background-position: 10px 12px; /* Position the search icon */
-	background-repeat: no-repeat; /* Do not repeat the icon image */
+	background-repeat : no-repeat; /* Do not repeat the icon image */
 	width: 100%; /* Full-width */
 	font-size: 16px; /* Increase font-size */
 	padding: 12px 20px 12px 40px; /* Add some padding */
 	border: 1px solid #ddd; /* Add a grey border */
-	margin-bottom: 12px; /* Add some space below the input */
+	margin-bottom: 12px;
+	background-repeat: no-repeat /* Add some space below the input */
 }
 </style>
 
@@ -643,8 +646,10 @@
 							class="form-control" placeholder="End"
 							style="width: 15%; display: inline" /><br> <br> <input
 							type="checkbox" name='p_exec' value="p_exec" style="float: left">
-						&nbsp;Parallel Exec <br> <br> <input type="submit"
-							value="Rerun" class="btn btn-info"> <br>
+						&nbsp;Parallel Exec <br> <input type="checkbox"
+							name='write_once' value="write_once" style="float: left"
+							checked='true'> &nbsp;Post write<br> <br> <input
+							type="submit" value="Rerun" class="btn btn-info"> <br>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -665,5 +670,7 @@
 	<script src="template_files/custom.js"></script>
 	<script src="template_files/bootstrap_multiselect.js"
 		type="text/javascript"></script>
+	<script src="js/chosen.min.js" type="text/javascript"></script>
+
 </body>
 </html>

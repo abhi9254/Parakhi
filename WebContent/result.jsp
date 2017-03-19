@@ -30,10 +30,10 @@
 </script>
 <script>
 	function pushToSheet2() {
-		
+
 		var query = document.getElementById('query').innerHTML;
 		var row_c = document.getElementById('res_tbl').rows.length;
-		
+
 		var i = 0, j = 0;
 		var str = "";
 
@@ -52,16 +52,16 @@
 			}
 
 		}
-		
+
 		var x = new XMLHttpRequest();
-		var params = "query="+query+"&result="+str;
+		var params = "query=" + query + "&result=" + str;
 		x.open("POST", "index_ajax2.jsp", true);
-		
+
 		x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		x.onreadystatechange = function() {
-		    if(x.readyState == 4 && x.status == 200) {
-		        alert(x.responseText).trim();
-		    }
+			if (x.readyState == 4 && x.status == 200) {
+				alert(x.responseText).trim();
+			}
 		}
 		x.send(params);
 	}
@@ -162,34 +162,88 @@
 		for (i = 0; i < tbl_arr.length; i++) {
 			var tbl_nm = tbl_arr[i];
 
-			//	if (document.getElementById('query_' + tbl_nm) != null)
-			//		document.getElementById('query_' + tbl_nm).style.display = 'none'
+			var checked = [];
 			var checkboxes;
 			if (tbl_nm != '') {
-				checkboxes = document.getElementsByName('cols_' + tbl_arr[i]);
-				//alert(tbl_nm + checkboxes.length)
-			}
-			var dummy = 'dummy'
-			if (checkboxes.length != 0) {
-				var query = "select * from " + tbl_arr[i]
-				for (c = 0; c < checkboxes.length && checkboxes[c].checked; c++) {
-					if (c == 0)
-						query += " WHERE " + checkboxes[0].value + " = '"
-								+ dummy + "'"
-					else
-						query += " AND " + checkboxes[c].value + " = '" + dummy
-								+ "'"
+				checkboxes = document.getElementsByName('cols_' + tbl_nm);
+				for (c = 0; c < checkboxes.length; c++) {
+					if (checkboxes[c].checked) {
+						checked.push(checkboxes[c].value)
+						//	alert('pushed' + checkboxes[c].value)
+					}
 				}
+			}
+			var header_row = document.getElementById("row_0").cells;
+			var headers = [];
+			for (e = 1; e < header_row.length - 1; e++)
+				headers.push(header_row[e].innerHTML);
+
+			var data_rows = document.getElementsByName("trace");
+			var data_rows_id = [];
+			for (r = 0; r < data_rows.length; r++) {
+				if (data_rows[r].checked)
+					data_rows_id.push(data_rows[r].value);
+			}
+			var query = "select * from " + tbl_nm;
+
+			if (checked.length != 0) {
+
+				for (d = 0; d < data_rows_id.length; d++) {
+					var data_row = document.getElementById(data_rows_id[d]).cells
+					for (h = 0; h < checked.length; h++) {
+						if (h == 0) {
+							for (j = 0; j < headers.length; j++) {
+								if (checked[0] == headers[j]) {
+									if (d == 0)
+										query += " WHERE \n(" + checked[0]
+												+ " = '"
+												+ data_row[j + 1].innerHTML
+												+ "'"
+									else
+										query += "\n(" + checked[0] + " = '"
+												+ data_row[j + 1].innerHTML
+												+ "'"
+									if (checked.length == 1
+											&& d != data_rows_id.length - 1)
+										query += ") OR"
+									if (checked.length == 1
+											&& d == data_rows_id.length - 1)
+										query += ")"
+									break;
+								}
+							}
+
+						} else {
+							for (j = 0; j < headers.length; j++) {
+								if (checked[h] == headers[j]) {
+									query += " AND " + checked[h] + " = '"
+											+ data_row[j + 1].innerHTML + "'"
+									if (h == checked.length - 1
+											&& d != data_rows_id.length - 1)
+										query += ") OR"
+									if (h == checked.length - 1
+											&& d == data_rows_id.length - 1)
+										query += ")"
+									break;
+								}
+							}
+						}
+					}
+				}
+
 				//turn display: inline to debug
-				document.getElementById(tbl_nm).innerHTML += "<pre style=display:none id=query_"+tbl_nm+" name = query_text>"
+				document.getElementById(tbl_nm).innerHTML += "<textarea id=query_"
+						+ tbl_nm
+						+ " style='display:none;width:50%;height:100px' name = 'query_text'>"
 						+ query
-						+ "</pre><input type='submit' value='Trace' class='btn btn-info' style='float: right; display:inline-block'><input type='button' value='Preview' onclick=previewTraceQuery('"
+						+ "</textarea><input type='submit' value='Trace' class='btn btn-info' style='float: right; display:inline-block'><input type='button' value='Preview' onclick=previewTraceQuery('"
 						+ tbl_nm
 						+ "') class='btn' style='float: right;display:inline-block'/>"
 
-			}//document.getElementById('query_'+tbl_nm).style.display='inline'
+			}
 		}
 	}
+	//WORKING CTRL Z CHECK
 
 	function traceCols(tbl_nm) {
 		var checkboxes;

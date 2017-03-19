@@ -421,6 +421,54 @@ public class MySQL_dao {
 
 	}
 
+	public boolean updateTaskProgress(int task_id, int progress) {
+		boolean returnCode = true;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "UPDATE parakhi.mytasks SET progress = " + progress + " where task_id = " + task_id ;
+			System.out.println(query);
+			statement.executeUpdate(query);
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			returnCode = false;
+		}
+		return returnCode;
+		
+	}
+	
+	public List<String[]> getTasks(){
+		
+		ResultSet resultSet = null;
+		List<String[]> tasks = new ArrayList<String[]>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT task_id,progress FROM parakhi.mytasks";
+			resultSet = statement.executeQuery(query);
+			String[] s;
+
+			while (resultSet.next()) {
+				s = new String[2];
+				s[0] = resultSet.getString(1);
+				s[1] = resultSet.getString(2);
+				tasks.add(s);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return tasks;
+	}
+
 }
 
 class Cases {

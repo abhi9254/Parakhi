@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -19,61 +19,96 @@
 <link href="template_files/bootstrap.min.css" rel="stylesheet" />
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" type="text/css">
-</head>
-<body>
-<!-- start header -->
-		<header>
-		<div class="navbar navbar-inverse navbar-static-top">
-			<div class="container" style="float: right; color: white">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-					<!-- <a class="navbar-brand" href="index.html"><img
-						src="template_files/img/logo.png" alt="" width="199" height="52" /></a> -->
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle "
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Project <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="index.jsp" data-toggle="modal">Switch
-										Project</a></li>
-								<li><a href="index.jsp">New Project</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Sheets <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE"
-									>View Sheet</a></li>
-								<li><a href="index.jsp" data-toggle="modal" data-target="#myModal2">Rerun Sheet</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="cross_section.jsp"
-							style="color: white">Cross Section</a></li>
-						<li class="dropdown"><a href="history.jsp"
-							style="color: white">History</a></li>
-						<li class="dropdown"><a href="settings.jsp"
-							style="color: white">Settings</a></li>
+<script>
+	function getTasks() {
 
-						
-						<li class=""><a href="" data-toggle="modal"
-							data-target="#loginModal" style="color: white">Login</a></li>
-					</ul>
-				</div>
+		$.get("index_ajax2.jsp?tasks=1", function(data) {
+
+			$('#results').html(data);
+		});
+
+		setInterval(function() {
+
+			$.get("index_ajax2.jsp?tasks=1", function(data) {
+
+				$('#results').html(data);
+			});
+		}, 10000);
+
+	}
+</script>
+
+
+</head>
+<body onload="getTasks()">
+	<!-- start header -->
+	<header>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<div class="container" style="float: right; color: white">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<!-- <a class="navbar-brand" href="index.html"><img
+						src="template_files/img/logo.png" alt="" width="199" height="52" /></a> -->
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle "
+						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+						data-close-others="false" style="color: white">Project <span
+							class="glyphicon glyphicon-chevron-down"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="index.jsp" data-toggle="modal">Switch
+									Project</a></li>
+							<li><a href="index.jsp">New Project</a></li>
+						</ul></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+						data-close-others="false" style="color: white">Sheets <span
+							class="glyphicon glyphicon-chevron-down"></span></a>
+						<ul class="dropdown-menu">
+							<li><a target="_blank"
+								href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+									Sheet</a></li>
+							<li><a href="index.jsp" data-toggle="modal"
+								data-target="#myModal2">Rerun Sheet</a></li>
+						</ul></li>
+					<li class="dropdown"><a href="cross_section.jsp"
+						style="color: white">Cross Section</a></li>
+					<li class="dropdown"><a href="history.jsp"
+						style="color: white">History</a></li>
+					<li class="dropdown"><a href="settings.jsp"
+						style="color: white">Settings</a></li>
+
+
+					<li class=""><a href="" data-toggle="modal"
+						data-target="#loginModal" style="color: white">Login</a></li>
+				</ul>
 			</div>
 		</div>
-		</header>
-		<!-- end header -->
-	<div style="margin-left:10px"><h2>This page is under construction</h2><br>
-	<h3>Recent Queries fired by the user</h3>
-</div>
+	</div>
+	</header>
+	<!-- end header -->
+	<h2 style="margin-left: 20px">Recent Tasks</h2>
+
+	<div style="margin-left: 20px; width: 30%">
+
+
+		<h4>110881: Rerun Sheet Task</h4>
+		<div class="progress">
+			<div class="progress-bar  progress-bar-danger"
+				role="progressbar" aria-valuenow="100" aria-valuemin="0"
+				aria-valuemax="100" style="width: 100%">Failed</div>
+		</div>
+		
+		<!-- <button class="btn btn-info" style="display: inline ;float:right">Remove</button>
+		 -->
+
+		<h3 id='results'>Updating..</h3>
+	</div>
 </body>
 </html>
