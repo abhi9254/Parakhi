@@ -4,100 +4,69 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="java.io.*"%>
 <%@ page import="java.util.regex.Matcher"%>
+<%@ page import="org.abhi.parakhi.MySQL_dao"%>
 <%
 	PrintWriter outRes = response.getWriter();
-	if (request.getParameter("check").equals("db")) {
+	if (request.getParameter("projId") != null && request.getParameter("inpQuery") != null) {
 
 		String inpQuery = request.getParameter("inpQuery");
-		String projId = request.getParameter("projId");
-		String makeInpQuery = inpQuery;
-		String[] inpQueryArray = inpQuery.split(" ");
-		int numbOccur = 0;
+		int projId = Integer.parseInt(request.getParameter("projId"));
 
-		String DB_URL = "jdbc:mysql://localhost:3306/parakhi";
-		String USER = "root";
-		String PASS = "cloudera";
-		Connection conn = null;
-		Class.forName("com.mysql.jdbc.Driver");
+		MySQL_dao ob = new MySQL_dao();
+		List<String> dbs = new ArrayList<String>(ob.getProjDbNames(projId));
 
-		conn = DriverManager.getConnection(DB_URL, USER, PASS);
-		String sql;
-		if (projId == "0") {
-			sql = "select distinct database_nm from myprojects";
-		} else {
-			sql = "select distinct database_nm from myprojects where project_id=" + projId;
+		StringBuilder s = new StringBuilder("");
+		s.append("<select id='tables' class='chosen-select'  tabindex='4'>");
+		s.append("<option value='' selected disabled>Select table</option>");
+		for (String db : dbs) {
+			s.append("<optgroup label='" + db + "'>");
+
+			String[] tbls = ob.getDbTblNames(projId, db);
+			for (String tbl : tbls)
+				s.append("<option value='" + db + "." + tbl + "'>" + tbl + "</option>");
 		}
-		PreparedStatement preparedStatement = conn.prepareStatement(sql);
-		ResultSet rs = preparedStatement.executeQuery();
+		s.append("</optgroup></select>");
 
-		ArrayList<String> db_nms = new ArrayList();
-		while (rs.next()) {
-			db_nms.add(rs.getString(1));
-		}
-		preparedStatement.close();
-		String output = "";
+		String db_text = "$db.$tableA";
+		String rep = inpQuery.replace("$db.$tableA", s);
+		outRes.println(rep);
+	}
 
-		String patternTable = "\\$db.\\$table[A-Z]";
-		String patternCols = "\\$table[A-Z].\\$col";
-		for (int i = 0; i < inpQueryArray.length; i++) {
-			if (inpQueryArray[i].equals("$db.$table") || inpQueryArray[i].matches(patternTable)) {
-				output = "<ul class='nav' style='display: inline-block'><li class='dropdown'><a data-toggle='dropdown' data-hover='dropdown' data-delay='0' data-close-others='false' class='dropdown-toggle' id='"
-						+ inpQueryArray[i] + "' href='#'>" + inpQueryArray[i]
-						+ "<b class='caret'></b></a><ul class='dropdown-menu'>";
-				String dbQuery = "";
+	if (request.getParameter("selected") != null) {
+		String db_nm_tbl_nm = request.getParameter("selected");
 
-				for (String db_nm : db_nms) {
-					if (projId == "0") {
-						dbQuery = "select distinct tbl_nm from mytables where db_nm='" + db_nm + "'";
-					} else {
-						dbQuery = "select distinct tbl_nm from mytables where db_nm='" + db_nm
-								+ "' AND project_id=" + projId;
-					}
-					output = output + "<li><a href='#'>" + db_nm
-							+ "<i class='icon-arrow-right'></i></a><ul class='dropdown-menu sub-menu'>";
-					PreparedStatement stmt = conn.prepareStatement(dbQuery);
-					ResultSet rs_tbl = stmt.executeQuery();
-					while (rs_tbl.next()) {
-						output = output + "<li><a href='#' onclick=setQueryTblVal('" + db_nm + "','"
-								+ rs_tbl.getString(1) + "','" + inpQueryArray[i] + "','"
-								+ inpQueryArray[i].substring(inpQueryArray[i].indexOf('.') + 1) + "','" + projId
-								+ "')>" + rs_tbl.getString(1) + "</a></li>";
-					}
-					output = output + "</ul></li>";
-				}
+		MySQL_dao ob = new MySQL_dao();
+		List<String> cols = new ArrayList<String>(ob.getTbl_Columns(db_nm_tbl_nm));
 
-				output = output + "</ul></li></ul>";
-				//conn.close();
-				makeInpQuery = makeInpQuery.replace(inpQueryArray[i], output);
-			} else if (inpQueryArray[i].matches(patternCols + "[0-9]")
-					|| inpQueryArray[i].matches(patternCols + "s")) {
-				makeInpQuery = makeInpQuery.replace(inpQueryArray[i],
-						"<span id='" + inpQueryArray[i] + "'>" + inpQueryArray[i] + "</span>");
+		StringBuilder s = new StringBuilder("");
+		StringBuilder all = new StringBuilder("");
+		s.append(
+				"<select id='columns' class='chosen-select'  data-placeholder='Select columns' style='min-width:180px' multiple tabindex='4'>");
+		//	s.append("<option value='' selected disabled>Select columns</option>");
+		if (cols.size() != 0) {
+
+			s.append("<option value='*'>*</option>");
+
+			int i = 1;
+			for (String col : cols) {
+				s.append("<option value='" + col + "'>" + col + "</option>");
+
+				if (i == 1)
+					all.append(col);
+				else
+					all.append("," + col);
+
+				i++;
 			}
+			s.append("<option value=" + all + ">All</option>");
+		} else {
+			s.append("<option value='' disabled>No columns</option>");
 		}
-		conn.close();
-		outRes.println(makeInpQuery);
-	} else if (request.getParameter("check").equals("col")) {
-		String db_nm = request.getParameter("db_nm");
-		String tbl_nm = request.getParameter("tbl_nm");
-		String col_id = request.getParameter("col_id");
-		String proj_id = request.getParameter("proj_id");
 
-		String DB_URL = "jdbc:mysql://localhost:3306/parakhi";
-		String USER = "root";
-		String PASS = "cloudera";
-		Connection conn = null;
-		Class.forName("com.mysql.jdbc.Driver");
+		s.append("</select>");
 
-		conn = DriverManager.getConnection(DB_URL, USER, PASS);
-		String colQuery = "select distinct col_nm from mytables where db_nm='" + db_nm + "' AND tbl_nm='"
-				+ tbl_nm + "' AND project_id=" + proj_id + "";
-		PreparedStatement stmt = conn.prepareStatement(colQuery);
-		ResultSet rs_col = stmt.executeQuery();
-		String col_nms = "";
-		while (rs_col.next()) {
-			col_nms = col_nms + rs_col.getString(1) + ",";
-		}
-		outRes.println(col_nms);
+		outRes.println(s);
 	}
 %>
+
+

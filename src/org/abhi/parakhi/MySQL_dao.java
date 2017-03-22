@@ -243,6 +243,37 @@ public class MySQL_dao {
 
 	}
 
+	public List<String> getTbl_Columns(String db_nm_tbl_nm) {
+		ResultSet resultSet = null;
+		List<String> col_nms = new ArrayList<String>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT target_col_nm FROM parakhi.mystms where stm_nm='"
+					+ db_nm_tbl_nm + "'";
+			resultSet = statement.executeQuery(query);
+			
+
+			while (resultSet.next()) {
+				
+				col_nms.add(resultSet.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return col_nms;
+
+	}
+
+	
 	public boolean insertIntoProjects(Integer p_id, String p_name, String p_desc, String db_name, String tbl_name) {
 		boolean returnCode = true;
 		try {

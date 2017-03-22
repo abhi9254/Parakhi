@@ -16,11 +16,15 @@
 <title>Parakhi - 0.7</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Parakhi" />
-
-<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="css/chosen.css" type="text/css">
+<!-- css -->
+<link href="template_files/bootstrap.min.css" rel="stylesheet" />
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/chosen.min.css" type="text/css">
+<link href="template_files/bootstrap_multiselect.min.css"
+	rel="stylesheet" type="text/css" />
+
+<!-- Theme skin -->
 <link id="t-colors" href="template_files/default.css" rel="stylesheet" />
 
 
@@ -103,70 +107,8 @@
 	margin-bottom: 12px;
 	background-repeat: no-repeat /* Add some space below the input */
 }
-
-.chosen-container-multi .chosen-choices {
-	overflow: initial;
-	border: 0px;
-}
-
-.chosen-container-single .chosen-single {
-	overflow: initial;
-	border: 0px;
-}
 </style>
-<script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
-<script src="js/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/chosen.jquery.min.js" type="text/javascript"></script>
-<script>
-	function dothat() {
-		$(document).ready(function() {
-			$(".chosen-select").chosen();
-			$('button').click(function() {
-				$(".chosen-select").val('').trigger("chosen:updated");
-			});
 
-			var q = document.getElementById('query_text').value;
-			var q2 = document.getElementById('query_text').value;
-			$('#tables').on('change', function(evt, params) {
-				var selected = $(this).val();
-				var up_q = q.replace(' $db.$tableA ', " " + selected + " ");
-				document.getElementById('query_text').value = up_q;
-				q2 = up_q;
-				dotheotherone(selected, up_q)
-			});
-
-			$('#columns').on('change', function(evt, params) {
-
-				var cols = $(this).val();
-				var up_q2 = q2.replace(' $tableA.$cols ', " " + cols + " ");
-				document.getElementById('query_text').value = up_q2;
-
-			});
-		});
-
-	}
-
-	function dotheotherone(selected, up_q) {
-
-		var x = new XMLHttpRequest()
-		x.open("GET", "index_ajax.jsp?col_nms=1" + "&selected=" + selected,
-				true)
-		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				var cols_list = x.responseText;
-				//var final_q = up_q.replace('$tableA.$cols',cols_list);alert(final_q)
-				var p = document.getElementById("makeQuery").innerHTML;
-				var tbl_ptrn = /[$]tableA.[$]col./g;
-				var q = p.replace(tbl_ptrn, cols_list);
-				document.getElementById("makeQuery").innerHTML = q;
-				//.replace('$tableA.$cols', cols_list);
-				dothat();
-			}
-		}
-
-	}
-</script>
 <script>
 	function setActiveProj(proj_id, proj_nm) {
 		var x = new XMLHttpRequest()
@@ -200,23 +142,20 @@
 	}
 
 	function enterQuery(inpQuery, projId) {
-		document.getElementById("makeQuery").display = 'none';
 		document.getElementById("query_text").innerHTML = ""
 		var str = inpQuery.replace('$empty', '\'\'')
-		if (projId == '')
+		if (projId == '') {
 			projId = 0
-
+		}
 		document.getElementById("setQuery").value = str
 		document.getElementById("query_text").value = str
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax.jsp?inpQuery=" + inpQuery + "&projId="
-				+ projId, true)
+				+ projId + "&check=db", true)
 		x.send(null)
 		x.onreadystatechange = function() {
 			if (x.readyState == 4) {
 				document.getElementById("makeQuery").innerHTML = x.responseText;
-				dothat();
-				document.getElementById("makeQuery").display = 'inline';
 			}
 		}
 	}
@@ -532,8 +471,16 @@
 						<div class="panel" id="main_panel"
 							style="height: 200px; width: 600px; display: inline-block">
 							<div id="makeQuery" class="panel panel-body"
-								style="font-size: large; height: 200px;width:600px; display: inline-block"></div>
-
+								style="font-size: large; height: 140px; display: inline-block"></div>
+							<div
+								style="background-color: grey; color: white; font-size: large; height: 40px;">
+								<span>Selected Columns : </span><span id="fullCols"></span> <span
+									style="float: right"> <a href="#"
+									onclick="resetColumns()" class="btn btn-info"
+									style="margin: 4px">Reset</a> <a href="#"
+									onclick="addColumns()" class="btn btn-danger"
+									style="margin: 4px">Done</a></span>
+							</div>
 						</div>
 
 
@@ -736,15 +683,18 @@
 		</div>
 	</div>
 
-
+	<script src="template_files/jquery.min.js"></script>
 	<script src="template_files/modernizr.custom.js"></script>
 	<script src="template_files/jquery.easing.1.3.js"></script>
-
+	<script src="template_files/bootstrap.min.js"></script>
 	<script src="template_files/jquery.appear.js"></script>
 	<script src="template_files/stellar.js"></script>
 	<script src="template_files/classie.js"></script>
 	<script src="template_files/animate.js"></script>
 	<script src="template_files/custom.js"></script>
+	<script src="template_files/bootstrap_multiselect.js"
+		type="text/javascript"></script>
+	<script src="js/chosen.min.js" type="text/javascript"></script>
 
 </body>
 </html>
