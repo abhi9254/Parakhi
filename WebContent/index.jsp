@@ -109,7 +109,7 @@
 	border: 0px;
 }
 
-.chosen-container-single .chosen-single {
+.chosen-container-single .chosen-single span {
 	overflow: initial;
 	border: 0px;
 }
@@ -474,39 +474,17 @@
 				<div id="generic" class="tab-pane fade in active">
 					<ul class="ver_nav_bar" id="cases_ul">
 						<%
-							String sqlQuery = "";
-							if (request.getParameter("q") == null) {
-								sqlQuery = "select case_name,case_desc,case_query from mytests where project_id=0";
-							} else {
-								sqlQuery = "select case_name,case_desc,case_query from mytests where project_id=0 or project_id="
-										+ request.getParameter("q");
-							}
-							String DB_URL = "jdbc:mysql://localhost:3306/parakhi";
-							String USER = "root";
-							String PASS = "cloudera";
-							Connection conn = null;
-							Class.forName("com.mysql.jdbc.Driver");
+							MySQL_dao ob = new MySQL_dao();
+							List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
 
-							conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-							PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery);
-							ResultSet rs = preparedStatement.executeQuery();
-							String q = "";
-							if (request.getParameter("q") == null) {
-								q = "";
-							} else {
-								q = request.getParameter("q");
-							}
-							while (rs.next()) {
+							for (String[] c : cases) {
 						%>
-						<li class="ver_li" title="<%=rs.getString(2)%>"><a
+						<li class="ver_li" title="<%=c[2]%>"><a
 							class="ver_li inactive" href="#"
-							onclick="enterQuery('<%=rs.getString(3)%>','<%=q%>')"
-							style="font-size: large"><%=rs.getString(1)%></a></li>
+							onclick="enterQuery('<%=c[3]%>','0')" style="font-size: large"><%=c[1]%></a></li>
 
 						<%
 							}
-							preparedStatement.close();
 						%>
 
 					</ul>
@@ -514,9 +492,19 @@
 
 				<div id="project" class="tab-pane fade">
 					<ul class="ver_nav_bar" id="cases_ul">
-						<li class="ver_li" title="dummy"><a class="ver_li inactive"
-							href="#" onclick="enterQuery('dummy','dummy')"
-							style="font-size: large">option 2</a></li>
+						<%
+							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+
+							for (String[] c : proj_cases) {
+						%>
+						<li class="ver_li" title="<%=c[2]%>"><a
+							class="ver_li inactive" href="#"
+							onclick="enterQuery('<%=c[3]%>','<%=active_proj %>')" style="font-size: large"><%=c[1]%></a></li>
+
+						<%
+							}
+						%>
 					</ul>
 				</div>
 
@@ -532,7 +520,7 @@
 						<div class="panel" id="main_panel"
 							style="height: 200px; width: 600px; display: inline-block">
 							<div id="makeQuery" class="panel panel-body"
-								style="font-size: large; height: 200px;width:600px; display: inline-block"></div>
+								style="font-size: large; height: 200px; width: 600px; display: inline-block"></div>
 
 						</div>
 
@@ -563,24 +551,18 @@
 
 					<div class="modal-body">
 						<%
-							String projQuery;
-							projQuery = "select distinct project_id,project_name,project_desc from myprojects";
+							List<String[]> projs = new ArrayList<String[]>(ob.getProjects());
 
-							PreparedStatement preparedStatementProj = conn.prepareStatement(projQuery);
-							ResultSet rsProj = preparedStatementProj.executeQuery();
-
-							while (rsProj.next()) {
+							for (String[] p : projs) {
 						%>
 
 						<h4>
-							<a title="<%=rsProj.getString(3)%>"
-								href="index.jsp?q=<%=rsProj.getString(1)%>" style="color: white"
-								onclick="setActiveProj('<%=rsProj.getString(1)%>','<%=rsProj.getString(2)%>')"><%=rsProj.getString(2)%></a>
+							<a title="<%=p[2]%>" href="index.jsp?q=<%=p[0]%>"
+								style="color: white"
+								onclick="setActiveProj('<%=p[0]%>','<%=p[1]%>')"><%=p[1]%></a>
 						</h4>
 						<%
 							}
-							preparedStatement.close();
-							conn.close();
 						%>
 					</div>
 				</div>
@@ -699,7 +681,6 @@
 							id="selected_project" onchange="getTestSheets()">
 							<option selected disabled>Project Name</option>
 							<%
-								MySQL_dao ob = new MySQL_dao();
 								List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
 								for (String[] p : projects) {
 							%>

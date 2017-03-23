@@ -95,15 +95,16 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT case_id,case_name,case_desc FROM parakhi.mytests where project_id=0 OR project_id="
+			String query = "SELECT case_id,case_name,case_desc,case_query FROM parakhi.mytests where project_id="
 					+ project_id;
 			resultSet = statement.executeQuery(query);
 			String[] s;
 			while (resultSet.next()) {
-				s = new String[3];
+				s = new String[4];
 				s[0] = resultSet.getString(1);
 				s[1] = resultSet.getString(2);
 				s[2] = resultSet.getString(3);
+				s[3] = resultSet.getString(4);
 				cases.add(s);
 			}
 		} catch (SQLException e) {
