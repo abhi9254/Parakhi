@@ -154,8 +154,9 @@ input:checked+.slider:before {
 		<label class="switch" style="float: right; display: inline"><input
 			type="checkbox" onclick="func()">
 			<div class="slider round"></div> </label>
-		<div style="display: inline;width: 300px; height: 50px;">
-			<h5 style='float: right;margin-top: 6px;margin-right: 4px;'>Edit Query</h5>
+		<div style="display: inline; width: 300px; height: 50px;">
+			<h5 style='float: right; margin-top: 6px; margin-right: 4px;'>Edit
+				Query</h5>
 		</div>
 	</div>
 </body>

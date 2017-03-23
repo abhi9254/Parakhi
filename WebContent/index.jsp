@@ -258,6 +258,20 @@ input:checked+.slider:before {
 				li[i].style.display = "none";
 			}
 		}
+
+		ul = document.getElementById("proj_cases_ul");
+		li = ul.getElementsByTagName('li');
+
+		// Loop through all list items, and hide those who don't match the search query
+		for (i = 0; i < li.length; i++) {
+			a = li[i].getElementsByTagName("a")[0];
+			if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+				//alert(i)
+				li[i].style.display = "";
+			} else {
+				li[i].style.display = "none";
+			}
+		}
 	}
 
 	function enterQuery(inpQuery, projId) {
@@ -552,7 +566,7 @@ input:checked+.slider:before {
 				</div>
 
 				<div id="project" class="tab-pane fade">
-					<ul class="ver_nav_bar" id="cases_ul">
+					<ul class="ver_nav_bar" id="proj_cases_ul">
 						<%
 							if (request.getSession().getAttribute("proj_id") != null) {
 								int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
@@ -586,7 +600,7 @@ input:checked+.slider:before {
 						<div class="panel" id="main_panel"
 							style="height: 200px; width: 600px; display: inline-block">
 							<div id="makeQuery" class="panel panel-body"
-								style="font-size: large; height: 200px; width: 600px; display: inline-block; border-width: 1px 1px 1px 4px; border-color: #A9A9A9;border-radius:0px"></div>
+								style="font-size: large; height: 200px; width: 600px; display: inline-block; border-width: 1px 1px 1px 4px; border-color: #A9A9A9; border-radius: 0px"></div>
 
 						</div>
 
