@@ -92,9 +92,9 @@
 
 #myInput {
 	background-image: url('css/search.svg');
-	background-size: 22px 22px;
+	background-size: 20px 20px;
 	/* Add a search icon to input */
-	background-position: 10px 12px; /* Position the search icon */
+	background-position: 10px 14px; /* Position the search icon */
 	background-repeat: no-repeat; /* Do not repeat the icon image */
 	width: 100%; /* Full-width */
 	font-size: 16px; /* Increase font-size */
@@ -112,6 +112,67 @@
 .chosen-container-single .chosen-single span {
 	overflow: initial;
 	border: 0px;
+}
+
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 25px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+	display: none;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	bottom: 0;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 22px;
+	width: 22px;
+	left: 2px;
+	bottom: 2px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+
+input:checked+.slider {
+	background-color: #2196F3;
+}
+
+input:focus+.slider {
+	box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+	-webkit-transform: translateX(24px);
+	-ms-transform: translateX(24px);
+	transform: translateX(24px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 34px;
+}
+
+.slider.round:before {
+	border-radius: 50%;
 }
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
@@ -463,7 +524,7 @@
 
 		<div class="ver_nav_bar">
 			<input type="text" id="myInput" onkeyup="myFunction()"
-				placeholder="Search for queries...">
+				placeholder="Search...">
 
 			<ul class="nav nav-tabs">
 				<li class="active" style="width: 50%"><a data-toggle="tab"
@@ -493,16 +554,20 @@
 				<div id="project" class="tab-pane fade">
 					<ul class="ver_nav_bar" id="cases_ul">
 						<%
-							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
-							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+							if (request.getSession().getAttribute("proj_id") != null) {
+								int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
 
-							for (String[] c : proj_cases) {
+								List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+
+								for (String[] c : proj_cases) {
 						%>
 						<li class="ver_li" title="<%=c[2]%>"><a
 							class="ver_li inactive" href="#"
-							onclick="enterQuery('<%=c[3]%>','<%=active_proj %>')" style="font-size: large"><%=c[1]%></a></li>
+							onclick="enterQuery('<%=c[3]%>','<%=active_proj%>')"
+							style="font-size: large"><%=c[1]%></a></li>
 
 						<%
+							}
 							}
 						%>
 					</ul>
@@ -516,24 +581,34 @@
 			<div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-6">
-					<form action="Query" method="post" style="margin-top: 10px">
+					<form action="Query" method="post"
+						style="margin-top: 10px; height: 200px">
 						<div class="panel" id="main_panel"
 							style="height: 200px; width: 600px; display: inline-block">
 							<div id="makeQuery" class="panel panel-body"
-								style="font-size: large; height: 200px; width: 600px; display: inline-block"></div>
+								style="font-size: large; height: 200px; width: 600px; display: inline-block; border-width: 1px 1px 1px 4px; border-color: #A9A9A9;border-radius:0px"></div>
 
 						</div>
 
 
 						<textarea name="query_text" id="query_text" cols="100" rows="5"
-							style="font-size: large; font-color: black; border: 1px solid #A9A9A9; border-left: 4px solid #A9A9A9; border-radius: 0px; height: 200px; display: none">select * from db_gold.gold_product_sku</textarea>
+							style="resize: none; font-size: large; font-color: black; border: 1px solid #A9A9A9; border-left: 4px solid #A9A9A9; border-radius: 0px; height: 200px; display: none">select * from db_gold.gold_product_sku</textarea>
 
 						<input class="btn btn-success btn-lg" type="submit"
 							style="display: inline-block; vertical-align: top; height: 200px; width: 80px"
 							value="Fire" />
 					</form>
-					<button style="display: inline-block" onclick="editQuery();">Toggle
-						Edit</button>
+
+					<div style="width: 600px; height: 50px; padding: 1em;">
+
+						<label class="switch" style="float: right; display: inline"><input
+							type="checkbox" onclick="editQuery()">
+							<div class="slider round"></div> </label>
+						<div style="display: inline; width: 500px; height: 50px;">
+							<h5 style='float: right; margin-top: 6px; margin-right: 4px;'>Edit
+								Query</h5>
+						</div>
+					</div>
 				</div>
 
 			</div>
