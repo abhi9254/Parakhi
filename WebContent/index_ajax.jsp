@@ -41,7 +41,7 @@
 		StringBuilder s = new StringBuilder("");
 		StringBuilder all = new StringBuilder("");
 		s.append(
-				"<select id='columns' class='chosen-select'  data-placeholder='Select columns' style='min-width:180px' multiple tabindex='4'>");
+				"<select id='columns' name='columns' class='chosen-select column'  data-placeholder='Select columns' style='min-width:180px' multiple tabindex='4'>");
 		//	s.append("<option value='' selected disabled>Select columns</option>");
 		if (cols.size() != 0) {
 

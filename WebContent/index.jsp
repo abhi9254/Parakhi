@@ -179,36 +179,59 @@ input:checked+.slider:before {
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/chosen.jquery.min.js" type="text/javascript"></script>
 <script>
-	function dothat() {
+
+	function refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text) {
 		$(document).ready(function() {
 			$(".chosen-select").chosen();
-			$('button').click(function() {
-				$(".chosen-select").val('').trigger("chosen:updated");
-			});
-
-			var q = document.getElementById('query_text').value;
-			var q2 = document.getElementById('query_text').value;
+		
 			$('#tables').on('change', function(evt, params) {
 				var selected = $(this).val();
-				var up_q = q.replace(' $db.$tableA ', " " + selected + " ");
-				document.getElementById('query_text').value = up_q;
-				q2 = up_q;
-				dotheotherone(selected, up_q)
+				up_base_text = base_text.replace(' $db.$tableA ', " " + selected + " ");
+				document.getElementById('query_text').value = up_base_text;
+				update_col_selectors(base_query,base_text,selected,up_base_text,up_cols_text);
 			});
-
+			
 			$('#columns').on('change', function(evt, params) {
-
-				var cols = $(this).val();
-				var up_q2 = q2.replace(' $tableA.$cols ', " " + cols + " ");
-				document.getElementById('query_text').value = up_q2;
-
+				var selected = $(this).val();
+				up_cols_text = up_base_text.replace(/[$]tableA.[$]cols/g, selected);
+				var mid_text = up_cols_text;
+				var total = $('.column').length;
+			//	for(i=1; i<total; i++){
+			//		if($('#column_'+i).val()!=null)
+			//			$('#column_'+i).val(null).trigger('chosen:updated');
+			//	}
+				for(i=1; i<total; i++){
+					if($('#column_'+i).val()!='')
+						mid_text=	mid_text.replace('$tableA.$col'+i, $('#column_'+i).val());
+				}
+		
+			
+				document.getElementById('query_text').value = mid_text;
+				refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
 			});
+			$('.column').on('change', function(evt, params) {
+				
+				var selected = $(this).val();
+				var select_id = $(this).prop('id').charAt(7);
+				var total = $('.column').length;
+				var final_text = up_cols_text;
+				if(select_id!=''){
+					for(i=1; i<total; i++){
+						if($('#column_'+i).val()!=null)
+						final_text=	final_text.replace('$tableA.$col'+i, $('#column_'+i).val());
+					}
+					document.getElementById('query_text').value = final_text;
+			//	refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
+				}
+			});
+			
 		});
-
 	}
-
-	function dotheotherone(selected, up_q) {
-
+			
+	function update_col_selectors(base_query,base_text,selected,up_base_text,up_cols_text){
+		up_base_query= base_query.replace("value='' selected","value=''");
+		up_base_query= up_base_query.replace("value='"+selected+"'","value='"+selected+"' selected");
+		
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax.jsp?col_nms=1" + "&selected=" + selected,
 				true)
@@ -216,17 +239,22 @@ input:checked+.slider:before {
 		x.onreadystatechange = function() {
 			if (x.readyState == 4) {
 				var cols_list = x.responseText;
-				//var final_q = up_q.replace('$tableA.$cols',cols_list);alert(final_q)
-				var p = document.getElementById("makeQuery").innerHTML;
 				var tbl_ptrn = /[$]tableA.[$]col./g;
-				var q = p.replace(tbl_ptrn, cols_list);
-				document.getElementById("makeQuery").innerHTML = q;
-				//.replace('$tableA.$cols', cols_list);
-				dothat();
-			}
-		}
+				up_base_query = up_base_query.replace(/[$]tableA.[$]cols/g, cols_list);
+				cols_list = cols_list.replace(/columns/g,'column');
+				up_base_query = up_base_query.replace(tbl_ptrn,cols_list);
+		
+				var i= 0;
+				while(up_base_query.includes("id='column'")){
+					up_base_query = up_base_query.replace("id='column'","id='column_"+(++i)+"'") ;
+				}
+				
+		$("#makeQuery").html(up_base_query);
+			
+		refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text)
+	}}}
 
-	}
+
 </script>
 <script>
 	function setActiveProj(proj_id, proj_nm) {
@@ -278,22 +306,26 @@ input:checked+.slider:before {
 		document.getElementById("makeQuery").display = 'none';
 		document.getElementById("query_text").innerHTML = ""
 		var str = inpQuery.replace('$empty', '\'\'')
-		if (projId == '')
-			projId = 0
 
 		document.getElementById("setQuery").value = str
 		document.getElementById("query_text").value = str
-		var x = new XMLHttpRequest()
-		x.open("GET", "index_ajax.jsp?inpQuery=" + inpQuery + "&projId="
-				+ projId, true)
-		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				document.getElementById("makeQuery").innerHTML = x.responseText;
-				dothat();
-				document.getElementById("makeQuery").display = 'inline';
+
+		if (projId != '') {
+			var x = new XMLHttpRequest()
+			x.open("GET", "index_ajax.jsp?inpQuery=" + inpQuery + "&projId="
+					+ projId, true)
+			x.send(null)
+			x.onreadystatechange = function() {
+				if (x.readyState == 4) {
+					document.getElementById("makeQuery").innerHTML = x.responseText;
+					refresh_selectors(x.responseText,str,x.responseText,str,'');
+
+				}
 			}
-		}
+		} else
+			document.getElementById("makeQuery").innerHTML = str;
+
+		document.getElementById("makeQuery").display = 'inline';
 	}
 
 	function setQueryTblVal(db_nm, tbl_nm, tbl_nm_id, col_id, proj_id) {
@@ -577,8 +609,7 @@ input:checked+.slider:before {
 						%>
 						<li class="ver_li" title="<%=c[2]%>"><a
 							class="ver_li inactive" href="#"
-							onclick="enterQuery('<%=c[3]%>','<%=active_proj%>')"
-							style="font-size: large"><%=c[1]%></a></li>
+							onclick="enterQuery('<%=c[3]%>','')" style="font-size: large"><%=c[1]%></a></li>
 
 						<%
 							}
