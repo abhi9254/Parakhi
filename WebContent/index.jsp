@@ -305,14 +305,15 @@ input:checked+.slider:before {
 	function enterQuery(inpQuery, projId) {
 		document.getElementById("makeQuery").display = 'none';
 		document.getElementById("query_text").innerHTML = ""
-		var str = inpQuery.replace('$empty', '\'\'')
+		
+		var str = inpQuery.replace(/\[quot\]/g,'\'')
 
 		document.getElementById("setQuery").value = str
 		document.getElementById("query_text").value = str
 
 		if (projId != '') {
 			var x = new XMLHttpRequest()
-			x.open("GET", "index_ajax.jsp?inpQuery=" + inpQuery + "&projId="
+			x.open("GET", "index_ajax.jsp?inpQuery=" + str + "&projId="
 					+ projId, true)
 			x.send(null)
 			x.onreadystatechange = function() {
