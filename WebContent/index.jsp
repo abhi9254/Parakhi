@@ -174,64 +174,158 @@ input:checked+.slider:before {
 .slider.round:before {
 	border-radius: 50%;
 }
+
+div.tab {
+	float: left;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	width: 20%;
+	height: 500px;
+}
+
+/* Style the buttons inside the tab */
+div.tab button {
+	display: block;
+	background-color: inherit;
+	color: black;
+	padding: 22px 16px;
+	width: 100%;
+	outline: none;
+	text-align: left;
+	cursor: pointer;
+	transition: 0.3s;
+	font-size: 17px;
+	height: 250px;
+	border-style: solid;
+	border-width: 0px;
+	border-right-width: 3px;
+	border-right-color: grey;
+}
+
+/* Change background color of buttons on hover */
+div.tab button:hover {
+	background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+div.tab button.active {
+	background-color: #ccc;
+	border-right-color: #1eada5;
+}
+
+/* Style the tab content */
+.tabcontent {
+	float: left;
+	padding: 0px 12px;
+	border: 1px solid #ccc;
+	width: 80%;
+	border-left: none;
+	height: 500px;
+	background-color: white;
+}
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/chosen.jquery.min.js" type="text/javascript"></script>
 <script>
+	function refresh_selectors(base_query, base_text, up_base_query,
+			up_base_text, up_cols_text) {
+		$(document)
+				.ready(
+						function() {
+							$(".chosen-select").chosen();
 
-	function refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text) {
-		$(document).ready(function() {
-			$(".chosen-select").chosen();
-		
-			$('#tables').on('change', function(evt, params) {
-				var selected = $(this).val();
-				up_base_text = base_text.replace(' $db.$tableA ', " " + selected + " ");
-				document.getElementById('query_text').value = up_base_text;
-				update_col_selectors(base_query,base_text,selected,up_base_text,up_cols_text);
-			});
-			
-			$('#columns').on('change', function(evt, params) {
-				var selected = $(this).val();
-				up_cols_text = up_base_text.replace(/[$]tableA.[$]cols/g, selected);
-				var mid_text = up_cols_text;
-				var total = $('.column').length;
-			//	for(i=1; i<total; i++){
-			//		if($('#column_'+i).val()!=null)
-			//			$('#column_'+i).val(null).trigger('chosen:updated');
-			//	}
-				for(i=1; i<total; i++){
-					if($('#column_'+i).val()!='')
-						mid_text=	mid_text.replace('$tableA.$col'+i, $('#column_'+i).val());
-				}
-		
-			
-				document.getElementById('query_text').value = mid_text;
-				refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
-			});
-			$('.column').on('change', function(evt, params) {
-				
-				var selected = $(this).val();
-				var select_id = $(this).prop('id').charAt(7);
-				var total = $('.column').length;
-				var final_text = up_cols_text;
-				if(select_id!=''){
-					for(i=1; i<total; i++){
-						if($('#column_'+i).val()!=null)
-						final_text=	final_text.replace('$tableA.$col'+i, $('#column_'+i).val());
-					}
-					document.getElementById('query_text').value = final_text;
-			//	refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
-				}
-			});
-			
-		});
+							$('#tables')
+									.on(
+											'change',
+											function(evt, params) {
+												var selected = $(this).val();
+												up_base_text = base_text
+														.replace(
+																' $db.$tableA ',
+																" " + selected
+																		+ " ");
+												document
+														.getElementById('query_text').value = up_base_text;
+												update_col_selectors(
+														base_query, base_text,
+														selected, up_base_text,
+														up_cols_text);
+											});
+
+							$('#columns')
+									.on(
+											'change',
+											function(evt, params) {
+												var selected = $(this).val();
+												up_cols_text = up_base_text
+														.replace(
+																/[$]tableA.[$]cols/g,
+																selected);
+												var mid_text = up_cols_text;
+												var total = $('.column').length;
+												//	for(i=1; i<total; i++){
+												//		if($('#column_'+i).val()!=null)
+												//			$('#column_'+i).val(null).trigger('chosen:updated');
+												//	}
+												for (i = 1; i < total; i++) {
+													if ($('#column_' + i).val() != '')
+														mid_text = mid_text
+																.replace(
+																		'$tableA.$col'
+																				+ i,
+																		$(
+																				'#column_'
+																						+ i)
+																				.val());
+												}
+
+												document
+														.getElementById('query_text').value = mid_text;
+												refresh_selectors(base_query,
+														base_text,
+														up_base_query,
+														up_base_text,
+														up_cols_text);
+											});
+							$('.column')
+									.on(
+											'change',
+											function(evt, params) {
+
+												var selected = $(this).val();
+												var select_id = $(this).prop(
+														'id').charAt(7);
+												var total = $('.column').length;
+												var final_text = up_cols_text;
+												if (select_id != '') {
+													for (i = 1; i < total; i++) {
+														if ($('#column_' + i)
+																.val() != null)
+															final_text = final_text
+																	.replace(
+																			'$tableA.$col'
+																					+ i,
+																			$(
+																					'#column_'
+																							+ i)
+																					.val());
+													}
+													document
+															.getElementById('query_text').value = final_text;
+													//	refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
+												}
+											});
+
+						});
 	}
-			
-	function update_col_selectors(base_query,base_text,selected,up_base_text,up_cols_text){
-		up_base_query= base_query.replace("value='' selected","value=''");
-		up_base_query= up_base_query.replace("value='"+selected+"'","value='"+selected+"' selected");
-		
+
+	function update_col_selectors(base_query, base_text, selected,
+			up_base_text, up_cols_text) {
+		up_base_query = base_query.replace("value='' selected", "value=''");
+		up_base_query = up_base_query.replace("value='" + selected + "'",
+				"value='" + selected + "' selected");
+
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax.jsp?col_nms=1" + "&selected=" + selected,
 				true)
@@ -240,21 +334,24 @@ input:checked+.slider:before {
 			if (x.readyState == 4) {
 				var cols_list = x.responseText;
 				var tbl_ptrn = /[$]tableA.[$]col./g;
-				up_base_query = up_base_query.replace(/[$]tableA.[$]cols/g, cols_list);
-				cols_list = cols_list.replace(/columns/g,'column');
-				up_base_query = up_base_query.replace(tbl_ptrn,cols_list);
-		
-				var i= 0;
-				while(up_base_query.includes("id='column'")){
-					up_base_query = up_base_query.replace("id='column'","id='column_"+(++i)+"'") ;
+				up_base_query = up_base_query.replace(/[$]tableA.[$]cols/g,
+						cols_list);
+				cols_list = cols_list.replace(/columns/g, 'column');
+				up_base_query = up_base_query.replace(tbl_ptrn, cols_list);
+
+				var i = 0;
+				while (up_base_query.includes("id='column'")) {
+					up_base_query = up_base_query.replace("id='column'",
+							"id='column_" + (++i) + "'");
 				}
-				
-		$("#makeQuery").html(up_base_query);
-			
-		refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text)
-	}}}
 
+				$("#makeQuery").html(up_base_query);
 
+				refresh_selectors(base_query, base_text, up_base_query,
+						up_base_text, up_cols_text)
+			}
+		}
+	}
 </script>
 <script>
 	function setActiveProj(proj_id, proj_nm) {
@@ -305,8 +402,8 @@ input:checked+.slider:before {
 	function enterQuery(inpQuery, projId) {
 		document.getElementById("makeQuery").display = 'none';
 		document.getElementById("query_text").innerHTML = ""
-		
-		var str = inpQuery.replace(/\[quot\]/g,'\'')
+
+		var str = inpQuery.replace(/\[quot\]/g, '\'')
 
 		document.getElementById("setQuery").value = str
 		document.getElementById("query_text").value = str
@@ -319,7 +416,8 @@ input:checked+.slider:before {
 			x.onreadystatechange = function() {
 				if (x.readyState == 4) {
 					document.getElementById("makeQuery").innerHTML = x.responseText;
-					refresh_selectors(x.responseText,str,x.responseText,str,'');
+					refresh_selectors(x.responseText, str, x.responseText, str,
+							'');
 
 				}
 			}
@@ -471,6 +569,29 @@ input:checked+.slider:before {
 		}
 	}
 </script>
+
+
+<script>
+	function openCity(evt, cityName) {
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className
+					.replace(" active", "");
+		}
+		document.getElementById(cityName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+
+	// Get the element with id="defaultOpen" and click on it
+	document.getElementById("defaultOpen").click();
+</script>
+
+
 </head>
 <body>
 	<input type="text" hidden="hidden" id="setQuery">
@@ -521,6 +642,8 @@ input:checked+.slider:before {
 								class="glyphicon glyphicon-chevron-down"></span></a>
 							<ul class="dropdown-menu">
 								<li><a href="#" data-toggle="modal"
+									data-target="#styledProject">Styled Project</a></li>
+								<li><a href="#" data-toggle="modal"
 									data-target="#onSwitchModal">Switch Project</a></li>
 								<li><a href="#" data-toggle="modal" data-target="#myModal">New
 										Project</a></li>
@@ -566,227 +689,294 @@ input:checked+.slider:before {
 		</header>
 		<!-- end header -->
 
+	</div>
 
 
+	<div class="ver_nav_bar">
+		<input type="text" id="myInput" onkeyup="myFunction()"
+			placeholder="Search...">
 
-		<div class="ver_nav_bar">
-			<input type="text" id="myInput" onkeyup="myFunction()"
-				placeholder="Search...">
+		<ul class="nav nav-tabs">
+			<li class="active" style="width: 50%"><a data-toggle="tab"
+				href="#generic">Generic</a></li>
+			<li style="width: 50%"><a data-toggle="tab" href="#project">Project</a></li>
+		</ul>
+		<div class="tab-content">
+			<div id="generic" class="tab-pane fade in active">
+				<ul class="ver_nav_bar" id="cases_ul">
+					<%
+						MySQL_dao ob = new MySQL_dao();
+						List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
 
-			<ul class="nav nav-tabs">
-				<li class="active" style="width: 50%"><a data-toggle="tab"
-					href="#generic">Generic</a></li>
-				<li style="width: 50%"><a data-toggle="tab" href="#project">Project</a></li>
-			</ul>
-			<div class="tab-content">
-				<div id="generic" class="tab-pane fade in active">
-					<ul class="ver_nav_bar" id="cases_ul">
-						<%
-							MySQL_dao ob = new MySQL_dao();
-							List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
+						for (String[] c : cases) {
+					%>
+					<li class="ver_li" title="<%=c[2]%>"><a
+						class="ver_li inactive" href="#"
+						onclick="enterQuery('<%=c[3]%>','0')" style="font-size: large"><%=c[1]%></a></li>
 
-							for (String[] c : cases) {
-						%>
-						<li class="ver_li" title="<%=c[2]%>"><a
-							class="ver_li inactive" href="#"
-							onclick="enterQuery('<%=c[3]%>','0')" style="font-size: large"><%=c[1]%></a></li>
+					<%
+						}
+					%>
 
-						<%
-							}
-						%>
-
-					</ul>
-				</div>
-
-				<div id="project" class="tab-pane fade">
-					<ul class="ver_nav_bar" id="proj_cases_ul">
-						<%
-							if (request.getSession().getAttribute("proj_id") != null) {
-								int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
-
-								List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
-
-								for (String[] c : proj_cases) {
-						%>
-						<li class="ver_li" title="<%=c[2]%>"><a
-							class="ver_li inactive" href="#"
-							onclick="enterQuery('<%=c[3]%>','')" style="font-size: large"><%=c[1]%></a></li>
-
-						<%
-							}
-							}
-						%>
-					</ul>
-				</div>
-
+				</ul>
 			</div>
+
+			<div id="project" class="tab-pane fade">
+				<ul class="ver_nav_bar" id="proj_cases_ul">
+					<%
+						if (request.getSession().getAttribute("proj_id") != null) {
+							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+
+							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+
+							for (String[] c : proj_cases) {
+					%>
+					<li class="ver_li" title="<%=c[2]%>"><a
+						class="ver_li inactive" href="#"
+						onclick="enterQuery('<%=c[3]%>','')" style="font-size: large"><%=c[1]%></a></li>
+
+					<%
+						}
+						}
+					%>
+				</ul>
+			</div>
+
 		</div>
-		<div id='clipboard'
-			style="border: 1px solid black; float: right; height: 500px; width: 200px">Clipboard</div>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-2"></div>
-				<div class="col-md-6">
-					<form action="Query" method="post"
-						style="margin-top: 10px; height: 200px">
-						<div class="panel" id="main_panel"
-							style="height: 200px; width: 600px; display: inline-block">
-							<div id="makeQuery" class="panel panel-body"
-								style="font-size: large; height: 200px; width: 600px; display: inline-block; border-width: 1px 1px 1px 4px; border-color: #A9A9A9; border-radius: 0px"></div>
+	</div>
+	<div id='clipboard'
+		style="border: 1px solid black; float: right; height: 500px; width: 200px">Clipboard</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-6">
+				<form action="Query" method="post"
+					style="margin-top: 10px; height: 200px">
+					<div class="panel" id="main_panel"
+						style="height: 200px; width: 600px; display: inline-block">
+						<div id="makeQuery" class="panel panel-body"
+							style="font-size: large; height: 200px; width: 600px; display: inline-block; border-width: 1px 1px 1px 4px; border-color: #A9A9A9; border-radius: 0px"></div>
 
-						</div>
-
-
-						<textarea name="query_text" id="query_text" cols="100" rows="5"
-							style="resize: none; font-size: large; font-color: black; border: 1px solid #A9A9A9; border-left: 4px solid #A9A9A9; border-radius: 0px; height: 200px; display: none">select * from db_gold.gold_product_sku</textarea>
-
-						<input class="btn btn-success btn-lg" type="submit"
-							style="display: inline-block; vertical-align: top; height: 200px; width: 80px"
-							value="Fire" />
-					</form>
-
-					<div style="width: 600px; height: 50px; padding: 1em;">
-
-						<label class="switch" style="float: right; display: inline"><input
-							type="checkbox" onclick="editQuery()">
-							<div class="slider round"></div> </label>
-						<div style="display: inline; width: 500px; height: 50px;">
-							<h5 style='float: right; margin-top: 6px; margin-right: 4px;'>Edit
-								Query</h5>
-						</div>
 					</div>
-				</div>
-
-			</div>
-		</div>
 
 
-		<div class="modal fade" id="onSwitchModal" role="dialog"
-			style="display: none; margin-top: 60px;">
-			<div class="modal-heading"
-				style="text-align: center; background-color: #026c94">
-				<h1 style="color: white">Existing Projects</h1>
-			</div>
-			<div class="modal-dialog">
-				<div class="modal-content" style="background-color: #026c94">
+					<textarea name="query_text" id="query_text" cols="100" rows="5"
+						style="resize: none; font-size: large; font-color: black; border: 1px solid #A9A9A9; border-left: 4px solid #A9A9A9; border-radius: 0px; height: 200px; display: none">select * from db_gold.gold_product_sku</textarea>
 
-					<div class="modal-body">
-						<%
-							List<String[]> projs = new ArrayList<String[]>(ob.getProjects());
+					<input class="btn btn-success btn-lg" type="submit"
+						style="display: inline-block; vertical-align: top; height: 200px; width: 80px"
+						value="Fire" />
+				</form>
 
-							for (String[] p : projs) {
-						%>
+				<div style="width: 600px; height: 50px; padding: 1em;">
 
-						<h4>
-							<a title="<%=p[2]%>" href="index.jsp?q=<%=p[0]%>"
-								style="color: white"
-								onclick="setActiveProj('<%=p[0]%>','<%=p[1]%>')"><%=p[1]%></a>
-						</h4>
-						<%
-							}
-						%>
+					<label class="switch" style="float: right; display: inline"><input
+						type="checkbox" onclick="editQuery()">
+						<div class="slider round"></div> </label>
+					<div style="display: inline; width: 500px; height: 50px;">
+						<h5 style='float: right; margin-top: 6px; margin-right: 4px;'>Edit
+							Query</h5>
 					</div>
 				</div>
 			</div>
 
 		</div>
-		<div class="modal fade" id="myModal" role="dialog">
-			<div class="modal-dialog modal-lg">
+	</div>
 
-				<!-- Modal content-->
-				<div class="panel panel-primary">
-					<div class="panel panel-heading">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title" style="color: white">New Project</h4>
-					</div>
-					<div class="modal-body">
 
-						<div class="panel panel-body">
-							<ul class="nav nav-tabs" style="border-bottom: none;">
-								<li class="active" style="background-color: white; padding: 0px"><a
-									data-toggle="tab" href="#google" onclick="hideDiv('excel')"
-									style="color: black; background-color: white">Google sheet</a></li>
-								<li style="background-color: white; padding: 0px"><a
-									data-toggle="tab" href="#excel" onclick="hideDiv('google')"
-									style="color: black; background-color: white">Excel</a></li>
-							</ul>
-							<div class="tab-content">
-								<div class="panel panel-primary" style="height: 400px">
-									<div class="tab-pane fade in active" id="google"
-										style="background-color: white; width: 100%;">
-										<form action="CreateProject" method='post'>
-											<input type="text" name="pid" placeholder="Project id"
-												class="form-control"
-												style="width: 19%; display: inline-block" /> <input
-												type="text" name="pname" placeholder="Project name"
-												class="form-control"
-												style="width: 80%; display: inline-block" /> <br> <br>
-											<textarea name="pdesc" style="resize: none" rows="5"
-												placeholder="Project Description" class="form-control"></textarea>
-											<br> <input type="text" name="testSheet_url"
-												id="testSheet_url" placeholder="Test Sheet url"
-												class="form-control"
-												style="width: 90%; display: inline-block" /><input
-												type="button" class="btn" style="color: black"
-												value="Inspect" onclick="fetchSheetDetails('testSheet')" />
-											<br>
-											<div id="testSheet_name"></div>
-											<br> <input type="text" name="stm_url" id="stm_url"
-												placeholder="STM url" class="form-control"
-												style="width: 90%; display: inline-block" /> <input
-												type="button" class="btn" style="color: black"
-												value="Inspect" onclick="fetchSheetDetails('stm')" /> <br>
-											<div id="stm_name"></div>
-											<br> <input type="submit" class="btn btn-primary"
-												value="Create Project">
-											<button type="button" class="btn btn-default"
-												data-dismiss="modal">Cancel</button>
+	<div class="modal fade" id="onSwitchModal" role="dialog"
+		style="display: none; margin-top: 60px;">
+		<div class="modal-heading"
+			style="text-align: center; background-color: #026c94">
+			<h1 style="color: white">Existing Projects</h1>
+		</div>
+		<div class="modal-dialog">
+			<div class="modal-content" style="background-color: #026c94">
 
-										</form>
-									</div>
-									<div id="excel" class="tab-pane fade"
-										style="background-color: white; width: 100%; display: none">
-										<form action="#" method='post'>
-											<input type="text" name="pid" placeholder="Project id"
-												class="form-control"
-												style="width: 19%; display: inline-block" /> <input
-												type="text" name="pname" placeholder="Project name"
-												class="form-control"
-												style="width: 80%; display: inline-block" /> <br> <br>
-											<textarea name="pdesc" style="resize: none" rows="5"
-												placeholder="Project Description" class="form-control"></textarea>
-											<br> <input type="text" name="testSheet_file"
-												id="testSheet_file" placeholder="Test Sheet file (.xls)"
-												class="form-control"
-												style="width: 90%; display: inline-block" /><input
-												type="button" class="btn" style="color: black"
-												value="Browse" /> <br>
-											<div id="testSheet_name"></div>
-											<br> <input type="text" name="stm_file" id="stm_file"
-												placeholder="STM file (.xls)" class="form-control"
-												style="width: 90%; display: inline-block" /> <input
-												type="button" class="btn" style="color: black"
-												value="Browse" /> <br> <br> <input type="submit"
-												class="btn btn-primary" value="Create Project">
-											<button type="button" class="btn btn-default"
-												data-dismiss="modal">Cancel</button>
-										</form>
+				<div class="modal-body">
+					<%
+						List<String[]> projs = new ArrayList<String[]>(ob.getProjects());
 
-									</div>
+						for (String[] p : projs) {
+					%>
+
+					<h4>
+						<a title="<%=p[2]%>" href="index.jsp?q=<%=p[0]%>"
+							style="color: white"
+							onclick="setActiveProj('<%=p[0]%>','<%=p[1]%>')"><%=p[1]%></a>
+					</h4>
+					<%
+						}
+					%>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="panel panel-primary">
+				<div class="panel panel-heading">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" style="color: white">New Project</h4>
+				</div>
+				<div class="modal-body">
+
+					<div class="panel panel-body">
+						<ul class="nav nav-tabs" style="border-bottom: none;">
+							<li class="active" style="background-color: white; padding: 0px"><a
+								data-toggle="tab" href="#google" onclick="hideDiv('excel')"
+								style="color: black; background-color: white">Google sheet</a></li>
+							<li style="background-color: white; padding: 0px"><a
+								data-toggle="tab" href="#excel" onclick="hideDiv('google')"
+								style="color: black; background-color: white">Excel</a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="panel panel-primary" style="height: 400px">
+								<div class="tab-pane fade in active" id="google"
+									style="background-color: white; width: 100%;">
+									<form action="CreateProject" method='post'>
+										<input type="text" name="pid" placeholder="Project id"
+											class="form-control"
+											style="width: 19%; display: inline-block" /> <input
+											type="text" name="pname" placeholder="Project name"
+											class="form-control"
+											style="width: 80%; display: inline-block" /> <br> <br>
+										<textarea name="pdesc" style="resize: none" rows="5"
+											placeholder="Project Description" class="form-control"></textarea>
+										<br> <input type="text" name="testSheet_url"
+											id="testSheet_url" placeholder="Test Sheet url"
+											class="form-control"
+											style="width: 90%; display: inline-block" /><input
+											type="button" class="btn" style="color: black"
+											value="Inspect" onclick="fetchSheetDetails('testSheet')" />
+										<br>
+										<div id="testSheet_name"></div>
+										<br> <input type="text" name="stm_url" id="stm_url"
+											placeholder="STM url" class="form-control"
+											style="width: 90%; display: inline-block" /> <input
+											type="button" class="btn" style="color: black"
+											value="Inspect" onclick="fetchSheetDetails('stm')" /> <br>
+										<div id="stm_name"></div>
+										<br> <input type="submit" class="btn btn-primary"
+											value="Create Project">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">Cancel</button>
+
+									</form>
 								</div>
+								<div id="excel" class="tab-pane fade"
+									style="background-color: white; width: 100%; display: none">
+									<form action="#" method='post'>
+										<input type="text" name="pid" placeholder="Project id"
+											class="form-control"
+											style="width: 19%; display: inline-block" /> <input
+											type="text" name="pname" placeholder="Project name"
+											class="form-control"
+											style="width: 80%; display: inline-block" /> <br> <br>
+										<textarea name="pdesc" style="resize: none" rows="5"
+											placeholder="Project Description" class="form-control"></textarea>
+										<br> <input type="text" name="testSheet_file"
+											id="testSheet_file" placeholder="Test Sheet file (.xls)"
+											class="form-control"
+											style="width: 90%; display: inline-block" /><input
+											type="button" class="btn" style="color: black" value="Browse" />
+										<br>
+										<div id="testSheet_name"></div>
+										<br> <input type="text" name="stm_file" id="stm_file"
+											placeholder="STM file (.xls)" class="form-control"
+											style="width: 90%; display: inline-block" /> <input
+											type="button" class="btn" style="color: black" value="Browse" />
+										<br> <br> <input type="submit"
+											class="btn btn-primary" value="Create Project">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">Cancel</button>
+									</form>
 
+								</div>
 							</div>
+
 						</div>
 					</div>
-					<!--		<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-			-->
 				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="styledProject" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="tab">
+				<button class="tablinks active" onclick="openCity(event, 'New')"
+					id="defaultOpen">New project</button>
+				<button class="tablinks" onclick="openCity(event, 'Existing')">Existing project</button>
+
+			</div>
+
+			<div id="New" class="tabcontent">
+				<h3>New project</h3>
+				<br>
+				<form action="#" method='post'>
+					<input type="text" name="pid" placeholder="Project id"
+						class="form-control" style="width: 18.5%; display: inline-block" />&nbsp;
+					<input type="text" name="pname" placeholder="Project name"
+						class="form-control" style="width: 80%; display: inline-block" />
+					<br> <br>
+					<textarea name="pdesc" style="resize: none" rows="1"
+						placeholder="Project Description" class="form-control"></textarea>
+					<br>
+					<h5>Project files</h5>
+					<input class="radio-inline" type="radio" name="filesType">&nbsp;Excel
+					<input class="radio-inline" type="radio" name="filesType" checked>&nbsp;Google
+					Sheet <br><br>
+					<input type="text" name="testSheet_file" id="testSheet_file"
+						placeholder="Test Sheet file (.xls)" class="form-control"
+						style="width: 80%; display: inline-block" />&nbsp;&nbsp;<input
+						type="button" class="btn" style="color: black" value="Browse" />
+					<br>
+					<div id="testSheet_name"></div>
+					<br> <input type="text" name="stm_file" id="stm_file"
+						placeholder="STM file (.xls)" class="form-control"
+						style="width: 80%; display: inline-block" />&nbsp; <input
+						type="button" class="btn" style="color: black" value="Browse" />
+					<br> <br> <br> <input type="submit"
+						class="btn btn-primary" value="Create Project">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</form>
+
+			</div>
+
+			<div id="Existing" class="tabcontent" style="display: none;">
+				<h3>Existing projects</h3>
+				<br>
+
+				<%
+					//	List<String[]> projs = new ArrayList<String[]>(ob.getProjects());
+
+					for (String[] p : projs) {
+				%>
+
+				<h4>
+					<a title="<%=p[2]%>" href="index.jsp" style="color: grey"
+						onclick="setActiveProj('<%=p[0]%>','<%=p[1]%>')"><%=p[1]%></a>
+				</h4>
+				<%
+					}
+				%>
 
 			</div>
 		</div>
 	</div>
+
+
+
 	<div class="modal fade" id="myModal2" role="dialog">
 		<div class="modal-dialog modal-lg">
 
@@ -824,11 +1014,12 @@ input:checked+.slider:before {
 							style="width: 15%; display: inline" /> <input type="text"
 							class="form-control" placeholder="End"
 							style="width: 15%; display: inline" /><br> <br> <input
-							type="checkbox" name='p_exec' value="p_exec" style="float: left">
-						&nbsp;Parallel Exec <br> <input type="checkbox"
-							name='write_once' value="write_once" style="float: left"
-							checked='true'> &nbsp;Post write<br> <br> <input
-							type="submit" value="Rerun" class="btn btn-info"> <br>
+							class="checkbox-inline" type="checkbox" name='p_exec'
+							value="p_exec"> &nbsp;Parallel Exec <input
+							class="checkbox-inline" type="checkbox" name='write_once'
+							value="write_once" checked='true'> &nbsp;Post write<br>
+						<br> <input type="submit" value="Rerun" class="btn btn-info">
+						<br>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -847,6 +1038,5 @@ input:checked+.slider:before {
 	<script src="template_files/classie.js"></script>
 	<script src="template_files/animate.js"></script>
 	<script src="template_files/custom.js"></script>
-
 </body>
 </html>
