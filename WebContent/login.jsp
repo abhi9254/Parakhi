@@ -10,7 +10,8 @@
 <body>
 	<form action="Login" method="post"
 		style="position: fixed; width: 50%; margin-left: 25%; margin-top: 10%">
-		<pre style="width: 300px">
+		<img src="res/images/parrot.jpg" alt="Grey parrot" style="width:300px;height:200px;opacity: 0.5;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.5';">
+		<pre style="width: 300px;background-color: gainsboro;">
   __  
  |__)    
  |  ARAKHI   <i>alpha</i>
