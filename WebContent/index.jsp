@@ -918,6 +918,7 @@ div.tab button.active {
 			<div class="tab">
 				<button class="tablinks active" onclick="openCity(event, 'New')"
 					id="defaultOpen">New project</button>
+
 				<button class="tablinks" onclick="openCity(event, 'Existing')">Existing
 					project</button>
 
@@ -938,12 +939,12 @@ div.tab button.active {
 					<h5>Project files</h5>
 					<input class="radio-inline" type="radio" name="filesType">&nbsp;Excel
 					<input class="radio-inline" type="radio" name="filesType" checked>&nbsp;Google
-					Sheet <br>
-					<br> <input type="text" name="testSheet_file"
+
+					Sheet <br> <br> <input type="text" name="testSheet_file"
 						id="testSheet_file" placeholder="Test Sheet file (.xls)"
-						class="form-control" style="width: 80%; display: inline-block" />&nbsp;&nbsp;<input
-						type="button" class="btn" style="color: black" value="Browse" />
-					<br>
+						class="form-control" style="width: 80%; display: inline-block" />&nbsp;&nbsp;
+					<input type="button" class="btn" style="color: black"
+						value="Browse" /> <br>
 					<div id="testSheet_name"></div>
 					<br> <input type="text" name="stm_file" id="stm_file"
 						placeholder="STM file (.xls)" class="form-control"
@@ -956,7 +957,10 @@ div.tab button.active {
 
 			</div>
 
-			<div id="Existing" class="tabcontent" style="display: none;position: relative;">
+
+			<div id="Existing" class="tabcontent"
+				style="display: none; position: relative;">
+
 				<h3>Existing projects</h3>
 				<br>
 
@@ -966,6 +970,8 @@ div.tab button.active {
 					for (String[] p : projs) {
 				%>
 
+
+
 				<h4>
 					<a title="<%=p[2]%>" href="index.jsp" style="color: grey"
 						onclick="setActiveProj('<%=p[0]%>','<%=p[1]%>')"><%=p[1]%></a>
@@ -973,7 +979,8 @@ div.tab button.active {
 				<%
 					}
 				%>
-				<button type="button" class="btn btn-default" data-dismiss="modal" style="position: absolute; bottom:20px">Cancel</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"
+					style="position: absolute; bottom: 20px">Cancel</button>
 			</div>
 		</div>
 	</div>
