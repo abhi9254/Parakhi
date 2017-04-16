@@ -119,6 +119,12 @@ target_data_typ VARCHAR(100),
 comment VARCHAR(300));
 
 
+insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','1','db_gold','gold_cust_sales_trans_dtls','demand_dt','String','Direct Mapping','db_insight','insight_monetization_all_transaction','Trans_Date','String','Demand_date format is yyyy-mm-dd');
+insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','2','db_gold','gold_dfp_denorm','advertiser_id','int','Direct Mapping','db_insight','insight_monetization_all_transaction','dfp_advertiser_ID','int','Max (advertiser_iD) based on DFP_vendor_nm link');
+insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','3','db_gold','gold_dfp_denorm','company_name','String','Direct Mapping','db_insight','insight_monetization_all_transaction','dfp_advertiser_nm','String','Advertiser_nm associated with Advertiser_id');
+
+
+
 
 ////-------MYTESTSHEETS
 
