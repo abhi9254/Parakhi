@@ -413,7 +413,7 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "select DISTINCT CONCAT(source_db_nm,'.',source_tbl_nm,' ',source_col_nm) from parakhi.mystms where CONCAT(TRIM(target_db_nm),'.',TRIM(target_tbl_nm)) = '"
+			String query = "select DISTINCT CONCAT(source_db_nm,'.',source_tbl_nm,' ',source_col_nm,'|',target_col_nm) from parakhi.mystms where CONCAT(TRIM(target_db_nm),'.',TRIM(target_tbl_nm)) = '"
 					+ tbl_nm + "'";
 			// System.out.println(query);
 			ResultSet resultSet = statement.executeQuery(query);

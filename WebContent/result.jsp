@@ -97,6 +97,7 @@
 
 		//alert(headers);
 
+		// create trace forms for all source tables
 		var tbl_nms_text = document.getElementById("src_db_nms").innerHTML;
 		var tbl_nms = tbl_nms_text.split(',');
 		var tbl_arr = [];
@@ -122,7 +123,7 @@
 			}
 
 		}
-		//alert(tbl_arr)
+	//	alert(tbl_arr)
 		var track_creator = '';
 		for (i = 0; i < tbl_arr.length; i++) {
 			track_creator += "<form action='Query' method='post' target='_blank' id='"+tbl_arr[i]+"'><label>"
@@ -133,15 +134,19 @@
 
 		//create checkboxes for only those columns in resultset which are in stm, with a defined source
 		for (h = 0; h < headers.length; h++) {
+			//check the header in each table
+			//alert(tbl_nms)
 			for (i = 0; i < tbl_nms.length; i++) {
 				//alert("in outer loop")
 				var str = tbl_nms[i]
 				//split to get tbl nms from stm
 				var tbl_nm = str.substring(0, str.indexOf(' '))
 				//split to get col nms from stm
+			//	var src_col_nm = str.substring(str.indexOf(' ') + 1,str.indexOf('|'))
+				var tgt_col_nm = str.substring(str.indexOf('|')+1)
 				var col_nm = str.substring(str.indexOf(' ') + 1)
-
-				if (headers[h] == col_nm) {
+				
+				if (headers[h] == tgt_col_nm) {
 					document.getElementById(tbl_nm).innerHTML += "<input type='checkbox' style='display:inline-block' id='checkboxes_"
 							+ tbl_nm
 							+ "' name='cols_"
@@ -149,7 +154,7 @@
 							+ "' value='"
 							+ col_nm
 							+ "' checked='true' onchange=traceCols('"
-							+ tbl_nm + "')></input>" + col_nm;
+							+ tbl_nm + "')></input>" + tgt_col_nm;
 				}
 			}
 		}
@@ -162,17 +167,21 @@
 		for (i = 0; i < tbl_arr.length; i++) {
 			var tbl_nm = tbl_arr[i];
 
-			var checked = [];
+			var checked_tgt_col = [];
+			var checked_src_col = [];
+			
 			var checkboxes;
 			if (tbl_nm != '') {
 				checkboxes = document.getElementsByName('cols_' + tbl_nm);
 				for (c = 0; c < checkboxes.length; c++) {
 					if (checkboxes[c].checked) {
-						checked.push(checkboxes[c].value)
-						//	alert('pushed' + checkboxes[c].value)
+						str= checkboxes[c].value
+						checked_src_col.push(str.substring(0,str.indexOf('|')))
+						checked_tgt_col.push(str.substring(str.indexOf('|')+1))
 					}
 				}
 			}
+			//alert(checked_src_col);alert(checked_tgt_col);
 			var header_row = document.getElementById("row_0").cells;
 			var headers = [];
 			for (e = 1; e < header_row.length - 1; e++)
@@ -186,27 +195,27 @@
 			}
 			var query = "select * from " + tbl_nm;
 
-			if (checked.length != 0) {
+			if (checked_tgt_col.length != 0) {
 
 				for (d = 0; d < data_rows_id.length; d++) {
 					var data_row = document.getElementById(data_rows_id[d]).cells
-					for (h = 0; h < checked.length; h++) {
+					for (h = 0; h < checked_tgt_col.length; h++) {
 						if (h == 0) {
 							for (j = 0; j < headers.length; j++) {
-								if (checked[0] == headers[j]) {
+								if (checked_tgt_col[0] == headers[j]) {
 									if (d == 0)
-										query += " WHERE \n(" + checked[0]
+										query += " WHERE \n(" + checked_src_col[0]
 												+ " = '"
 												+ data_row[j + 1].innerHTML
 												+ "'"
 									else
-										query += "\n(" + checked[0] + " = '"
+										query += "\n(" + checked_src_col[0] + " = '"
 												+ data_row[j + 1].innerHTML
 												+ "'"
-									if (checked.length == 1
+									if (checked_tgt_col.length == 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
-									if (checked.length == 1
+									if (checked_tgt_col.length == 1
 											&& d == data_rows_id.length - 1)
 										query += ")"
 									break;
@@ -215,13 +224,13 @@
 
 						} else {
 							for (j = 0; j < headers.length; j++) {
-								if (checked[h] == headers[j]) {
-									query += " AND " + checked[h] + " = '"
+								if (checked_tgt_col[h] == headers[j]) {
+									query += " AND " + checked_src_col[h] + " = '"
 											+ data_row[j + 1].innerHTML + "'"
-									if (h == checked.length - 1
+									if (h == checked_tgt_col.length - 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
-									if (h == checked.length - 1
+									if (h == checked_tgt_col.length - 1
 											&& d == data_rows_id.length - 1)
 										query += ")"
 									break;
@@ -247,8 +256,9 @@
 
 	function traceCols(tbl_nm) {
 		var checkboxes;
-		var checked = [];
-
+		var checked_tgt_col = [];
+		var checked_src_col = [];
+		
 		//get headers of resultset
 		var header_row = document.getElementById("row_0").cells;
 		var headers = [];
@@ -272,31 +282,32 @@
 			checkboxes = document.getElementsByName('cols_' + tbl_nm);
 			for (c = 0; c < checkboxes.length; c++) {
 				if (checkboxes[c].checked) {
-					checked.push(checkboxes[c].value)
-					//	alert('pushed' + checkboxes[c].value)
+					str= checkboxes[c].value
+					checked_src_col.push(str.substring(0,str.indexOf('|')))
+					checked_tgt_col.push(str.substring(str.indexOf('|')+1))
 				}
 			}
 
-			if (checked.length != 0) {
+			if (checked_tgt_col.length != 0) {
 				for (d = 0; d < data_rows_id.length; d++) {
 					var data_row = document.getElementById(data_rows_id[d]).cells
-					for (h = 0; h < checked.length; h++) {
+					for (h = 0; h < checked_tgt_col.length; h++) {
 						if (h == 0) {
 							for (j = 0; j < headers.length; j++) {
-								if (checked[0] == headers[j]) {
+								if (checked_tgt_col[0] == headers[j]) {
 									if (d == 0)
-										query += " WHERE \n(" + checked[0]
+										query += " WHERE \n(" + checked_src_col[0]
 												+ " = '"
 												+ data_row[j + 1].innerHTML
 												+ "'"
 									else
-										query += "\n(" + checked[0] + " = '"
+										query += "\n(" + checked_src_col[0] + " = '"
 												+ data_row[j + 1].innerHTML
 												+ "'"
-									if (checked.length == 1
+									if (checked_tgt_col.length == 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
-									if (checked.length == 1
+									if (checked_tgt_col.length == 1
 											&& d == data_rows_id.length - 1)
 										query += ")"
 									break;
@@ -305,13 +316,13 @@
 
 						} else {
 							for (j = 0; j < headers.length; j++) {
-								if (checked[h] == headers[j]) {
-									query += " AND " + checked[h] + " = '"
+								if (checked_tgt_col[h] == headers[j]) {
+									query += " AND " + checked_src_col[h] + " = '"
 											+ data_row[j + 1].innerHTML + "'"
-									if (h == checked.length - 1
+									if (h == checked_tgt_col.length - 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
-									if (h == checked.length - 1
+									if (h == checked_tgt_col.length - 1
 											&& d == data_rows_id.length - 1)
 										query += ")"
 									break;

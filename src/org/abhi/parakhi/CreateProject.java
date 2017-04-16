@@ -25,6 +25,8 @@ public class CreateProject extends HttpServlet {
 		String stm_url = request.getParameter("stm_url");
 		String[] selected_ws = request.getParameterValues("ws");
 
+		System.out.println(p_id +":"+ p_name +":   "+ stm_url);
+		
 		Matcher m = p.matcher(stm_url);
 		System.out.println("Worksheets selected");
 		for (String ws : selected_ws)
