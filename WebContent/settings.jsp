@@ -156,7 +156,7 @@
 	</header>
 	<!-- end header -->
 	<div style="margin-left: 10px">
-		<h2>This page is under construction</h2>
+	
 		<br>
 		<h3>Toggle: HiveServer / HiveServer2</h3>
 		<h3>Set parallelism: Current= 2</h3>
