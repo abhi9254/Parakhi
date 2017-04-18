@@ -14,8 +14,7 @@
 <link rel="stylesheet" href="/Parakhi/animate.css" type="text/css">
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css">
-<link rel="stylesheet" href="/Parakhi/css/w3.css"
-	type="text/css">	
+<link rel="stylesheet" href="/Parakhi/css/w3.css" type="text/css">
 <style>
 #myInput {
 	background-image: url('css/search.jpg');
@@ -35,7 +34,7 @@
 function showProjectDetails(proj_id){
 	document.getElementById("tables_list").innerHTML='';
 	var x = new XMLHttpRequest()
-	x.open("GET", "index_ajax2.jsp?proj_id=" + proj_id,
+	x.open("GET", "index_ajax2.jsp?tables=1&proj_id=" + proj_id,
 			true)
 	x.send(null)
 	x.onreadystatechange = function() {
@@ -44,6 +43,25 @@ function showProjectDetails(proj_id){
 		}
 	}
 	
+	var y = new XMLHttpRequest()
+	y.open("GET", "index_ajax2.jsp?testsheets=1&proj_id=" + proj_id,
+			true)
+	y.send(null)
+	y.onreadystatechange = function() {
+		if (y.readyState == 4) {
+			document.getElementById("testsheets_list").innerHTML = y.responseText;
+		}
+	}
+	
+	var z = new XMLHttpRequest()
+	z.open("GET", "index_ajax2.jsp?stmsheets=1&proj_id=" + proj_id,
+			true)
+	z.send(null)
+	z.onreadystatechange = function() {
+		if (z.readyState == 4) {
+			document.getElementById("stmsheets_list").innerHTML = z.responseText;
+		}
+	}
 }
 
 function myFunction(id) {
@@ -51,11 +69,11 @@ function myFunction(id) {
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
         x.previousElementSibling.className = 
-        x.previousElementSibling.className.replace("w3-sand", "w3-grey");
+        x.previousElementSibling.className.replace("w3-sand", "w3-light-grey");
     } else { 
         x.className = x.className.replace(" w3-show", "");
         x.previousElementSibling.className = 
-        x.previousElementSibling.className.replace("w3-grey", "w3-sand");
+        x.previousElementSibling.className.replace("w3-light-grey", "w3-sand");
     }
 }
 
@@ -141,45 +159,39 @@ function myFunction(id) {
 		%>
 	</ul>
 
-	<div style="margin-left: 16%">
+	<div style="margin-left: 15%; padding-top: 0px">
 
-
-		<div id="tables_list"
-			style="width: 40%; padding: 0px; margin: 0px; display: inline-block; float: top"></div>
-
-		<div style="width: 30%; display: inline-block">
-			Columns in gold_product_sku<br> <br>Column,Data
-			type,Source,Source column<br>
-			<%
-				List<String[]> columns = new ArrayList<String[]>(ob.getTbl_Columns("db_gold", "gold_product_sku"));
-				for (int i = 0; i < columns.size(); i++) {
-			%>
-			<p><%=columns.get(i)[0]%>,<%=columns.get(i)[1]%>,<%=columns.get(i)[2]%>,<%=columns.get(i)[3]%></p>
-			<%
-				}
-			%>
+<button onclick="myFunction('Demo0')"
+			class="w3-button w3-block w3-sand w3-left-align">About</button>
+		<div id="Demo0" class="w3-hide">
+			<p>Select project..</p>
 		</div>
 
 		<button onclick="myFunction('Demo1')"
-			class="w3-button w3-block w3-sand w3-left-align">STMs
-			</button>
-		<div id="Demo1" class="w3-hide w3-container">
-			<p>Some text..</p>
+			class="w3-button w3-block w3-sand w3-left-align">STMs</button>
+		<div id="Demo1" class="w3-hide">
+			<div id="stmsheets_list"
+				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+				a project..</div>
 		</div>
 
 		<button onclick="myFunction('Demo2')"
 			class="w3-button w3-block w3-sand w3-left-align">Test Sheets</button>
-		<div id="Demo2" class="w3-hide w3-container">
-			<p>Some other text..</p>
+		<div id="Demo2" class="w3-hide">
+			<div id="testsheets_list"
+				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+				a project..</div>
 		</div>
-		
+
 		<button onclick="myFunction('Demo3')"
 			class="w3-button w3-block w3-sand w3-left-align">Tables</button>
-		<div id="Demo3" class="w3-hide w3-container">
-			<p>Some other text..</p>
+		<div id="Demo3" class="w3-hide">
+			<div id="tables_list"
+				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+				a project..</div>
 		</div>
 
-
+ 
 	</div>
 
 

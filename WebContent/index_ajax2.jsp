@@ -86,13 +86,13 @@
 
 	}
 
-	if (request.getParameter("proj_id") != null) {
+	if (request.getParameter("tables") != null && request.getParameter("proj_id") != null) {
 		int p_id = Integer.parseInt(request.getParameter("proj_id"));
 		MySQL_dao ob = new MySQL_dao();
 		List<String> db_list = new ArrayList<String>(ob.getProjDbNames(p_id));
 
 		for (String db : db_list) {
-			outRes.println(db + "<br>");
+			outRes.println("<b>"+db + "</b><br>");
 			String[] tables = ob.getDbTblNames(Integer.parseInt(request.getParameter("proj_id")), db);
 
 			for (int i = 0; i < tables.length; i++) {
@@ -102,6 +102,27 @@
 		}
 	}
 
+	
+	if (request.getParameter("testsheets") != null && request.getParameter("proj_id") != null) {
+		int p_id = Integer.parseInt(request.getParameter("proj_id"));
+		MySQL_dao ob = new MySQL_dao();
+		List<String[]> ts_list = new ArrayList<String[]>(ob.getTestsheets(p_id));
+
+		for (String[] ts : ts_list) {
+			outRes.println(ts[1] + " <a target='_blank' href='"+ ts[2]+"'>View</a>");
+		}
+	}
+	
+	if (request.getParameter("stmsheets") != null && request.getParameter("proj_id") != null) {
+		int p_id = Integer.parseInt(request.getParameter("proj_id"));
+		MySQL_dao ob = new MySQL_dao();
+		List<String[]> ss_list = new ArrayList<String[]>(ob.getSTMsheets(p_id));
+
+		for (String[] ss : ss_list) {
+			outRes.println(ss[1] + " <a target='_blank' href='"+ ss[2]+"'>View</a>");
+		}
+	}
+	
 	if (request.getParameter("spreadsheet_id") != null && !request.getParameter("spreadsheet_id").equals("")
 			&& request.getParameter("title") != null) {
 		Pattern p = Pattern.compile("spreadsheets/d/.*/");

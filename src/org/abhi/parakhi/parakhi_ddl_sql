@@ -127,6 +127,22 @@ insert into mystms values('test','db_insight.insight_monetization_all_transactio
 
 
 
+////-------MYSTMSHEETS
+
+create table mystmsheets(
+project_id INT,
+project_name VARCHAR(100),
+stm_sheet_id VARCHAR(100),
+stm_sheet_title VARCHAR(200),
+stm_sheet_url VARCHAR(300));
+
+insert into mystmsheets values(100,"Ad Monetization","1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A","My sample STM for Parakhi","https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit#gid=29414504");
+
+
+
+
+
+
 ////-------MYTESTSHEETS
 
 create table mytestsheets(

@@ -64,7 +64,7 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT test_sheet_id,test_sheet_title FROM parakhi.mytestsheets WHERE project_id ="
+			String query = "SELECT DISTINCT test_sheet_id,test_sheet_title,test_sheet_url FROM parakhi.mytestsheets WHERE project_id ="
 					+ p_id;
 			resultSet = statement.executeQuery(query);
 			String[] s;
@@ -72,6 +72,7 @@ public class MySQL_dao {
 				s = new String[3];
 				s[0] = resultSet.getString(1);
 				s[1] = resultSet.getString(2);
+				s[2] = resultSet.getString(3);
 				ts.add(s);
 			}
 		} catch (SQLException e) {
@@ -87,7 +88,38 @@ public class MySQL_dao {
 		}
 		return ts;
 	}
-
+	public List<String[]> getSTMsheets(int p_id) {
+		ResultSet resultSet = null;
+		List<String[]> ss = new ArrayList<String[]>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT stm_sheet_id,stm_sheet_title,stm_sheet_url FROM parakhi.mystmsheets WHERE project_id ="
+					+ p_id;
+			resultSet = statement.executeQuery(query);
+			String[] s;
+			while (resultSet.next()) {
+				s = new String[3];
+				s[0] = resultSet.getString(1);
+				s[1] = resultSet.getString(2);
+				s[2] = resultSet.getString(3);
+				ss.add(s);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ss;
+	}
+	
+	
 	public List<String[]> getCases(int project_id) {
 
 		ResultSet resultSet = null;
