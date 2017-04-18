@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="/Parakhi/animate.css" type="text/css">
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css">
+<link rel="stylesheet" href="/Parakhi/css/w3.css"
+	type="text/css">	
 <style>
 #myInput {
 	background-image: url('css/search.jpg');
@@ -43,6 +45,20 @@ function showProjectDetails(proj_id){
 	}
 	
 }
+
+function myFunction(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        x.previousElementSibling.className = 
+        x.previousElementSibling.className.replace("w3-sand", "w3-grey");
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+        x.previousElementSibling.className = 
+        x.previousElementSibling.className.replace("w3-grey", "w3-sand");
+    }
+}
+
 </script>
 <meta charset="utf-8">
 <title>Parakhi - Making Testing So EASY</title>
@@ -127,9 +143,9 @@ function showProjectDetails(proj_id){
 
 	<div style="margin-left: 16%">
 
-		
+
 		<div id="tables_list"
-			style="width: 40%; padding: 0px; margin: 0px; display: inline-block;float: top"></div>
+			style="width: 40%; padding: 0px; margin: 0px; display: inline-block; float: top"></div>
 
 		<div style="width: 30%; display: inline-block">
 			Columns in gold_product_sku<br> <br>Column,Data
@@ -143,7 +159,30 @@ function showProjectDetails(proj_id){
 				}
 			%>
 		</div>
+
+		<button onclick="myFunction('Demo1')"
+			class="w3-button w3-block w3-sand w3-left-align">STMs
+			</button>
+		<div id="Demo1" class="w3-hide w3-container">
+			<p>Some text..</p>
+		</div>
+
+		<button onclick="myFunction('Demo2')"
+			class="w3-button w3-block w3-sand w3-left-align">Test Sheets</button>
+		<div id="Demo2" class="w3-hide w3-container">
+			<p>Some other text..</p>
+		</div>
+		
+		<button onclick="myFunction('Demo3')"
+			class="w3-button w3-block w3-sand w3-left-align">Tables</button>
+		<div id="Demo3" class="w3-hide w3-container">
+			<p>Some other text..</p>
+		</div>
+
+
 	</div>
+
+
 
 </body>
 

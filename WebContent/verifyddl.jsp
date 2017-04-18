@@ -155,8 +155,7 @@
 					Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
 					Statement stmt = (Statement) con.createStatement();
 
-					String query = "describe " + 
-					"db_gold.gold_product_sku";
+					String query = "describe " + "db_gold.gold_product_sku";
 					//"db_insight.insight_monetization_all_transaction";
 					ResultSet hiveCols = stmt.executeQuery(query);
 					while (hiveCols.next()) {
@@ -181,14 +180,25 @@
 
 				for (int i = 0; i < totalCols - 1; i++) {
 			%>
-<tr><td><%=hiveColumns.get(i)[1] %></td><td><%=hiveColumns.get(i)[2] %></td><td><%=stmColumns.get(i)[1] %></td><td><%=stmColumns.get(i)[2] %></td>
+			<tr>
+				<td><%=hiveColumns.get(i)[1]%></td>
+				<td><%=hiveColumns.get(i)[2]%></td>
+				<td><%=stmColumns.get(i)[1]%></td>
+				<td><%=stmColumns.get(i)[2]%></td>
 
-<%if(hiveColumns.get(i)[1].equals(stmColumns.get(i)[1]) && hiveColumns.get(i)[2].equals(stmColumns.get(i)[2])){ %>
-<td>PASS</td>
-<%}else{ %>
-<td>FAIL</td>
-<%} %>
-</tr>
+				<%
+					if (hiveColumns.get(i)[1].equals(stmColumns.get(i)[1])
+								&& hiveColumns.get(i)[2].equals(stmColumns.get(i)[2])) {
+				%>
+				<td>PASS</td>
+				<%
+					} else {
+				%>
+				<td>FAIL</td>
+				<%
+					}
+				%>
+			</tr>
 			<%
 				}
 			%>

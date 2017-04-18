@@ -180,7 +180,7 @@ div.tab {
 	border: 1px solid #ccc;
 	background-color: #f1f1f1;
 	width: 20%;
-	height: 500px;
+	height: 600px;
 }
 
 /* Style the buttons inside the tab */
@@ -195,7 +195,7 @@ div.tab button {
 	cursor: pointer;
 	transition: 0.3s;
 	font-size: 17px;
-	height: 250px;
+	height: 300px;
 	border-style: solid;
 	border-width: 0px;
 	border-right-width: 3px;
@@ -220,7 +220,7 @@ div.tab button.active {
 	border: 1px solid #ccc;
 	width: 80%;
 	border-left: none;
-	height: 500px;
+	height: 600px;
 	background-color: white;
 }
 </style>
@@ -941,9 +941,26 @@ div.tab button.active {
 					<input class="radio-inline" type="radio" name="filesType">&nbsp;Excel
 					<input class="radio-inline" type="radio" name="filesType" checked>&nbsp;Google
 
-					Sheet <br> <br> <input type="text" name="testSheet_file"
+					Sheet <br> <br>
+
+					<div id="google_selector">
+						<input type="text" name="testSheet_url" id="testSheet_url"
+							placeholder="Test Sheet url" class="form-control"
+							style="width: 80%; display: inline-block" />&nbsp; <input
+							type="button" class="btn" style="color: black" value="Inspect" />
+						<br>
+						<div id="testSheet_name"></div>
+						<br> <input type="text" name="stm_url" id="stm_url"
+							placeholder="STM url" class="form-control"
+							style="width: 80%; display: inline-block" />&nbsp; <input
+							type="button" class="btn" style="color: black" value="Inspect" />
+					</div>
+
+
+					<!-- 		<div id="excel_selector">
+					<input type="text" name="testSheet_file"
 						id="testSheet_file" placeholder="Test Sheet file (.xls)"
-						class="form-control" style="width: 80%; display: inline-block" />&nbsp;&nbsp;
+						class="form-control" style="width: 80%; display: inline-block" />&nbsp;
 					<input type="button" class="btn" style="color: black"
 						value="Browse" /> <br>
 					<div id="testSheet_name"></div>
@@ -951,6 +968,8 @@ div.tab button.active {
 						placeholder="STM file (.xls)" class="form-control"
 						style="width: 80%; display: inline-block" />&nbsp; <input
 						type="button" class="btn" style="color: black" value="Browse" />
+						</div>
+			 -->
 					<br> <br> <br> <input type="submit"
 						class="btn btn-primary" value="Create Project">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -993,8 +1012,8 @@ div.tab button.active {
 				style="background-color: white; width: 100%; height: 500px display:table">
 
 				<form action='verifyddl.jsp' method='post' style="padding: 20px;">
-					<div style="width: 500px;  display: table-cell">
-					<h4>STM Definition</h4>
+					<div style="width: 500px; display: table-cell">
+						<h4>STM Definition</h4>
 						<select class="form-control" placeholder="select project"
 							id="selected_project" onchange="getTestSheets()">
 							<option selected disabled>Project Name</option>
@@ -1012,17 +1031,16 @@ div.tab button.active {
 						</select><br> <select class="form-control" id="selected_worksheet"
 							name="selected_worksheet">
 							<option selected disabled>Table</option>
-						</select>
-						<br>
+						</select> <br>
 
 					</div>
 					<div style="width: 500px; padding: 20px; display: table-cell">
-					<h4>Hive table</h4>
-					<select class="form-control" placeholder="select project"
+						<h4>Hive table</h4>
+						<select class="form-control" placeholder="select project"
 							id="selected_project" onchange="getTestSheets()">
 							<option selected disabled>Project Name</option>
 							<%
-							//	List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
+								//	List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
 								for (String[] p : projects) {
 							%>
 							<option value="<%=p[0]%>"><%=p[1]%></option>
@@ -1035,11 +1053,11 @@ div.tab button.active {
 						</select><br> <select class="form-control" id="selected_worksheet"
 							name="selected_worksheet">
 							<option selected disabled>Table</option>
-						</select> 
-						<br>
-					</div><br>
-						<input type ="checkbox" value = "colOrder"/>Check columns order<br>
-					<br> <input type="submit" value="Compare" class="btn btn-info">
+						</select> <br>
+					</div>
+					<br> <input type="checkbox" value="colOrder" />Check columns
+					order<br> <br> <input type="submit" value="Compare"
+						class="btn btn-info">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					<br>
 				</form>
