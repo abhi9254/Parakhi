@@ -500,6 +500,39 @@ public class MySQL_dao {
 		}
 		return tasks;
 	}
+	
+	
+	public List<String[]> getStmTgtCols(String stm_id){
+		
+		ResultSet resultSet = null;
+		List<String[]> tgtCols = new ArrayList<String[]>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT serial_no,target_col_nm,target_data_typ FROM parakhi.mystms where stm_id = '"+stm_id+"' order by serial_no";
+			resultSet = statement.executeQuery(query);
+			String[] s;
+
+			while (resultSet.next()) {
+				s = new String[3];
+				s[0] = resultSet.getString(1);
+				s[1] = resultSet.getString(2);
+				s[2] = resultSet.getString(3);
+				tgtCols.add(s);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return tgtCols;
+	}
 
 }
 

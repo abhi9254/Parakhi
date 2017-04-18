@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="com.google.api.client.auth.oauth2.Credential"%>
+<%@page import="java.util.List,java.util.ArrayList"%>
+<%@ page import="org.abhi.parakhi.MySQL_dao"%>
 <%@page
 	import="java.sql.DriverManager, java.sql.Connection, java.sql.ResultSet, java.sql.Statement"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -116,49 +118,81 @@
 		<!-- end header -->
 
 	</div>
-	<%
-		String stm_table = request.getParameter("stm_tbl");
-		String hive_table = request.getParameter("hive_tbl");
-
-		String driverName = "org.apache.hive.jdbc.HiveDriver";
-
-		try {
-			Class.forName(driverName);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
-			Statement stmt = (Statement) con.createStatement();
-
-			String query = "describe " + "db_insight.insight_monetization_all_transaction";
-			ResultSet res = stmt.executeQuery(query);
-			while (res.next()) {
-				if (res.getString(1).charAt(0) == '#' || res.getString(1) == "")
-					break;
-	%>
-
-	<%=res.getString(1)%>,<%=res.getString(2)%><br>
-
-	<%
-		}
-			res.close();
-			con.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	%>
 	<table>
 
 		<thead>
 			<tr>
-				<th>Head1</th>
+				<th>Hive Column</th>
+				<th>Hive Datatype</th>
+				<th>STM Column</th>
+				<th>STM Datatype</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>Body1</td>
-			</tr>
+
+			<%
+				String stm_table = request.getParameter("stm_tbl");
+				String hive_table = request.getParameter("hive_tbl");
+
+				List<String[]> stmColumns = new ArrayList<String[]>();
+				List<String[]> hiveColumns = new ArrayList<String[]>();
+
+				MySQL_dao ob = new MySQL_dao();
+				List<String[]> stmCols = new ArrayList<String[]>(
+						ob.getStmTgtCols("1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A"));
+				for (String[] stmCol : stmCols) {
+					stmColumns.add(stmCol);
+				}
+
+				String driverName = "org.apache.hive.jdbc.HiveDriver";
+
+				try {
+					Class.forName(driverName);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				try {
+					Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
+					Statement stmt = (Statement) con.createStatement();
+
+					String query = "describe " + 
+					"db_gold.gold_product_sku";
+					//"db_insight.insight_monetization_all_transaction";
+					ResultSet hiveCols = stmt.executeQuery(query);
+					while (hiveCols.next()) {
+						if (hiveCols.getString(1).charAt(0) == '#' || hiveCols.getString(1) == "")
+							break;
+						String[] s = new String[3];
+						s[0] = String.valueOf(hiveCols.getRow());
+						s[1] = hiveCols.getString(1);
+						s[2] = hiveCols.getString(2);
+						hiveColumns.add(s);
+
+					}
+					hiveCols.close();
+					con.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+				int totalCols = hiveColumns.size();
+				if (hiveColumns.size() < stmColumns.size())
+					totalCols = stmColumns.size();
+
+				for (int i = 0; i < totalCols - 1; i++) {
+			%>
+<tr><td><%=hiveColumns.get(i)[1] %></td><td><%=hiveColumns.get(i)[2] %></td><td><%=stmColumns.get(i)[1] %></td><td><%=stmColumns.get(i)[2] %></td>
+
+<%if(hiveColumns.get(i)[1].equals(stmColumns.get(i)[1]) && hiveColumns.get(i)[2].equals(stmColumns.get(i)[2])){ %>
+<td>PASS</td>
+<%}else{ %>
+<td>FAIL</td>
+<%} %>
+</tr>
+			<%
+				}
+			%>
+
 		</tbody>
 	</table>
 
