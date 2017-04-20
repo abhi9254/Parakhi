@@ -164,7 +164,9 @@ function myFunction(id) {
 <button onclick="myFunction('Demo0')"
 			class="w3-button w3-block w3-sand w3-left-align">About</button>
 		<div id="Demo0" class="w3-hide">
-			<p>Select project..</p>
+			<div id="about"
+				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+				a project..</div>
 		</div>
 
 		<button onclick="myFunction('Demo1')"

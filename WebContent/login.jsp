@@ -9,7 +9,7 @@
 </head>
 <body>
 	<form action="Login" method="post"
-		style="position: fixed; width: 50%; margin-left: 25%; margin-top: 10%">
+		style="position: fixed; width: 50%; margin-left: 25%; margin-top: 20px">
 		<img src="res/images/parrot.jpg" alt="Grey parrot" style="width:300px;height:200px;opacity: 0.5;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.5';">
 		<pre style="width: 300px;background-color: gainsboro;">
   __  
@@ -19,7 +19,9 @@
 		<br> <input type="text" placeholder="Username" name="uname"
 			class="form-control" style="width: 300px" /> <br> <input
 			type="password" placeholder="Password" name="pass"
-			class="form-control" style="width: 300px" /> <br> <input
+			class="form-control" style="width: 300px" /> <br> 
+			<input type="checkbox" value="remember" />&nbsp;Remember me <br><br>
+			<input
 			type="submit" value="Login" class="btn btn-danger" />
 		</td>
 		</tr>
