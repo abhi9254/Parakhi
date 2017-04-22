@@ -92,7 +92,7 @@
 		List<String> db_list = new ArrayList<String>(ob.getProjDbNames(p_id));
 
 		for (String db : db_list) {
-			outRes.println("<b>"+db + "</b><br>");
+			outRes.println("<b>" + db + "</b><br>");
 			String[] tables = ob.getDbTblNames(Integer.parseInt(request.getParameter("proj_id")), db);
 
 			for (int i = 0; i < tables.length; i++) {
@@ -102,27 +102,28 @@
 		}
 	}
 
-	
 	if (request.getParameter("testsheets") != null && request.getParameter("proj_id") != null) {
 		int p_id = Integer.parseInt(request.getParameter("proj_id"));
 		MySQL_dao ob = new MySQL_dao();
 		List<String[]> ts_list = new ArrayList<String[]>(ob.getTestsheets(p_id));
 
 		for (String[] ts : ts_list) {
-			outRes.println(ts[1] + " <a target='_blank' href='"+ ts[2]+"'>View</a>");
+			outRes.println(ts[1] + " <a target='_blank' href='" + ts[2]
+					+ "'>View</a> <a href=''>Refresh</a> <a  href=''>Remove</a>");
 		}
 	}
-	
+
 	if (request.getParameter("stmsheets") != null && request.getParameter("proj_id") != null) {
 		int p_id = Integer.parseInt(request.getParameter("proj_id"));
 		MySQL_dao ob = new MySQL_dao();
 		List<String[]> ss_list = new ArrayList<String[]>(ob.getSTMsheets(p_id));
 
 		for (String[] ss : ss_list) {
-			outRes.println(ss[1] + " <a target='_blank' href='"+ ss[2]+"'>View</a>");
+			outRes.println(ss[1] + " <a target='_blank' href='" + ss[2]
+					+ "'>View</a> <a href=''>Refresh</a> <a  href=''>Remove</a>");
 		}
 	}
-	
+
 	if (request.getParameter("spreadsheet_id") != null && !request.getParameter("spreadsheet_id").equals("")
 			&& request.getParameter("title") != null) {
 		Pattern p = Pattern.compile("spreadsheets/d/.*/");
@@ -260,14 +261,14 @@
 		List<String[]> tasks = new ArrayList<String[]>(ob.getTasks());
 		StringBuilder t = new StringBuilder("");
 		for (String[] task : tasks) {
-			if("100".equals(task[1]))
+			if ("100".equals(task[1]))
 				t.append("<h4>" + task[0]
-						+ ": Rerun Sheet Task</h4><div class='progress'><div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='100'aria-valuemin='0' aria-valuemax='100' style='width:100%'>Complete</div></div>");	
-			else	
-			t.append("<h4>" + task[0]
-					+ ": Rerun Sheet Task</h4><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='"
-					+ task[1] + "'aria-valuemin='0' aria-valuemax='100' style='width: " + task[1] + "%'>"
-					+ task[1] + "%</div></div>");
+						+ ": Rerun Sheet Task</h4><div class='progress'><div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='100'aria-valuemin='0' aria-valuemax='100' style='width:100%'>Complete</div></div>");
+			else
+				t.append("<h4>" + task[0]
+						+ ": Rerun Sheet Task</h4><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='"
+						+ task[1] + "'aria-valuemin='0' aria-valuemax='100' style='width: " + task[1] + "%'>"
+						+ task[1] + "%</div></div>");
 		}
 		outRes.println(t);
 	}

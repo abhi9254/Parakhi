@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="com.google.api.client.auth.oauth2.Credential"%>
-<%@page import="java.util.List,java.util.ArrayList"%>
+<%@page
+	import="java.util.List,java.util.ArrayList,java.util.Map,java.util.HashMap"%>
 <%@ page import="org.abhi.parakhi.MySQL_dao"%>
 <%@page
 	import="java.sql.DriverManager, java.sql.Connection, java.sql.ResultSet, java.sql.Statement"%>
@@ -203,6 +204,65 @@
 				}
 			%>
 
+			<%
+				int total_dis_Cols = 0;
+				List<String> disColumns = new ArrayList<String>();
+				for (int i = 0; i < hiveColumns.size(); i++) {
+					disColumns.add(hiveColumns.get(i)[1].concat(hiveColumns.get(i)[2]));
+					total_dis_Cols++;
+				}
+				for (int i = 0; i < stmColumns.size(); i++) {
+					if (!disColumns.contains(stmColumns.get(i)[1].concat(stmColumns.get(i)[2])))
+						total_dis_Cols++;
+				}
+
+				int breaker = 0;
+				List<String[]> allColumns = new ArrayList<String[]>();
+				//	Map<String,String> stmMap = new HashMap<String,String>();
+				//	Map<String,String> hiveMap = new HashMap<String,String>();
+
+				out.println(
+						"<table><thead><tr><th>Hive Column</th><th>Hive Datatype</th><th>STM Column</th><th>STM Datatype</th></tr></thead><tbody>");
+
+				for (int i = 0; i < total_dis_Cols; i++) {
+
+					int j = breaker;
+					try {
+						if (hiveColumns.get(i)[1].equals(stmColumns.get(j)[1])
+								&& hiveColumns.get(i)[2].equals(stmColumns.get(j)[2])) {
+							String[] total = new String[4];
+							total[0] = hiveColumns.get(i)[1];
+							total[1] = hiveColumns.get(i)[2];
+							total[2] = stmColumns.get(j)[1];
+							total[3] = stmColumns.get(j)[2];
+							out.println("<tr><td>" + total[0] + "</td><td>" + total[1] + "</td><td>" + total[2]
+									+ "</td><td>" + total[3] + "</td></tr>" + "<br>");
+							breaker++;
+						} else {
+							String[] total = new String[4];
+							total[0] = hiveColumns.get(i)[1];
+							total[1] = hiveColumns.get(i)[2];
+							total[2] = "--";
+							total[3] = "--";
+							out.println("<tr><td>" + total[0] + "</td><td>" + total[1] + "</td><td>" + total[2]
+									+ "</td><td>" + total[3] + "</td></tr>" + "<br>");
+
+						}
+					} catch (IndexOutOfBoundsException ex) {
+						String[] total = new String[4];
+						total[0] = "--";
+						total[1] = "--";
+						total[2] = stmColumns.get(breaker)[1];
+						total[3] = stmColumns.get(breaker)[2];
+						breaker++;
+						out.println("<tr><td>" + total[0] + "</td><td>" + total[1] + "</td><td>" + total[2] + "</td><td>"
+								+ total[3] + "</td></tr>" + "<br>");
+
+					}
+
+				}
+				out.println("</thead></table>");
+			%>
 		</tbody>
 	</table>
 

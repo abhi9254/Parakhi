@@ -161,7 +161,7 @@ function myFunction(id) {
 
 	<div style="margin-left: 15%; padding-top: 0px">
 
-<button onclick="myFunction('Demo0')"
+		<button onclick="myFunction('Demo0')"
 			class="w3-button w3-block w3-sand w3-left-align">About</button>
 		<div id="Demo0" class="w3-hide">
 			<div id="about"
@@ -175,6 +175,7 @@ function myFunction(id) {
 			<div id="stmsheets_list"
 				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
 				a project..</div>
+			<a href="" style="float: right; margin-right: 50px">Add</a><br>
 		</div>
 
 		<button onclick="myFunction('Demo2')"
@@ -183,6 +184,7 @@ function myFunction(id) {
 			<div id="testsheets_list"
 				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
 				a project..</div>
+			<a href="" style="float: right; margin-right: 50px">Add</a><br>
 		</div>
 
 		<button onclick="myFunction('Demo3')"
@@ -193,7 +195,7 @@ function myFunction(id) {
 				a project..</div>
 		</div>
 
- 
+
 	</div>
 
 

@@ -541,7 +541,7 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT serial_no,target_col_nm,target_data_typ FROM parakhi.mystms where stm_id = '"+stm_id+"' order by serial_no";
+			String query = "SELECT DISTINCT serial_no,target_col_nm,target_data_typ FROM parakhi.mystms where stm_id = '"+stm_id+"' order by CAST(serial_no AS UNSIGNED INTEGER)";
 			resultSet = statement.executeQuery(query);
 			String[] s;
 

@@ -156,7 +156,7 @@
 	</header>
 	<!-- end header -->
 	<div style="margin-left: 10px">
-	
+
 		<br>
 		<h3>Toggle: HiveServer / HiveServer2</h3>
 		<h3>Set parallelism: Current= 2</h3>
@@ -193,14 +193,22 @@
 		<div id="sheet_ws"></div>
 		<br> <br>
 	</div>
-	<div id="authorization-div" style="display: none"></div>
-	<form action="Oauth2Servlet" style="display: inline">
-		<input type="submit" value="Authorize" />
-	</form>
-	<form action="delCredentials" style="display: inline">
-		<input type="submit" value="Delete Saved Creds" />
-	</form>
+	<div style="margin-left: 10px">
+		<h4>Google Authorization</h4>
+		<div id="authorization-div" style="display: none"></div>
+		<form action="Oauth2Servlet" style="display: inline">
+			<input class="btn btn-default" type="submit" value="Authorize" />
+		</form>
+		<form action="delCredentials" style="display: inline">
+			<input class="btn btn-default" type="submit"
+				value="Delete Saved Creds" />
+		</form>
 
+		<a class="btn btn-default" target="_blank"
+			href="https://myaccount.google.com/permissions">Revoke Permission</a>
+
+		<br> <br>
+	</div>
 
 </body>
 </html>
