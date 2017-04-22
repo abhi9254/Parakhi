@@ -31,7 +31,8 @@
 			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 			</label>
 			<%
-				Credential credential = (Credential) request.getSession().getAttribute("credential");
+				Credential credential = (Credential) request.getSession()
+						.getAttribute("credential");
 
 				Long active_time = null;
 				if (credential != null)
@@ -119,152 +120,228 @@
 		<!-- end header -->
 
 	</div>
-	<table>
 
-		<thead>
-			<tr>
-				<th>Hive Column</th>
-				<th>Hive Datatype</th>
-				<th>STM Column</th>
-				<th>STM Datatype</th>
-			</tr>
-		</thead>
-		<tbody>
+	<div style="margin: 20px">
+		<%
+			String stm_table = request.getParameter("stm_tbl");
+			String hive_table = request.getParameter("hive_tbl");
+			boolean match = true;
 
-			<%
-				String stm_table = request.getParameter("stm_tbl");
-				String hive_table = request.getParameter("hive_tbl");
+			List<String[]> stmColumns = new ArrayList<String[]>();
+			List<String[]> hiveColumns = new ArrayList<String[]>();
 
-				List<String[]> stmColumns = new ArrayList<String[]>();
-				List<String[]> hiveColumns = new ArrayList<String[]>();
+			MySQL_dao ob = new MySQL_dao();
+			List<String[]> stmCols = new ArrayList<String[]>(ob.getStmTgtCols(
+					"1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A"));
+			for (String[] stmCol : stmCols) {
+				stmColumns.add(stmCol);
+			}
 
-				MySQL_dao ob = new MySQL_dao();
-				List<String[]> stmCols = new ArrayList<String[]>(
-						ob.getStmTgtCols("1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A"));
-				for (String[] stmCol : stmCols) {
-					stmColumns.add(stmCol);
+			String driverName = "org.apache.hive.jdbc.HiveDriver";
+
+			try {
+				Class.forName(driverName);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			try {
+				Connection con = DriverManager.getConnection(
+						"jdbc:hive2://localhost:10000/default", "hive", "");
+				Statement stmt = (Statement) con.createStatement();
+
+				String query = "describe " + "db_gold.gold_product_sku";
+				//"db_insight.insight_monetization_all_transaction";
+				ResultSet hiveCols = stmt.executeQuery(query);
+				while (hiveCols.next()) {
+					if (hiveCols.getString(1).charAt(0) == '#'
+							|| hiveCols.getString(1) == "")
+						break;
+					String[] s = new String[3];
+					s[0] = String.valueOf(hiveCols.getRow());
+					s[1] = hiveCols.getString(1);
+					s[2] = hiveCols.getString(2);
+					hiveColumns.add(s);
+
 				}
+				hiveCols.close();
+				con.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 
-				String driverName = "org.apache.hive.jdbc.HiveDriver";
+			int totalCols = hiveColumns.size();
+			if (totalCols == stmColumns.size()) {
+				for (int i = 0; i < totalCols; i++) {
 
-				try {
-					Class.forName(driverName);
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+					if (!(hiveColumns.get(i)[1].equals(stmColumns.get(i)[1])
+							&& hiveColumns.get(i)[2]
+									.equals(stmColumns.get(i)[2])))
+						match = false;
 				}
-				try {
-					Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
-					Statement stmt = (Statement) con.createStatement();
+			} else
+				match = false;
+			
+			
+			out.print("<h4 style='display:inline'>Verification: </h4>");
+			if (match)
+				out.println(
+						"<h4 style='color:green ;display:inline'>Pass</h4><br><br>");
+			else
+				out.println(
+						"<h4 style='color:red;display:inline'>Fail</h4><br><br>");
+		%>
 
-					String query = "describe " + "db_gold.gold_product_sku";
-					//"db_insight.insight_monetization_all_transaction";
-					ResultSet hiveCols = stmt.executeQuery(query);
-					while (hiveCols.next()) {
-						if (hiveCols.getString(1).charAt(0) == '#' || hiveCols.getString(1) == "")
-							break;
-						String[] s = new String[3];
-						s[0] = String.valueOf(hiveCols.getRow());
-						s[1] = hiveCols.getString(1);
-						s[2] = hiveCols.getString(2);
-						hiveColumns.add(s);
 
-					}
-					hiveCols.close();
-					con.close();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
 
-				int totalCols = hiveColumns.size();
-				if (hiveColumns.size() < stmColumns.size())
-					totalCols = stmColumns.size();
+		<table class="table" style="width: 800px">
 
-				for (int i = 0; i < totalCols - 1; i++) {
-			%>
-			<tr>
-				<td><%=hiveColumns.get(i)[1]%></td>
-				<td><%=hiveColumns.get(i)[2]%></td>
-				<td><%=stmColumns.get(i)[1]%></td>
-				<td><%=stmColumns.get(i)[2]%></td>
+			<thead>
+				<tr>
+					<th>Hive Column</th>
+					<th>Hive Datatype</th>
+					<th>STM Column</th>
+					<th>STM Datatype</th>
+				</tr>
+			</thead>
+			<tbody>
 
 				<%
-					if (hiveColumns.get(i)[1].equals(stmColumns.get(i)[1])
-								&& hiveColumns.get(i)[2].equals(stmColumns.get(i)[2])) {
+					int total_dis_Cols = 0;
+					List<String> disColumns = new ArrayList<String>();
+
+					//  get count of total distinct cols
+
+					for (int i = 0; i < hiveColumns.size(); i++) {
+						disColumns.add(
+								hiveColumns.get(i)[1].concat(hiveColumns.get(i)[2]));
+						total_dis_Cols++;
+					}
+					for (int i = 0; i < stmColumns.size(); i++) {
+						if (!disColumns.contains(
+								stmColumns.get(i)[1].concat(stmColumns.get(i)[2])))
+							total_dis_Cols++;
+					}
+
+					int breaker = 0;
+					int counter = 0;
+
+					List<String[]> allColumns = new ArrayList<String[]>();
+
+					//  maps for check contains function and coloring
+					//	Map<String,String> stmMap = new HashMap<String,String>();
+					//	Map<String,String> hiveMap = new HashMap<String,String>();
+
+					for (int i = 0; i < total_dis_Cols
+							&& counter < total_dis_Cols; i++) {
+						boolean flag = false;
+						int j = breaker;
+						try {
+							if (hiveColumns.get(i)[1].equals(stmColumns.get(j)[1])
+									&& hiveColumns.get(i)[2]
+											.equals(stmColumns.get(j)[2])) {
+								String[] total = new String[4];
+								total[0] = hiveColumns.get(i)[1];
+								total[1] = hiveColumns.get(i)[2];
+								total[2] = stmColumns.get(j)[1];
+								total[3] = stmColumns.get(j)[2];
 				%>
-				<td>PASS</td>
+				<tr>
+					<td><%=total[0]%></td>
+					<td><%=total[1]%></td>
+					<td><%=total[2]%></td>
+					<td><%=total[3]%></td>
+				</tr>
+				<%
+					breaker++;
+								counter++;
+							}
+
+							else {
+
+								for (int k = j; k < stmColumns.size()
+										&& breaker < stmColumns.size(); k++) {
+									if (hiveColumns.get(i)[1]
+											.equals(stmColumns.get(k)[1])
+											&& hiveColumns.get(i)[2]
+													.equals(stmColumns.get(k)[2])) {
+										flag = true;
+										String[] total = new String[4];
+										total[0] = "--";
+										total[1] = "--";
+										total[2] = stmColumns.get(breaker)[1];
+										total[3] = stmColumns.get(breaker)[2];
+				%>
+				<tr>
+					<td><%=total[0]%></td>
+					<td><%=total[1]%></td>
+					<td><%=total[2]%></td>
+					<td><%=total[3]%></td>
+				</tr>
+				<%
+					breaker++;
+										i--;
+										counter++;
+										break;
+									}
+								}
+
+								if (!flag) {
+									String[] total = new String[4];
+									total[0] = hiveColumns.get(i)[1];
+									total[1] = hiveColumns.get(i)[2];
+									total[2] = "--";
+									total[3] = "--";
+				%>
+				<tr>
+					<td><%=total[0]%></td>
+					<td><%=total[1]%></td>
+					<td><%=total[2]%></td>
+					<td><%=total[3]%></td>
+				</tr>
+				<%
+					counter++;
+								}
+
+							}
+						} catch (IndexOutOfBoundsException ex) {
+							if (breaker < stmColumns.size()) {
+								String[] total = new String[4];
+								total[0] = "--";
+								total[1] = "--";
+								total[2] = stmColumns.get(breaker)[1];
+								total[3] = stmColumns.get(breaker)[2];
+				%>
+				<tr>
+					<td><%=total[0]%></td>
+					<td><%=total[1]%></td>
+					<td><%=total[2]%></td>
+					<td><%=total[3]%></td>
+				</tr>
 				<%
 					} else {
+								String[] total = new String[4];
+								total[0] = hiveColumns.get(i)[1];
+								total[1] = hiveColumns.get(i)[2];
+								total[2] = "--";
+								total[3] = "--";
 				%>
-				<td>FAIL</td>
+				<tr>
+					<td><%=total[0]%></td>
+					<td><%=total[1]%></td>
+					<td><%=total[2]%></td>
+					<td><%=total[3]%></td>
+				</tr>
 				<%
 					}
-				%>
-			</tr>
-			<%
-				}
-			%>
 
-			<%
-				int total_dis_Cols = 0;
-				List<String> disColumns = new ArrayList<String>();
-				for (int i = 0; i < hiveColumns.size(); i++) {
-					disColumns.add(hiveColumns.get(i)[1].concat(hiveColumns.get(i)[2]));
-					total_dis_Cols++;
-				}
-				for (int i = 0; i < stmColumns.size(); i++) {
-					if (!disColumns.contains(stmColumns.get(i)[1].concat(stmColumns.get(i)[2])))
-						total_dis_Cols++;
-				}
-
-				int breaker = 0;
-				List<String[]> allColumns = new ArrayList<String[]>();
-				//	Map<String,String> stmMap = new HashMap<String,String>();
-				//	Map<String,String> hiveMap = new HashMap<String,String>();
-
-				out.println(
-						"<table><thead><tr><th>Hive Column</th><th>Hive Datatype</th><th>STM Column</th><th>STM Datatype</th></tr></thead><tbody>");
-
-				for (int i = 0; i < total_dis_Cols; i++) {
-
-					int j = breaker;
-					try {
-						if (hiveColumns.get(i)[1].equals(stmColumns.get(j)[1])
-								&& hiveColumns.get(i)[2].equals(stmColumns.get(j)[2])) {
-							String[] total = new String[4];
-							total[0] = hiveColumns.get(i)[1];
-							total[1] = hiveColumns.get(i)[2];
-							total[2] = stmColumns.get(j)[1];
-							total[3] = stmColumns.get(j)[2];
-							out.println("<tr><td>" + total[0] + "</td><td>" + total[1] + "</td><td>" + total[2]
-									+ "</td><td>" + total[3] + "</td></tr>" + "<br>");
 							breaker++;
-						} else {
-							String[] total = new String[4];
-							total[0] = hiveColumns.get(i)[1];
-							total[1] = hiveColumns.get(i)[2];
-							total[2] = "--";
-							total[3] = "--";
-							out.println("<tr><td>" + total[0] + "</td><td>" + total[1] + "</td><td>" + total[2]
-									+ "</td><td>" + total[3] + "</td></tr>" + "<br>");
-
+							counter++;
 						}
-					} catch (IndexOutOfBoundsException ex) {
-						String[] total = new String[4];
-						total[0] = "--";
-						total[1] = "--";
-						total[2] = stmColumns.get(breaker)[1];
-						total[3] = stmColumns.get(breaker)[2];
-						breaker++;
-						out.println("<tr><td>" + total[0] + "</td><td>" + total[1] + "</td><td>" + total[2] + "</td><td>"
-								+ total[3] + "</td></tr>" + "<br>");
 
 					}
-
-				}
-				out.println("</thead></table>");
-			%>
-		</tbody>
-	</table>
-
+				%>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>

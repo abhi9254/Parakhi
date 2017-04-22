@@ -124,7 +124,7 @@ insert into mystms values('test','db_insight.insight_monetization_all_transactio
 insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','2','db_gold','gold_dfp_denorm','advertiser_id','int','Direct Mapping','db_insight','insight_monetization_all_transaction','dfp_advertiser_ID','int','Max (advertiser_iD) based on DFP_vendor_nm link');
 insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','3','db_gold','gold_dfp_denorm','company_name','String','Direct Mapping','db_insight','insight_monetization_all_transaction','dfp_advertiser_nm','String','Advertiser_nm associated with Advertiser_id');
 insert into mystms values('1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A','db_gold.gold_product_sku','1.0','10','db_stage','raw_product','p','string','FLATTEN(p)','db_gold','gold_product_sku','p4','string','dummy comment');
-
+insert into mystms values('1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A','db_gold.gold_product_sku','1.0','5','db_stage','raw_product','gender','string','Direct Mapping','db_gold','gold_product_sku','gender','string','dummy comment');
 
 
 
