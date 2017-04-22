@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@page import="com.google.api.client.auth.oauth2.Credential"%>
 <%@page
-	import="java.util.List,java.util.ArrayList,java.util.Map,java.util.HashMap"%>
+	import="java.util.List,java.util.ArrayList,java.util.Set,java.util.HashSet"%>
 <%@ page import="org.abhi.parakhi.MySQL_dao"%>
 <%@page
 	import="java.sql.DriverManager, java.sql.Connection, java.sql.ResultSet, java.sql.Statement"%>
@@ -15,11 +15,28 @@
 <meta name="description" content="Parakhi" />
 
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="css/chosen.css" type="text/css">
+<link rel="stylesheet" href="css/jquery.dataTables.min.css"
+	type="text/css">
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" type="text/css">
 <link id="t-colors" href="template_files/default.css" rel="stylesheet" />
 
+<style>
+#comparetbl_wrapper{
+width:800px
+}
+</style>
+<script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script>
+	$(document).ready(function() {
+		$('#comparetbl').DataTable({
+			order: [],
+			paging: false
+		});
+	});
+</script>
 </head>
 <body>
 
@@ -180,8 +197,8 @@
 				}
 			} else
 				match = false;
-			
-			
+
+			out.println("<h5>Table: db_gold.gold_product_sku</h5>");
 			out.print("<h4 style='display:inline'>Verification: </h4>");
 			if (match)
 				out.println(
@@ -193,30 +210,44 @@
 
 
 
-		<table class="table" style="width: 800px">
+		<table id="comparetbl" class="table" style="width: 800px">
 
 			<thead>
 				<tr>
+					<th>Hive Ser</th>
 					<th>Hive Column</th>
 					<th>Hive Datatype</th>
+					<th>STM Ser</th>
 					<th>STM Column</th>
 					<th>STM Datatype</th>
+					<th>Remarks</th>
 				</tr>
 			</thead>
 			<tbody>
 
 				<%
 					int total_dis_Cols = 0;
+					int total_cols = hiveColumns.size() + stmColumns.size();
+
+					//  sets for check contains function
+					Set<String> stmSet = new HashSet<String>();
+					Set<String> hiveSet = new HashSet<String>();
+
 					List<String> disColumns = new ArrayList<String>();
 
-					//  get count of total distinct cols
+					//  get count of total distinct cols and total cols
 
 					for (int i = 0; i < hiveColumns.size(); i++) {
+						hiveSet.add(
+								hiveColumns.get(i)[1].concat(hiveColumns.get(i)[2]));
+
 						disColumns.add(
 								hiveColumns.get(i)[1].concat(hiveColumns.get(i)[2]));
 						total_dis_Cols++;
 					}
 					for (int i = 0; i < stmColumns.size(); i++) {
+						stmSet.add(stmColumns.get(i)[1].concat(stmColumns.get(i)[2]));
+
 						if (!disColumns.contains(
 								stmColumns.get(i)[1].concat(stmColumns.get(i)[2])))
 							total_dis_Cols++;
@@ -225,34 +256,38 @@
 					int breaker = 0;
 					int counter = 0;
 
-					List<String[]> allColumns = new ArrayList<String[]>();
+					//List<String[]> allColumns = new ArrayList<String[]>();
 
-					//  maps for check contains function and coloring
-					//	Map<String,String> stmMap = new HashMap<String,String>();
-					//	Map<String,String> hiveMap = new HashMap<String,String>();
-
-					for (int i = 0; i < total_dis_Cols
-							&& counter < total_dis_Cols; i++) {
+					for (int i = 0; i < total_cols && counter < total_cols; i++) {
 						boolean flag = false;
+						boolean printed = false;
 						int j = breaker;
 						try {
 							if (hiveColumns.get(i)[1].equals(stmColumns.get(j)[1])
 									&& hiveColumns.get(i)[2]
 											.equals(stmColumns.get(j)[2])) {
-								String[] total = new String[4];
-								total[0] = hiveColumns.get(i)[1];
-								total[1] = hiveColumns.get(i)[2];
-								total[2] = stmColumns.get(j)[1];
-								total[3] = stmColumns.get(j)[2];
+								String[] total = new String[7];
+
+								total[0] = hiveColumns.get(i)[0];
+								total[1] = hiveColumns.get(i)[1];
+								total[2] = hiveColumns.get(i)[2];
+								total[3] = stmColumns.get(j)[0];
+								total[4] = stmColumns.get(j)[1];
+								total[5] = stmColumns.get(j)[2];
+								total[6] = "";
 				%>
 				<tr>
 					<td><%=total[0]%></td>
 					<td><%=total[1]%></td>
 					<td><%=total[2]%></td>
 					<td><%=total[3]%></td>
+					<td><%=total[4]%></td>
+					<td><%=total[5]%></td>
+					<td><%=total[6]%></td>
 				</tr>
 				<%
-					breaker++;
+					printed = true;
+								breaker++;
 								counter++;
 							}
 
@@ -265,20 +300,31 @@
 											&& hiveColumns.get(i)[2]
 													.equals(stmColumns.get(k)[2])) {
 										flag = true;
-										String[] total = new String[4];
-										total[0] = "--";
-										total[1] = "--";
-										total[2] = stmColumns.get(breaker)[1];
-										total[3] = stmColumns.get(breaker)[2];
+										String[] total = new String[7];
+										total[0] = "-";
+										total[1] = "-";
+										total[2] = "-";
+										total[3] = stmColumns.get(breaker)[0];
+										total[4] = stmColumns.get(breaker)[1];
+										total[5] = stmColumns.get(breaker)[2];
+										if (hiveSet.contains(stmColumns.get(breaker)[1]
+												.concat(stmColumns.get(breaker)[2])))
+											total[6] = "Order issue";
+										else
+											total[6] = "Not in Hive";
 				%>
 				<tr>
 					<td><%=total[0]%></td>
 					<td><%=total[1]%></td>
 					<td><%=total[2]%></td>
 					<td><%=total[3]%></td>
+					<td><%=total[4]%></td>
+					<td><%=total[5]%></td>
+					<td><%=total[6]%></td>
 				</tr>
 				<%
-					breaker++;
+					printed = true;
+										breaker++;
 										i--;
 										counter++;
 										break;
@@ -286,58 +332,87 @@
 								}
 
 								if (!flag) {
-									String[] total = new String[4];
-									total[0] = hiveColumns.get(i)[1];
-									total[1] = hiveColumns.get(i)[2];
-									total[2] = "--";
-									total[3] = "--";
+									String[] total = new String[7];
+									total[0] = hiveColumns.get(i)[0];
+									total[1] = hiveColumns.get(i)[1];
+									total[2] = hiveColumns.get(i)[2];
+									total[3] = "-";
+									total[4] = "-";
+									total[5] = "-";
+									if (stmSet.contains(hiveColumns.get(i)[1]
+											.concat(hiveColumns.get(i)[2])))
+										total[6] = "Order issue";
+									else
+										total[6] = "Not in Stm";
 				%>
 				<tr>
 					<td><%=total[0]%></td>
 					<td><%=total[1]%></td>
 					<td><%=total[2]%></td>
 					<td><%=total[3]%></td>
+					<td><%=total[4]%></td>
+					<td><%=total[5]%></td>
+					<td><%=total[6]%></td>
 				</tr>
 				<%
-					counter++;
+					printed = true;
+									counter++;
 								}
 
 							}
 						} catch (IndexOutOfBoundsException ex) {
 							if (breaker < stmColumns.size()) {
-								String[] total = new String[4];
-								total[0] = "--";
-								total[1] = "--";
-								total[2] = stmColumns.get(breaker)[1];
-								total[3] = stmColumns.get(breaker)[2];
+								String[] total = new String[7];
+								total[0] = "-";
+								total[1] = "-";
+								total[2] = "-";
+								total[3] = stmColumns.get(breaker)[0];
+								total[4] = stmColumns.get(breaker)[1];
+								total[5] = stmColumns.get(breaker)[2];
+								total[6] = "Not in Hive *";
 				%>
 				<tr>
 					<td><%=total[0]%></td>
 					<td><%=total[1]%></td>
 					<td><%=total[2]%></td>
 					<td><%=total[3]%></td>
+					<td><%=total[4]%></td>
+					<td><%=total[5]%></td>
+					<td><%=total[6]%></td>
 				</tr>
 				<%
-					} else {
-								String[] total = new String[4];
-								total[0] = hiveColumns.get(i)[1];
-								total[1] = hiveColumns.get(i)[2];
-								total[2] = "--";
-								total[3] = "--";
-				%>
-				<tr>
-					<td><%=total[0]%></td>
-					<td><%=total[1]%></td>
-					<td><%=total[2]%></td>
-					<td><%=total[3]%></td>
-				</tr>
-				<%
-					}
+					printed = true;
 
-							breaker++;
-							counter++;
+								breaker++;
+								counter++;
+							} else if (i < hiveColumns.size()) {
+								String[] total = new String[7];
+								total[0] = hiveColumns.get(i)[0];
+								total[1] = hiveColumns.get(i)[1];
+								total[2] = hiveColumns.get(i)[2];
+								total[3] = "-";
+								total[4] = "-";
+								total[5] = "-";
+								total[6] = "Not in Stm *";
+				%>
+				<tr>
+					<td><%=total[0]%></td>
+					<td><%=total[1]%></td>
+					<td><%=total[2]%></td>
+					<td><%=total[3]%></td>
+					<td><%=total[4]%></td>
+					<td><%=total[5]%></td>
+					<td><%=total[6]%></td>
+				</tr>
+				<%
+					printed = true;
+
+								breaker++;
+								counter++;
+							}
 						}
-
+						if (!printed)
+							break;
 					}
 				%>
 			</tbody>

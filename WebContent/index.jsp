@@ -91,7 +91,7 @@
 }
 
 #myInput {
-	background-image: url('css/search.svg');
+	background-image: url('res/images/search.svg');
 	background-size: 20px 20px;
 	/* Add a search icon to input */
 	background-position: 10px 14px; /* Position the search icon */
@@ -1012,7 +1012,7 @@ div.tab button.active {
 				style="background-color: white; width: 100%; height: 500px display:table">
 
 				<form action='verifyddl.jsp' method='post' style="padding: 20px;">
-					<div style="width: 500px; display: table-cell">
+					<div style="width: 400px; display: table-cell">
 						<h4>STM Definition</h4>
 						<select class="form-control" placeholder="select project"
 							id="selected_project" onchange="getTestSheets()">
@@ -1034,7 +1034,7 @@ div.tab button.active {
 						</select> <br>
 
 					</div>
-					<div style="width: 500px; padding: 20px; display: table-cell">
+					<div style="width: 500px; padding-left: 80px;padding-right: 20px; display: table-cell">
 						<h4>Hive table</h4>
 						<select class="form-control" placeholder="select project"
 							id="selected_project" onchange="getTestSheets()">
