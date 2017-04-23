@@ -7,10 +7,29 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Parakhi - 0.7</title>
-<link rel="stylesheet" href="/Parakhi/style.css" type="text/css">
+
 <link rel="stylesheet" href="/Parakhi/animate.css" type="text/css">
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css">
+
+<link rel="stylesheet" href="/Parakhi/style.css" type="text/css">
+<style>
+header .navbar {
+	min-height: 51px;
+	max-height: 51px;
+}
+
+header .navbar-nav>li {
+	padding-bottom: 4px;
+	padding-top: 5px;
+}
+
+.navbar-inverse {
+	background-color: #252525;
+	border-color: #080808;
+}
+</style>
+
 <script type="text/javascript" src="/Parakhi/js/google_sheets_api.js"></script>
 <script src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script src="/Parakhi/js/bootstrap.min.js"></script>
@@ -110,110 +129,109 @@
 <link href="template_files/bootstrap.min.css" rel="stylesheet" />
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" type="text/css">
+<style>
+header .navbar {
+	min-height: 51px;
+}
+
+header .navbar-nav>li {
+	padding-bottom: 4px;
+	padding-top: 5px;
+}
+
+.navbar-inverse {
+	background-color: #353535;
+	border-color: #080808;
+}
+</style>
 </head>
 <body>
-	<div id="wrapper">
-		<!-- start header -->
-		<header>
-		<div class="navbar navbar-inverse navbar-static-top">
-			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
-			</label>
-			<%
-				Credential credential = (Credential) request.getSession()
-						.getAttribute("credential");
 
-				Long active_time = null;
-				if (credential != null)
-					active_time = credential.getExpiresInSeconds();
-				if (active_time != null && active_time > 0) {
-			%>
+	<header>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+		</small>
+		<%
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Active <%=(active_time) / 60%> min
-			</label>
-			<%
-				} else {
-			%>
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Inactive
-			</label>
-			<%
-				}
-			%>
+			Long active_time = null;
+			if (credential != null)
+				active_time = credential.getExpiresInSeconds();
+			if (active_time != null && active_time > 0) {
+		%>
 
-			<div class="container" style="float: right; color: white">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle "
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Project <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal"
-									data-target="#styledProject">Styled Project</a></li>
-								<li><a href="#" data-toggle="modal"
-									data-target="#onSwitchModal">Switch Project</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal">New
-										Project</a></li>
-								<li><a href="project.jsp">View Project</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Sheets <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-										Test Sheet</a></li>
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
-										STM</a></li>
-								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
-										Sheet</a></li>
-								<li><a href="">Verify DDLs</a></li>
-							</ul></li>
+		<small style="color: white"> Token: Active <%=(active_time) / 60%>
+			min
+		</small>
 
-						<li class="dropdown"><a href="cross_section.jsp"
-							style="color: white">Cross Section</a></li>
-						<li class="dropdown"><a href="history.jsp"
-							style="color: white">History</a></li>
-						<li class="dropdown"><a href="settings.jsp"
-							style="color: white">Settings</a></li>
+		<%
+			} else {
+		%>
+		<small style="color: white"> Token: Inactive </small>
+		<%
+			}
+		%>
 
-						<%
-							if (request.getSession().getAttribute("user_id") == null) {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
-						<%
-							} else {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
-						<%
-							}
-						%>
-					</ul>
-				</div>
-			</div>
+		<div class="container" style="float: right">
+			<ul class="nav navbar-nav" style="float: right; color: white">
+				<li class="dropdown"><a href="index.jsp" style="color: white"><span
+						class="glyphicon glyphicon-home"></span>&nbsp;Home </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle "
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Project
+						<span class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">Switch Project</a></li>
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">New Project</a></li>
+						<li><a href="project.jsp">View Project</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-book"></span>&nbsp;Sheets <span
+						class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+								Test Sheet</a></li>
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+								STM</a></li>
+						<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+								Sheet</a></li>
+						<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
+								DDLs</a></li>
+					</ul></li>
+
+				<li class="dropdown"><a href="cross_section.jsp"
+					style="color: white"><span class="glyphicon glyphicon-record"></span>&nbsp;Cross
+						Section</a></li>
+				<li class="dropdown"><a href="history.jsp" style="color: white"><span
+						class="glyphicon glyphicon-time"></span>&nbsp;History</a></li>
+				<li class="dropdown"><a href="settings.jsp"
+					style="color: white"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a></li>
+
+				<%
+					if (request.getSession().getAttribute("user_id") == null) {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
+				<%
+					} else {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Logout</a></li>
+				<%
+					}
+				%>
+			</ul>
 		</div>
-		</header>
-		<!-- end header -->
-
 	</div>
-
-
-
-
-
-
-
+	</header>
 
 	<div class="panel-group" id="accordion">
 
@@ -246,16 +264,16 @@
 				<div class="panel-body" style="margin-left: 10px">
 
 					<input type="text" class="form-control" id="hive_connection_url"
-						placeholder="Hive connection url" style="width: 800px" /><br> <input
-						type="text" class="form-control" id="hive_user" placeholder="user"
-						style="width: 200px" /><br> <input type="password"
-						class="form-control" id="hive_pwd" placeholder="password"
-						style="width: 200px" /><br>
+						placeholder="Hive connection url" style="width: 800px" /><br>
+					<input type="text" class="form-control" id="hive_user"
+						placeholder="user" style="width: 200px" /><br> <input
+						type="password" class="form-control" id="hive_pwd"
+						placeholder="password" style="width: 200px" /><br>
 
-					<button class="btn btn-primary" onclick="testHiveConnection()">Check</button>
+					<button class="btn btn-primary" onclick="testHiveConnection()"
+						style="width: 80px">Check</button>
 
-					<button class="btn btn-success" style="margin-left: 10px"
-						onclick="">Apply</button>
+					<button class="btn btn-success" style="width: 80px" onclick="">Apply</button>
 					<div id="hive_con_test"></div>
 				</div>
 			</div>
@@ -273,15 +291,15 @@
 			<div id="collapse0" class="panel-collapse collapse">
 				<div class="panel-body" style="margin-left: 10px">
 					<input type="text" class="form-control" id="connection_url"
-						placeholder="MySql connection url" style="width: 800px" /> <br> <input
-						type="text" class="form-control" id="user" placeholder="user"
-						style="width: 200px" /> <br> <input type="password"
-						class="form-control" id="pwd" placeholder="password"
-						style="width: 200px" /><br>
-					<button class="btn btn-primary" onclick="testConnection()">Check</button>
+						placeholder="MySql connection url" style="width: 800px" /> <br>
+					<input type="text" class="form-control" id="user"
+						placeholder="user" style="width: 200px" /> <br> <input
+						type="password" class="form-control" id="pwd"
+						placeholder="password" style="width: 200px" /><br>
+					<button class="btn btn-primary" onclick="testConnection()"
+						style="width: 80px">Check</button>
 
-					<button class="btn btn-success" style="margin-left: 10px"
-						onclick="">Apply</button>
+					<button class="btn btn-success" style="width: 80px" onclick="">Apply</button>
 					<div id="con_test"></div>
 
 				</div>
@@ -298,7 +316,7 @@
 						Authorization</a>
 				</h4>
 			</div>
-			<div id="collapse3" class="panel-collapse collapse">
+			<div id="collapse3" class="panel-collapse collapse in">
 				<div class="panel-body" style="margin-left: 10px">
 
 					<div id="authorization-div" style="display: none"></div>

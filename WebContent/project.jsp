@@ -7,31 +7,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Parakhi - 0.7</title>
-<link rel="stylesheet" href="/Parakhi/style.css" type="text/css">
-<link rel="stylesheet" href="/Parakhi/animate.css" type="text/css">
+
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css">
-<link rel="stylesheet" href="/Parakhi/css/w3.css" type="text/css">
+<link href="template_files/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css">
+
 <style>
-#myInput {
-	background-image: url('res/images/search.svg');
-	background-size: 20px 20px;
-	/* Add a search icon to input */
-	background-position: 10px 14px; /* Position the search icon */
-	background-repeat: no-repeat; /* Do not repeat the icon image */
-	width: 100%; /* Full-width */
-	font-size: 16px; /* Increase font-size */
-	padding: 12px 20px 12px 40px; /* Add some padding */
-	border: 0px;
-	border-right:1px solid #ddd; /* Add a grey border */
-	margin-bottom: 12px; /* Add some space below the input */
+header .navbar {
+	min-height: 51px;
+}
+
+header .navbar-nav>li {
+	padding-bottom: 4px;
+	padding-top: 5px;
+}
+
+.navbar-inverse {
+	background-color: #353535;
+	border-color: #080808;
 }
 </style>
+
 <script src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script src="/Parakhi/js/bootstrap.min.js"></script>
+<script src="/Parakhi/js/parakhi.js"></script>
+
 <script>
 function showProjectDetails(proj_id){
 	document.getElementById("tables_list").innerHTML='';
@@ -80,113 +83,96 @@ function myFunction(id) {
 }
 
 </script>
-<meta charset="utf-8">
-<title>Parakhi - Making Testing So EASY</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Parakhi" />
-<!-- css -->
-<link href="template_files/bootstrap.min.css" rel="stylesheet" />
-<link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css">
+
 </head>
 
 <body>
-	<div id="wrapper">
-		<!-- start header -->
-		<header>
-		<div class="navbar navbar-inverse navbar-static-top">
-			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
-			</label>
-			<%
-				Credential credential = (Credential) request.getSession()
-						.getAttribute("credential");
 
-				Long active_time = null;
-				if (credential != null)
-					active_time = credential.getExpiresInSeconds();
-				if (active_time != null && active_time > 0) {
-			%>
+	<header>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+		</small>
+		<%
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Active <%=(active_time) / 60%> min
-			</label>
-			<%
-				} else {
-			%>
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Inactive
-			</label>
-			<%
-				}
-			%>
+			Long active_time = null;
+			if (credential != null)
+				active_time = credential.getExpiresInSeconds();
+			if (active_time != null && active_time > 0) {
+		%>
 
-			<div class="container" style="float: right; color: white">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle "
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Project <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal"
-									data-target="#styledProject">Styled Project</a></li>
-								<li><a href="#" data-toggle="modal"
-									data-target="#onSwitchModal">Switch Project</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal">New
-										Project</a></li>
-								<li><a href="project.jsp">View Project</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Sheets <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-										Test Sheet</a></li>
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
-										STM</a></li>
-								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
-										Sheet</a></li>
-								<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
-										DDLs</a></li>
-							</ul></li>
+		<small style="color: white"> Token: Active <%=(active_time) / 60%>
+			min
+		</small>
 
-						<li class="dropdown"><a href="cross_section.jsp"
-							style="color: white">Cross Section</a></li>
-						<li class="dropdown"><a href="history.jsp"
-							style="color: white">History</a></li>
-						<li class="dropdown"><a href="settings.jsp"
-							style="color: white">Settings</a></li>
+		<%
+			} else {
+		%>
+		<small style="color: white"> Token: Inactive </small>
+		<%
+			}
+		%>
 
-						<%
-							if (request.getSession().getAttribute("user_id") == null) {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
-						<%
-							} else {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
-						<%
-							}
-						%>
-					</ul>
-				</div>
-			</div>
+		<div class="container" style="float: right">
+			<ul class="nav navbar-nav" style="float: right; color: white">
+				<li class="dropdown"><a href="index.jsp" style="color: white"><span
+						class="glyphicon glyphicon-home"></span>&nbsp;Home </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle "
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Project
+						<span class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">Switch Project</a></li>
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">New Project</a></li>
+						<li><a href="project.jsp">View Project</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-book"></span>&nbsp;Sheets <span
+						class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+								Test Sheet</a></li>
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+								STM</a></li>
+						<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+								Sheet</a></li>
+						<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
+								DDLs</a></li>
+					</ul></li>
+
+				<li class="dropdown"><a href="cross_section.jsp"
+					style="color: white"><span class="glyphicon glyphicon-record"></span>&nbsp;Cross
+						Section</a></li>
+				<li class="dropdown"><a href="history.jsp" style="color: white"><span
+						class="glyphicon glyphicon-time"></span>&nbsp;History</a></li>
+				<li class="dropdown"><a href="settings.jsp"
+					style="color: white"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a></li>
+
+				<%
+					if (request.getSession().getAttribute("user_id") == null) {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
+				<%
+					} else {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Logout</a></li>
+				<%
+					}
+				%>
+			</ul>
 		</div>
-		</header>
-		<!-- end header -->
-
 	</div>
+	</header>
 
 
 	<ul class="ver_nav_bar" id="projects_ul">
@@ -194,22 +180,21 @@ function myFunction(id) {
 			placeholder="Search...">
 		<%
 			MySQL_dao ob = new MySQL_dao();
-			List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
-			for (int i = 0; i < projects.size(); i++) {
+			List<String[]> projs = new ArrayList<String[]>(ob.getProjects());
+			for (int i = 0; i < projs.size(); i++) {
 		%>
-		<li class="ver_li" title="<%=projects.get(i)[2]%>"><a
+		<li class="ver_li" title="<%=projs.get(i)[2]%>"><a
 			class="ver_li inactive" href="#"
-			onclick="showProjectDetails(<%=projects.get(i)[0]%>)"
-			style="font-size: large"><%=projects.get(i)[1]%></a></li>
+			onclick="showProjectDetails(<%=projs.get(i)[0]%>)"
+			style="font-size: large"><%=projs.get(i)[1]%></a></li>
 
 		<%
 			}
 		%>
 	</ul>
 
-
-
-	<div class="panel-group" id="accordion" style="margin-left: 15.5%;margin-top:10px">
+	<div class="panel-group" id="accordion"
+		style="margin-left: 15.5%; margin-top: 10px">
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -220,8 +205,30 @@ function myFunction(id) {
 			</div>
 			<div id="collapse1" class="panel-collapse collapse in">
 				<div id="about"
-					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-					a project..</div>
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
+					<%
+						boolean activeSession = false;
+						int pid = 0;
+						if (request.getSession().getAttribute("proj_id") != null) {
+							pid = Integer.parseInt(request.getSession()
+									.getAttribute("proj_id").toString());
+							activeSession = true;
+
+						}
+						if (activeSession && pid != 0) {
+							String[] p_dtls = ob.getProjDtls(pid);
+					%>
+					<label>Project Id : </label>
+					<%=pid%><br> <label>Project Name : </label>
+					<%=p_dtls[1]%><br> <label>Project Desc : </label>
+					<%=p_dtls[2]%>
+					<%
+						} else {
+					%>Select a project..
+					<%
+						}
+					%>
+				</div>
 			</div>
 		</div>
 
@@ -271,9 +278,98 @@ function myFunction(id) {
 			</div>
 		</div>
 
-
 	</div>
 
+	<div class="modal fade" id="styledProject" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="tab">
+				<button class="tablinks active" onclick="openCity(event, 'New')">New
+					project</button>
+
+				<button class="tablinks" onclick="openCity(event, 'Existing')">Existing
+					project</button>
+
+			</div>
+
+			<div id="New" class="tabcontent">
+				<h3>New project</h3>
+				<br>
+				<form action="#" method='post'>
+					<input type="text" name="pid" placeholder="Project id"
+						class="form-control" style="width: 18.5%; display: inline-block" />&nbsp;
+					<input type="text" name="pname" placeholder="Project name"
+						class="form-control" style="width: 80%; display: inline-block" />
+					<br> <br>
+					<textarea name="pdesc" style="resize: none" rows="1"
+						placeholder="Project Description" class="form-control"></textarea>
+					<br>
+					<h5>Project files</h5>
+					<input class="radio-inline" type="radio" name="filesType">&nbsp;Excel
+					<input class="radio-inline" type="radio" name="filesType" checked>&nbsp;Google
+
+					Sheet <br> <br>
+
+					<div id="google_selector">
+						<input type="text" name="testSheet_url" id="testSheet_url"
+							placeholder="Test Sheet url" class="form-control"
+							style="width: 80%; display: inline-block" />&nbsp; <input
+							type="button" class="btn" style="color: black" value="Inspect" />
+						<br>
+						<div id="testSheet_name"></div>
+						<br> <input type="text" name="stm_url" id="stm_url"
+							placeholder="STM url" class="form-control"
+							style="width: 80%; display: inline-block" />&nbsp; <input
+							type="button" class="btn" style="color: black" value="Inspect" />
+					</div>
+
+
+					<!-- 		<div id="excel_selector">
+					<input type="text" name="testSheet_file"
+						id="testSheet_file" placeholder="Test Sheet file (.xls)"
+						class="form-control" style="width: 80%; display: inline-block" />&nbsp;
+					<input type="button" class="btn" style="color: black"
+						value="Browse" /> <br>
+					<div id="testSheet_name"></div>
+					<br> <input type="text" name="stm_file" id="stm_file"
+						placeholder="STM file (.xls)" class="form-control"
+						style="width: 80%; display: inline-block" />&nbsp; <input
+						type="button" class="btn" style="color: black" value="Browse" />
+						</div>
+			 -->
+					<br> <br> <br> <input type="submit"
+						class="btn btn-primary" value="Create Project">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</form>
+
+			</div>
+
+
+			<div id="Existing" class="tabcontent"
+				style="display: none; position: relative;">
+
+				<h3>Existing projects</h3>
+				<br>
+
+				<%
+					//	List<String[]> projs = new ArrayList<String[]>(ob.getProjects());
+
+					for (String[] p : projs) {
+				%>
+
+
+
+				<h4>
+					<a title="<%=p[2]%>" href="" style="color: grey"
+						onclick="setActiveProj('<%=p[0]%>','<%=p[1]%>')"><%=p[1]%></a>
+				</h4>
+				<%
+					}
+				%>
+				<button type="button" class="btn btn-default" data-dismiss="modal"
+					style="position: absolute; bottom: 20px">Cancel</button>
+			</div>
+		</div>
+	</div>
 
 </body>
 

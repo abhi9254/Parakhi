@@ -6,7 +6,6 @@
 	import="com.google.api.client.googleapis.auth.oauth2.GoogleCredential"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <%@ page import="java.sql.*,java.util.HashMap"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -21,7 +20,7 @@
 <link rel="stylesheet" href="css/chosen.css" type="text/css">
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" type="text/css">
-<link id="t-colors" href="template_files/default.css" rel="stylesheet" />
+
 
 
 <style>
@@ -90,144 +89,24 @@
 	left: -6px;
 }
 
-#myInput {
-	background-image: url('res/images/search.svg');
-	background-size: 20px 20px;
-	/* Add a search icon to input */
-	background-position: 10px 14px; /* Position the search icon */
-	background-repeat: no-repeat; /* Do not repeat the icon image */
-	width: 100%; /* Full-width */
-	font-size: 16px; /* Increase font-size */
-	padding: 12px 20px 12px 40px; /* Add some padding */
-	border: 0px;
-	border-right:1px solid #ddd; /* Add a grey border */
-	margin-bottom: 12px;
-	background-repeat: no-repeat /* Add some space below the input */
+header .navbar {
+	min-height: 51px;
 }
 
-.chosen-container-multi .chosen-choices {
-	overflow: initial;
-	border: 0px;
+header .navbar-nav>li {
+	padding-bottom: 4px;
+	padding-top: 5px;
 }
 
-.chosen-container-single .chosen-single span {
-	overflow: initial;
-	border: 0px;
-}
-
-.switch {
-	position: relative;
-	display: inline-block;
-	width: 50px;
-	height: 25px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-	display: none;
-}
-
-/* The slider */
-.slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #ccc;
-	-webkit-transition: .4s;
-	transition: .4s;
-	bottom: 0;
-}
-
-.slider:before {
-	position: absolute;
-	content: "";
-	height: 22px;
-	width: 22px;
-	left: 2px;
-	bottom: 2px;
-	background-color: white;
-	-webkit-transition: .4s;
-	transition: .4s;
-}
-
-input:checked+.slider {
-	background-color: #2196F3;
-}
-
-input:focus+.slider {
-	box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked+.slider:before {
-	-webkit-transform: translateX(24px);
-	-ms-transform: translateX(24px);
-	transform: translateX(24px);
-}
-
-/* Rounded sliders */
-.slider.round {
-	border-radius: 34px;
-}
-
-.slider.round:before {
-	border-radius: 50%;
-}
-
-div.tab {
-	float: left;
-	border: 1px solid #ccc;
-	background-color: #f1f1f1;
-	width: 20%;
-	height: 600px;
-}
-
-/* Style the buttons inside the tab */
-div.tab button {
-	display: block;
-	background-color: inherit;
-	color: black;
-	padding: 22px 16px;
-	width: 100%;
-	outline: none;
-	text-align: left;
-	cursor: pointer;
-	transition: 0.3s;
-	font-size: 17px;
-	height: 300px;
-	border-style: solid;
-	border-width: 0px;
-	border-right-width: 3px;
-	border-right-color: grey;
-}
-
-/* Change background color of buttons on hover */
-div.tab button:hover {
-	background-color: #ddd;
-}
-
-/* Create an active/current "tab button" class */
-div.tab button.active {
-	background-color: #ccc;
-	border-right-color: #1eada5;
-}
-
-/* Style the tab content */
-.tabcontent {
-	float: left;
-	padding: 0px 12px;
-	border: 1px solid #ccc;
-	width: 80%;
-	border-left: none;
-	height: 600px;
-	background-color: white;
+.navbar-inverse {
+	background-color: #353535;
+	border-color: #080808;
 }
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/chosen.jquery.min.js" type="text/javascript"></script>
+<script src="js/parakhi.js" type="text/javascript"></script>
 <script>
 	function refresh_selectors(base_query, base_text, up_base_query, up_base_text, up_cols_text) {
 		$(document)
@@ -367,17 +246,6 @@ div.tab button.active {
 	}
 </script>
 <script>
-	function setActiveProj(proj_id, proj_nm) {
-		var x = new XMLHttpRequest()
-		x.open("GET", "index_ajax2.jsp?setProj=1&proj_id=" + proj_id
-				+ "&proj_nm=" + proj_nm, true)
-		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-
-			}
-		}
-	}
 	function myFunction() {
 		// Declare variables
 		var input, filter, ul, li, a, i;
@@ -600,136 +468,102 @@ div.tab button.active {
 </script>
 
 
-<script>
-	function openCity(evt, cityName) {
-		var i, tabcontent, tablinks;
-		tabcontent = document.getElementsByClassName("tabcontent");
-		for (i = 0; i < tabcontent.length; i++) {
-			tabcontent[i].style.display = "none";
-		}
-		tablinks = document.getElementsByClassName("tablinks");
-		for (i = 0; i < tablinks.length; i++) {
-			tablinks[i].className =
-					tablinks[i].className.replace(" active", "");
-		}
-		document.getElementById(cityName).style.display = "block";
-		evt.currentTarget.className += " active";
-	}
-
-	// Get the element with id="defaultOpen" and click on it
-	document.getElementById("defaultOpen").click();
-</script>
-
 
 </head>
 <body>
-	<input type="text" hidden="hidden" id="setQuery">
-	<input type="text" hidden="hidden" id="colId">
 
-	<div id="wrapper">
-		<!-- start header -->
-		<header>
-		<div class="navbar navbar-inverse navbar-static-top">
-			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
-			</label>
-			<%
-				Credential credential = (Credential) request.getSession()
-						.getAttribute("credential");
+	<header>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+		</small>
+		<%
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
-				Long active_time = null;
-				if (credential != null)
-					active_time = credential.getExpiresInSeconds();
-				if (active_time != null && active_time > 0) {
-			%>
+			Long active_time = null;
+			if (credential != null)
+				active_time = credential.getExpiresInSeconds();
+			if (active_time != null && active_time > 0) {
+		%>
 
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Active <%=(active_time) / 60%> min
-			</label>
-			<%
-				} else {
-			%>
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Inactive
-			</label>
-			<%
-				}
-			%>
+		<small style="color: white"> Token: Active <%=(active_time) / 60%>
+			min
+		</small>
 
-			<div class="container" style="float: right; color: white">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle "
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Project <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal"
-									data-target="#styledProject">Styled Project</a></li>
-								<li><a href="#" data-toggle="modal"
-									data-target="#onSwitchModal">Switch Project</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal">New
-										Project</a></li>
-								<li><a href="project.jsp">View Project</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Sheets <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-										Test Sheet</a></li>
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
-										STM</a></li>
-								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
-										Sheet</a></li>
-								<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
-										DDLs</a></li>
-							</ul></li>
+		<%
+			} else {
+		%>
+		<small style="color: white"> Token: Inactive </small>
+		<%
+			}
+		%>
 
-						<li class="dropdown"><a href="cross_section.jsp"
-							style="color: white">Cross Section</a></li>
-						<li class="dropdown"><a href="history.jsp"
-							style="color: white">History</a></li>
-						<li class="dropdown"><a href="settings.jsp"
-							style="color: white">Settings</a></li>
+		<div class="container" style="float: right">
+			<ul class="nav navbar-nav" style="float: right; color: white">
+				<li class="dropdown"><a href="index.jsp" style="color: white"><span
+						class="glyphicon glyphicon-home"></span>&nbsp;Home </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle "
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Project
+						<span class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">Switch Project</a></li>
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">New Project</a></li>
+						<li><a href="project.jsp">View Project</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-book"></span>&nbsp;Sheets <span
+						class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+								Test Sheet</a></li>
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+								STM</a></li>
+						<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+								Sheet</a></li>
+						<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
+								DDLs</a></li>
+					</ul></li>
 
-						<%
-							if (request.getSession().getAttribute("user_id") == null) {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
-						<%
-							} else {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
-						<%
-							}
-						%>
-					</ul>
-				</div>
-			</div>
+				<li class="dropdown"><a href="cross_section.jsp"
+					style="color: white"><span class="glyphicon glyphicon-record"></span>&nbsp;Cross
+						Section</a></li>
+				<li class="dropdown"><a href="history.jsp" style="color: white"><span
+						class="glyphicon glyphicon-time"></span>&nbsp;History</a></li>
+				<li class="dropdown"><a href="settings.jsp"
+					style="color: white"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a></li>
+
+				<%
+					if (request.getSession().getAttribute("user_id") == null) {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
+				<%
+					} else {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Logout</a></li>
+				<%
+					}
+				%>
+			</ul>
 		</div>
-		</header>
-		<!-- end header -->
-
 	</div>
-
+	</header>
 
 	<div class="ver_nav_bar">
 		<input type="text" id="myInput" onkeyup="myFunction()"
 			placeholder="Search...">
 
 		<ul class="nav nav-tabs">
-			<li class="active" style="width: 50%"><a data-toggle="tab"
+			<li class="active" style="width: 50%;"><a data-toggle="tab"
 				href="#generic">Generic</a></li>
 			<li style="width: 50%"><a data-toggle="tab" href="#project">Project</a></li>
 		</ul>
@@ -752,6 +586,11 @@ div.tab button.active {
 
 				</ul>
 			</div>
+
+
+			<input type="text" hidden="hidden" id="setQuery"> <input
+				type="text" hidden="hidden" id="colId">
+
 
 			<div id="project" class="tab-pane fade">
 				<ul class="ver_nav_bar" id="proj_cases_ul">
@@ -778,6 +617,7 @@ div.tab button.active {
 
 		</div>
 	</div>
+
 	<div id='clipboard'
 		style="display: none; border: 1px solid black; float: right; height: 500px; width: 200px">Clipboard</div>
 	<div class="container-fluid">
@@ -948,8 +788,8 @@ div.tab button.active {
 	<div class="modal fade" id="styledProject" role="dialog">
 		<div class="modal-dialog modal-lg">
 			<div class="tab">
-				<button class="tablinks active" onclick="openCity(event, 'New')"
-					id="defaultOpen">New project</button>
+				<button class="tablinks active" onclick="openCity(event, 'New')">New
+					project</button>
 
 				<button class="tablinks" onclick="openCity(event, 'Existing')">Existing
 					project</button>

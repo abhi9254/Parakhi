@@ -22,8 +22,23 @@
 <link id="t-colors" href="template_files/default.css" rel="stylesheet" />
 
 <style>
-#comparetbl_wrapper{
-width:100%
+#comparetbl_wrapper {
+	width: 100%
+}
+</style>
+<style>
+header .navbar {
+	min-height: 51px;
+}
+
+header .navbar-nav>li {
+	padding-bottom: 4px;
+	padding-top: 5px;
+}
+
+.navbar-inverse {
+	background-color: #353535;
+	border-color: #080808;
 }
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
@@ -32,110 +47,100 @@ width:100%
 <script>
 	$(document).ready(function() {
 		$('#comparetbl').DataTable({
-			order: [],
-			paging: false
+			order : [],
+			paging : false
 		});
 	});
 </script>
 </head>
 <body>
 
+	<header>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+		</small>
+		<%
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
-	<div id="wrapper">
-		<!-- start header -->
-		<header>
-		<div class="navbar navbar-inverse navbar-static-top">
-			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
-			</label>
-			<%
-				Credential credential = (Credential) request.getSession()
-						.getAttribute("credential");
+			Long active_time = null;
+			if (credential != null)
+				active_time = credential.getExpiresInSeconds();
+			if (active_time != null && active_time > 0) {
+		%>
 
-				Long active_time = null;
-				if (credential != null)
-					active_time = credential.getExpiresInSeconds();
-				if (active_time != null && active_time > 0) {
-			%>
+		<small style="color: white"> Token: Active <%=(active_time) / 60%>
+			min
+		</small>
 
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Active <%=(active_time) / 60%> min
-			</label>
-			<%
-				} else {
-			%>
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Inactive
-			</label>
-			<%
-				}
-			%>
+		<%
+			} else {
+		%>
+		<small style="color: white"> Token: Inactive </small>
+		<%
+			}
+		%>
 
-			<div class="container" style="float: right; color: white">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle "
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Project <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal"
-									data-target="#styledProject">Styled Project</a></li>
-								<li><a href="#" data-toggle="modal"
-									data-target="#onSwitchModal">Switch Project</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal">New
-										Project</a></li>
-								<li><a href="project.jsp">View Project</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Sheets <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-										Test Sheet</a></li>
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
-										STM</a></li>
-								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
-										Sheet</a></li>
-								<li><a href="">Verify DDLs</a></li>
-							</ul></li>
-						
-						<li class="dropdown"><a href="cross_section.jsp"
-							style="color: white">Cross Section</a></li>
-						<li class="dropdown"><a href="history.jsp"
-							style="color: white">History</a></li>
-						<li class="dropdown"><a href="settings.jsp"
-							style="color: white">Settings</a></li>
+		<div class="container" style="float: right">
+			<ul class="nav navbar-nav" style="float: right; color: white">
+				<li class="dropdown"><a href="index.jsp" style="color: white"><span
+						class="glyphicon glyphicon-home"></span>&nbsp;Home </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle "
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Project
+						<span class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">Switch Project</a></li>
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">New Project</a></li>
+						<li><a href="project.jsp">View Project</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-book"></span>&nbsp;Sheets <span
+						class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+								Test Sheet</a></li>
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+								STM</a></li>
+						<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+								Sheet</a></li>
+						<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
+								DDLs</a></li>
+					</ul></li>
 
-						<%
-							if (request.getSession().getAttribute("user_id") == null) {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
-						<%
-							} else {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
-						<%
-							}
-						%>
-					</ul>
-				</div>
-			</div>
+				<li class="dropdown"><a href="cross_section.jsp"
+					style="color: white"><span class="glyphicon glyphicon-record"></span>&nbsp;Cross
+						Section</a></li>
+				<li class="dropdown"><a href="history.jsp" style="color: white"><span
+						class="glyphicon glyphicon-time"></span>&nbsp;History</a></li>
+				<li class="dropdown"><a href="settings.jsp"
+					style="color: white"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a></li>
+
+				<%
+					if (request.getSession().getAttribute("user_id") == null) {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
+				<%
+					} else {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Logout</a></li>
+				<%
+					}
+				%>
+			</ul>
 		</div>
-		</header>
-		<!-- end header -->
-
 	</div>
+	</header>
+
 
 	<div style="margin: 20px">
 		<%
@@ -201,10 +206,9 @@ width:100%
 			out.print("<h4 style='display:inline'>Verification: </h4>");
 			if (match)
 				out.println(
-						"<h4 style='color:green ;display:inline'>Pass</h4><br><br>");
+						"<h4 style='color:green ;display:inline'>Pass</h4>");
 			else
-				out.println(
-						"<h4 style='color:red;display:inline'>Fail</h4><br><br>");
+				out.println("<h4 style='color:red;display:inline'>Fail</h4>");
 		%>
 
 

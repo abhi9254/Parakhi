@@ -8,20 +8,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Parakhi - 0.7</title>
-<link rel="stylesheet" href="/Parakhi/style.css" type="text/css">
-<link rel="stylesheet" href="/Parakhi/animate.css" type="text/css">
+<link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css">
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css">
 <script src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script src="/Parakhi/js/bootstrap.min.js"></script>
-<meta charset="utf-8">
-<title>Parakhi - Making Testing So EASY</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Parakhi" />
-<!-- css -->
-<link href="template_files/bootstrap.min.css" rel="stylesheet" />
-<link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css">
+
 </head>
 <body>
 	<!-- start header -->
@@ -87,17 +79,23 @@
 		String sheet_id = request.getParameter("selected_testsheet");
 		String worksheet_id = request.getParameter("selected_worksheet");
 		String token = (String) request.getSession().getAttribute("token");
-		String q_range = worksheet_id + "!" + request.getParameter("q_range");
+		String q_range = worksheet_id + "!"
+				+ request.getParameter("q_range");
 		String op_range = null;
 
 		SheetsAPI ob = new SheetsAPI();
 
-		if (request.getParameter("op_range") != null && request.getParameter("op_range") != "")
-			op_range = worksheet_id + "!" + request.getParameter("op_range");
+		if (request.getParameter("op_range") != null
+				&& request.getParameter("op_range") != "")
+			op_range = worksheet_id + "!"
+					+ request.getParameter("op_range");
 		else {
 			int sep = request.getParameter("q_range").indexOf(':');
-			String opRowStart = request.getParameter("q_range").substring(1, sep);
-			op_range = worksheet_id + "!" + ob.getLastCol(token, sheet_id, worksheet_id) + opRowStart;
+			String opRowStart = request.getParameter("q_range").substring(1,
+					sep);
+			op_range = worksheet_id + "!"
+					+ ob.getLastCol(token, sheet_id, worksheet_id)
+					+ opRowStart;
 		}
 
 		ob.rerunSheet(token, sheet_id, worksheet_id, q_range, op_range);
