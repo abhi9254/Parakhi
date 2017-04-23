@@ -27,7 +27,7 @@ public class delCredentials extends HttpServlet {
 		} else
 			System.out.println("File " + cred_file.getAbsolutePath() + " does not exist");
 
-		response.sendRedirect("index.jsp");
+		response.sendRedirect("settings.jsp");
 	}
 
 }

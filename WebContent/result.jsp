@@ -1,7 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@page import="com.google.api.client.auth.oauth2.Credential"%>
 <%@ page
 	import="java.io.PrintWriter,java.sql.DriverManager,java.sql.Connection,java.sql.ResultSet,java.sql.ResultSetMetaData,java.sql.Statement,java.sql.SQLException,java.util.regex.Matcher,java.util.regex.Pattern"%>
 
@@ -40,12 +40,14 @@
 		for (i = 0; i < row_c; i++) {
 			str = str + "\n";
 
-			var cell_c = document.getElementById("res_tbl").rows[i].cells.length;
+			var cell_c =
+					document.getElementById("res_tbl").rows[i].cells.length;
 
 			for (j = 0; j < cell_c - 1; j++) {
 
-				var x = document.getElementById("res_tbl").rows[i].cells
-						.item(j).innerHTML;
+				var x =
+						document.getElementById("res_tbl").rows[i].cells
+								.item(j).innerHTML;
 
 				str = str + x + "\t";
 
@@ -68,7 +70,8 @@
 
 	function previewTraceQuery(tbl_nm) {
 
-		var query_element = document.getElementById('query_' + tbl_nm).style.display
+		var query_element =
+				document.getElementById('query_' + tbl_nm).style.display
 		if (query_element == 'none')
 			document.getElementById('query_' + tbl_nm).style.display = 'inline'
 		else
@@ -80,12 +83,13 @@
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?trace_tbl_nm=" + tbl_nm, true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				document.getElementById("src_db_nms").innerHTML = x.responseText
-						.trim();
-			}
-		}
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						document.getElementById("src_db_nms").innerHTML =
+								x.responseText.trim();
+					}
+				}
 		traceRows2();
 	}
 
@@ -123,11 +127,12 @@
 			}
 
 		}
-	//	alert(tbl_arr)
+		//	alert(tbl_arr)
 		var track_creator = '';
 		for (i = 0; i < tbl_arr.length; i++) {
-			track_creator += "<form action='Query' method='post' target='_blank' id='"+tbl_arr[i]+"'><label>"
-					+ tbl_arr[i] + "</label><br></form><br>";
+			track_creator +=
+					"<form action='Query' method='post' target='_blank' id='"+tbl_arr[i]+"'><label>"
+							+ tbl_arr[i] + "</label><br></form><br>";
 
 		}
 		document.getElementById("tracker").innerHTML = track_creator;
@@ -142,19 +147,17 @@
 				//split to get tbl nms from stm
 				var tbl_nm = str.substring(0, str.indexOf(' '))
 				//split to get col nms from stm
-			//	var src_col_nm = str.substring(str.indexOf(' ') + 1,str.indexOf('|'))
-				var tgt_col_nm = str.substring(str.indexOf('|')+1)
+				//	var src_col_nm = str.substring(str.indexOf(' ') + 1,str.indexOf('|'))
+				var tgt_col_nm = str.substring(str.indexOf('|') + 1)
 				var col_nm = str.substring(str.indexOf(' ') + 1)
-				
+
 				if (headers[h] == tgt_col_nm) {
-					document.getElementById(tbl_nm).innerHTML += "<input type='checkbox' style='display:inline-block' id='checkboxes_"
-							+ tbl_nm
-							+ "' name='cols_"
-							+ tbl_nm
-							+ "' value='"
-							+ col_nm
-							+ "' checked='true' onchange=traceCols('"
-							+ tbl_nm + "')></input>" + tgt_col_nm;
+					document.getElementById(tbl_nm).innerHTML +=
+							"<input type='checkbox' style='display:inline-block' id='checkboxes_"
+									+ tbl_nm + "' name='cols_" + tbl_nm
+									+ "' value='" + col_nm
+									+ "' checked='true' onchange=traceCols('"
+									+ tbl_nm + "')></input>" + tgt_col_nm;
 				}
 			}
 		}
@@ -169,15 +172,17 @@
 
 			var checked_tgt_col = [];
 			var checked_src_col = [];
-			
+
 			var checkboxes;
 			if (tbl_nm != '') {
 				checkboxes = document.getElementsByName('cols_' + tbl_nm);
 				for (c = 0; c < checkboxes.length; c++) {
 					if (checkboxes[c].checked) {
-						str= checkboxes[c].value
-						checked_src_col.push(str.substring(0,str.indexOf('|')))
-						checked_tgt_col.push(str.substring(str.indexOf('|')+1))
+						str = checkboxes[c].value
+						checked_src_col
+								.push(str.substring(0, str.indexOf('|')))
+						checked_tgt_col.push(str
+								.substring(str.indexOf('|') + 1))
 					}
 				}
 			}
@@ -198,20 +203,26 @@
 			if (checked_tgt_col.length != 0) {
 
 				for (d = 0; d < data_rows_id.length; d++) {
-					var data_row = document.getElementById(data_rows_id[d]).cells
+					var data_row =
+							document.getElementById(data_rows_id[d]).cells
 					for (h = 0; h < checked_tgt_col.length; h++) {
 						if (h == 0) {
 							for (j = 0; j < headers.length; j++) {
 								if (checked_tgt_col[0] == headers[j]) {
 									if (d == 0)
-										query += " WHERE \n(" + checked_src_col[0]
-												+ " = '"
-												+ data_row[j + 1].innerHTML
-												+ "'"
+										query +=
+												" WHERE \n("
+														+ checked_src_col[0]
+														+ " = '"
+														+ data_row[j + 1].innerHTML
+														+ "'"
 									else
-										query += "\n(" + checked_src_col[0] + " = '"
-												+ data_row[j + 1].innerHTML
-												+ "'"
+										query +=
+												"\n("
+														+ checked_src_col[0]
+														+ " = '"
+														+ data_row[j + 1].innerHTML
+														+ "'"
 									if (checked_tgt_col.length == 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
@@ -225,8 +236,11 @@
 						} else {
 							for (j = 0; j < headers.length; j++) {
 								if (checked_tgt_col[h] == headers[j]) {
-									query += " AND " + checked_src_col[h] + " = '"
-											+ data_row[j + 1].innerHTML + "'"
+									query +=
+											" AND " + checked_src_col[h]
+													+ " = '"
+													+ data_row[j + 1].innerHTML
+													+ "'"
 									if (h == checked_tgt_col.length - 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
@@ -241,13 +255,14 @@
 				}
 
 				//turn display: inline to debug
-				document.getElementById(tbl_nm).innerHTML += "<textarea id=query_"
-						+ tbl_nm
-						+ " style='display:none;width:50%;height:100px' name = 'query_text'>"
-						+ query
-						+ "</textarea><input type='submit' value='Trace' class='btn btn-info' style='float: right; display:inline-block'><input type='button' value='Preview' onclick=previewTraceQuery('"
-						+ tbl_nm
-						+ "') class='btn' style='float: right;display:inline-block'/>"
+				document.getElementById(tbl_nm).innerHTML +=
+						"<textarea id=query_"
+								+ tbl_nm
+								+ " style='display:none;width:50%;height:100px' name = 'query_text'>"
+								+ query
+								+ "</textarea><input type='submit' value='Trace' class='btn btn-info' style='float: right; display:inline-block'><input type='button' value='Preview' onclick=previewTraceQuery('"
+								+ tbl_nm
+								+ "') class='btn' style='float: right;display:inline-block'/>"
 
 			}
 		}
@@ -258,7 +273,7 @@
 		var checkboxes;
 		var checked_tgt_col = [];
 		var checked_src_col = [];
-		
+
 		//get headers of resultset
 		var header_row = document.getElementById("row_0").cells;
 		var headers = [];
@@ -282,28 +297,34 @@
 			checkboxes = document.getElementsByName('cols_' + tbl_nm);
 			for (c = 0; c < checkboxes.length; c++) {
 				if (checkboxes[c].checked) {
-					str= checkboxes[c].value
-					checked_src_col.push(str.substring(0,str.indexOf('|')))
-					checked_tgt_col.push(str.substring(str.indexOf('|')+1))
+					str = checkboxes[c].value
+					checked_src_col.push(str.substring(0, str.indexOf('|')))
+					checked_tgt_col.push(str.substring(str.indexOf('|') + 1))
 				}
 			}
 
 			if (checked_tgt_col.length != 0) {
 				for (d = 0; d < data_rows_id.length; d++) {
-					var data_row = document.getElementById(data_rows_id[d]).cells
+					var data_row =
+							document.getElementById(data_rows_id[d]).cells
 					for (h = 0; h < checked_tgt_col.length; h++) {
 						if (h == 0) {
 							for (j = 0; j < headers.length; j++) {
 								if (checked_tgt_col[0] == headers[j]) {
 									if (d == 0)
-										query += " WHERE \n(" + checked_src_col[0]
-												+ " = '"
-												+ data_row[j + 1].innerHTML
-												+ "'"
+										query +=
+												" WHERE \n("
+														+ checked_src_col[0]
+														+ " = '"
+														+ data_row[j + 1].innerHTML
+														+ "'"
 									else
-										query += "\n(" + checked_src_col[0] + " = '"
-												+ data_row[j + 1].innerHTML
-												+ "'"
+										query +=
+												"\n("
+														+ checked_src_col[0]
+														+ " = '"
+														+ data_row[j + 1].innerHTML
+														+ "'"
 									if (checked_tgt_col.length == 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
@@ -317,8 +338,11 @@
 						} else {
 							for (j = 0; j < headers.length; j++) {
 								if (checked_tgt_col[h] == headers[j]) {
-									query += " AND " + checked_src_col[h] + " = '"
-											+ data_row[j + 1].innerHTML + "'"
+									query +=
+											" AND " + checked_src_col[h]
+													+ " = '"
+													+ data_row[j + 1].innerHTML
+													+ "'"
 									if (h == checked_tgt_col.length - 1
 											&& d != data_rows_id.length - 1)
 										query += ") OR"
@@ -392,56 +416,100 @@ ul.tab li a:focus, .active {
 
 </head>
 <body>
-	<!-- start header -->
-	<header>
-	<div class="navbar navbar-inverse navbar-static-top">
-		<div class="container" style="float: right; color: white">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle "
-						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-						data-close-others="false" style="color: white">Project <span
-							class="glyphicon glyphicon-chevron-down"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="index.jsp">Switch Project</a></li>
-							<li><a href="#" data-toggle="modal" data-target="#myModal">New
-									Project</a></li>
-						</ul></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-						data-close-others="false" style="color: white">Sheets <span
-							class="glyphicon glyphicon-chevron-down"></span></a>
-						<ul class="dropdown-menu">
-							<li><a target="_blank"
-								href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-									Sheet</a></li>
-							<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
-									Sheet</a></li>
-						</ul></li>
-					<li class="dropdown"><a href="cross_section.jsp"
-						style="color: white">Cross Section</a></li>
-					<li class="dropdown"><a href="history.jsp"
-						style="color: white">History</a></li>
-					<li class="dropdown"><a href="settings.jsp"
-						style="color: white">Settings</a></li>
+	<div id="wrapper">
+		<!-- start header -->
+		<header>
+		<div class="navbar navbar-inverse navbar-static-top">
+			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+			</label>
+			<%
+				Credential credential = (Credential) request.getSession().getAttribute("credential");
 
+				Long active_time = null;
+				if (credential != null)
+					active_time = credential.getExpiresInSeconds();
+				if (active_time != null && active_time > 0) {
+			%>
 
-					<li class=""><a href="" data-toggle="modal"
-						data-target="#loginModal" style="color: white">Login</a></li>
-				</ul>
+			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
+				Token: Active <%=(active_time) / 60%> min
+			</label>
+			<%
+				} else {
+			%>
+			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
+				Token: Inactive
+			</label>
+			<%
+				}
+			%>
+
+			<div class="container" style="float: right; color: white">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target=".navbar-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle "
+							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+							data-close-others="false" style="color: white">Project <span
+								class="glyphicon glyphicon-chevron-down"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#" data-toggle="modal"
+									data-target="#styledProject">Styled Project</a></li>
+								<li><a href="#" data-toggle="modal"
+									data-target="#onSwitchModal">Switch Project</a></li>
+								<li><a href="#" data-toggle="modal" data-target="#myModal">New
+										Project</a></li>
+								<li><a href="project.jsp">View Project</a></li>
+							</ul></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+							data-close-others="false" style="color: white">Sheets <span
+								class="glyphicon glyphicon-chevron-down"></span></a>
+							<ul class="dropdown-menu">
+								<li><a target="_blank"
+									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+										Test Sheet</a></li>
+								<li><a target="_blank"
+									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+										STM</a></li>
+								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+										Sheet</a></li>
+								<li><a href="">Verify DDLs</a></li>
+							</ul></li>
+						
+						<li class="dropdown"><a href="cross_section.jsp"
+							style="color: white">Cross Section</a></li>
+						<li class="dropdown"><a href="history.jsp"
+							style="color: white">History</a></li>
+						<li class="dropdown"><a href="settings.jsp"
+							style="color: white">Settings</a></li>
+
+						<%
+							if (request.getSession().getAttribute("user_id") == null) {
+						%>
+						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
+						<%
+							} else {
+						%>
+						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
+						<%
+							}
+						%>
+					</ul>
+				</div>
 			</div>
 		</div>
+		</header>
+		<!-- end header -->
+
 	</div>
-	</header>
-	<!-- end header -->
 
 
 
@@ -652,8 +720,8 @@ ul.tab li a:focus, .active {
 		}
 		tablinks = document.getElementsByClassName("tablinks");
 		for (i = 0; i < tablinks.length; i++) {
-			tablinks[i].className = tablinks[i].className
-					.replace(" active", "");
+			tablinks[i].className =
+					tablinks[i].className.replace(" active", "");
 		}
 		document.getElementById(tabName).style.display = "block";
 		evt.currentTarget.className += " active";

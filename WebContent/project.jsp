@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@page import="com.google.api.client.auth.oauth2.Credential"%>
 <%@ page
 	import="org.abhi.parakhi.MySQL_dao,java.util.ArrayList,java.util.List"%>
 
@@ -17,14 +17,16 @@
 <link rel="stylesheet" href="/Parakhi/css/w3.css" type="text/css">
 <style>
 #myInput {
-	background-image: url('css/search.jpg');
+	background-image: url('res/images/search.svg');
+	background-size: 20px 20px;
 	/* Add a search icon to input */
-	background-position: 10px 12px; /* Position the search icon */
+	background-position: 10px 14px; /* Position the search icon */
 	background-repeat: no-repeat; /* Do not repeat the icon image */
 	width: 100%; /* Full-width */
 	font-size: 16px; /* Increase font-size */
 	padding: 12px 20px 12px 40px; /* Add some padding */
-	border: 1px solid #ddd; /* Add a grey border */
+	border: 0px;
+	border-right:1px solid #ddd; /* Add a grey border */
 	margin-bottom: 12px; /* Add some space below the input */
 }
 </style>
@@ -89,61 +91,107 @@ function myFunction(id) {
 </head>
 
 <body>
-	<!-- start header -->
-	<header>
-	<div class="navbar navbar-inverse navbar-static-top">
-		<div class="container" style="float: right; color: white">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<!-- <a class="navbar-brand" href="index.html"><img
-						src="template_files/img/logo.png" alt="" width="199" height="52" /></a> -->
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav">
-					<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle "
-						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-						data-close-others="false" style="color: white">Project <span
-							class="glyphicon glyphicon-chevron-down"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="index.jsp" data-toggle="modal">Switch
-									Project</a></li>
-							<li><a href="index.jsp">New Project</a></li>
-						</ul></li>
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-						data-close-others="false" style="color: white">Sheets <span
-							class="glyphicon glyphicon-chevron-down"></span></a>
-						<ul class="dropdown-menu">
-							<li><a target="_blank"
-								href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-									Sheet</a></li>
-							<li><a href="index.jsp" data-toggle="modal"
-								data-target="#myModal2">Rerun Sheet</a></li>
-						</ul></li>
-					<li class="dropdown"><a href="cross_section.jsp"
-						style="color: white">Cross Section</a></li>
-					<li class="dropdown"><a href="history.jsp"
-						style="color: white">History</a></li>
-					<li class="dropdown"><a href="settings.jsp"
-						style="color: white">Settings</a></li>
+	<div id="wrapper">
+		<!-- start header -->
+		<header>
+		<div class="navbar navbar-inverse navbar-static-top">
+			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+			</label>
+			<%
+				Credential credential = (Credential) request.getSession()
+						.getAttribute("credential");
 
+				Long active_time = null;
+				if (credential != null)
+					active_time = credential.getExpiresInSeconds();
+				if (active_time != null && active_time > 0) {
+			%>
 
-					<li class=""><a href="" data-toggle="modal"
-						data-target="#loginModal" style="color: white">Login</a></li>
-				</ul>
+			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
+				Token: Active <%=(active_time) / 60%> min
+			</label>
+			<%
+				} else {
+			%>
+			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
+				Token: Inactive
+			</label>
+			<%
+				}
+			%>
+
+			<div class="container" style="float: right; color: white">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target=".navbar-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle "
+							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+							data-close-others="false" style="color: white">Project <span
+								class="glyphicon glyphicon-chevron-down"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#" data-toggle="modal"
+									data-target="#styledProject">Styled Project</a></li>
+								<li><a href="#" data-toggle="modal"
+									data-target="#onSwitchModal">Switch Project</a></li>
+								<li><a href="#" data-toggle="modal" data-target="#myModal">New
+										Project</a></li>
+								<li><a href="project.jsp">View Project</a></li>
+							</ul></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+							data-close-others="false" style="color: white">Sheets <span
+								class="glyphicon glyphicon-chevron-down"></span></a>
+							<ul class="dropdown-menu">
+								<li><a target="_blank"
+									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+										Test Sheet</a></li>
+								<li><a target="_blank"
+									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+										STM</a></li>
+								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+										Sheet</a></li>
+								<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
+										DDLs</a></li>
+							</ul></li>
+
+						<li class="dropdown"><a href="cross_section.jsp"
+							style="color: white">Cross Section</a></li>
+						<li class="dropdown"><a href="history.jsp"
+							style="color: white">History</a></li>
+						<li class="dropdown"><a href="settings.jsp"
+							style="color: white">Settings</a></li>
+
+						<%
+							if (request.getSession().getAttribute("user_id") == null) {
+						%>
+						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
+						<%
+							} else {
+						%>
+						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
+						<%
+							}
+						%>
+					</ul>
+				</div>
 			</div>
 		</div>
+		</header>
+		<!-- end header -->
+
 	</div>
-	</header>
-	<!-- end header -->
+
+
 	<ul class="ver_nav_bar" id="projects_ul">
 		<input type="text" id="myInput" onkeyup="myFunction()"
-			placeholder="Search project...">
+			placeholder="Search...">
 		<%
 			MySQL_dao ob = new MySQL_dao();
 			List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
@@ -159,45 +207,72 @@ function myFunction(id) {
 		%>
 	</ul>
 
-	<div style="margin-left: 15%; padding-top: 0px">
 
-		<button onclick="myFunction('Demo0')"
-			class="w3-button w3-block w3-sand w3-left-align">About</button>
-		<div id="Demo0" class="w3-hide">
-			<div id="about"
-				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-				a project..</div>
+
+	<div class="panel-group" id="accordion" style="margin-left: 15.5%;margin-top:10px">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse1" style="display: block; text-decoration: none">About</a>
+				</h4>
+			</div>
+			<div id="collapse1" class="panel-collapse collapse in">
+				<div id="about"
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+					a project..</div>
+			</div>
 		</div>
 
-		<button onclick="myFunction('Demo1')"
-			class="w3-button w3-block w3-sand w3-left-align">STMs</button>
-		<div id="Demo1" class="w3-hide">
-			<div id="stmsheets_list"
-				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-				a project..</div>
-			<a href="" style="float: right; margin-right: 50px">Add</a><br>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse2" style="display: block; text-decoration: none">STMs</a>
+				</h4>
+			</div>
+			<div id="collapse2" class="panel-collapse collapse">
+				<div id="stmsheets_list"
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+					a project..</div>
+				<a href="" style="float: right; margin-right: 50px">Add</a><br>
+			</div>
 		</div>
 
-		<button onclick="myFunction('Demo2')"
-			class="w3-button w3-block w3-sand w3-left-align">Test Sheets</button>
-		<div id="Demo2" class="w3-hide">
-			<div id="testsheets_list"
-				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-				a project..</div>
-			<a href="" style="float: right; margin-right: 50px">Add</a><br>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse3" style="display: block; text-decoration: none">Test
+						Sheets</a>
+				</h4>
+			</div>
+			<div id="collapse3" class="panel-collapse collapse">
+				<div id="testsheets_list"
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+					a project..</div>
+				<a href="" style="float: right; margin-right: 50px">Add</a><br>
+			</div>
 		</div>
 
-		<button onclick="myFunction('Demo3')"
-			class="w3-button w3-block w3-sand w3-left-align">Tables</button>
-		<div id="Demo3" class="w3-hide">
-			<div id="tables_list"
-				style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-				a project..</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse4" style="display: block; text-decoration: none">Tables</a>
+				</h4>
+			</div>
+			<div id="collapse4" class="panel-collapse collapse">
+				<div id="tables_list"
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
+					a project..</div>
+			</div>
 		</div>
 
 
 	</div>
-
 
 
 </body>

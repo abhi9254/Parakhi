@@ -57,7 +57,7 @@ public class Oauth2Servlet extends AbstractAuthorizationCodeServlet {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		response.sendRedirect(OauthCommon.SERVLET_CONTEXT + "/index.jsp");
+		response.sendRedirect(OauthCommon.SERVLET_CONTEXT + "/settings.jsp");
 	}
 
 	@Override

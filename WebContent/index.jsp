@@ -99,7 +99,8 @@
 	width: 100%; /* Full-width */
 	font-size: 16px; /* Increase font-size */
 	padding: 12px 20px 12px 40px; /* Add some padding */
-	border: 1px solid #ddd; /* Add a grey border */
+	border: 0px;
+	border-right:1px solid #ddd; /* Add a grey border */
 	margin-bottom: 12px;
 	background-repeat: no-repeat /* Add some space below the input */
 }
@@ -228,8 +229,7 @@ div.tab button.active {
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/chosen.jquery.min.js" type="text/javascript"></script>
 <script>
-	function refresh_selectors(base_query, base_text, up_base_query,
-			up_base_text, up_cols_text) {
+	function refresh_selectors(base_query, base_text, up_base_query, up_base_text, up_cols_text) {
 		$(document)
 				.ready(
 						function() {
@@ -240,13 +240,16 @@ div.tab button.active {
 											'change',
 											function(evt, params) {
 												var selected = $(this).val();
-												up_base_text = base_text
-														.replace(
-																' $db.$tableA ',
-																" " + selected
-																		+ " ");
+												up_base_text =
+														base_text
+																.replace(
+																		' $db.$tableA ',
+																		" "
+																				+ selected
+																				+ " ");
 												document
-														.getElementById('query_text').value = up_base_text;
+														.getElementById('query_text').value =
+														up_base_text;
 												update_col_selectors(
 														base_query, base_text,
 														selected, up_base_text,
@@ -258,10 +261,11 @@ div.tab button.active {
 											'change',
 											function(evt, params) {
 												var selected = $(this).val();
-												up_cols_text = up_base_text
-														.replace(
-																/[$]tableA.[$]cols/g,
-																selected);
+												up_cols_text =
+														up_base_text
+																.replace(
+																		/[$]tableA.[$]cols/g,
+																		selected);
 												var mid_text = up_cols_text;
 												var total = $('.column').length;
 												//	for(i=1; i<total; i++){
@@ -270,18 +274,20 @@ div.tab button.active {
 												//	}
 												for (i = 1; i < total; i++) {
 													if ($('#column_' + i).val() != '')
-														mid_text = mid_text
-																.replace(
-																		'$tableA.$col'
-																				+ i,
-																		$(
-																				'#column_'
-																						+ i)
-																				.val());
+														mid_text =
+																mid_text
+																		.replace(
+																				'$tableA.$col'
+																						+ i,
+																				$(
+																						'#column_'
+																								+ i)
+																						.val());
 												}
 
 												document
-														.getElementById('query_text').value = mid_text;
+														.getElementById('query_text').value =
+														mid_text;
 												refresh_selectors(base_query,
 														base_text,
 														up_base_query,
@@ -294,25 +300,28 @@ div.tab button.active {
 											function(evt, params) {
 
 												var selected = $(this).val();
-												var select_id = $(this).prop(
-														'id').charAt(7);
+												var select_id =
+														$(this).prop('id')
+																.charAt(7);
 												var total = $('.column').length;
 												var final_text = up_cols_text;
 												if (select_id != '') {
 													for (i = 1; i < total; i++) {
 														if ($('#column_' + i)
 																.val() != null)
-															final_text = final_text
-																	.replace(
-																			'$tableA.$col'
-																					+ i,
-																			$(
-																					'#column_'
-																							+ i)
-																					.val());
+															final_text =
+																	final_text
+																			.replace(
+																					'$tableA.$col'
+																							+ i,
+																					$(
+																							'#column_'
+																									+ i)
+																							.val());
 													}
 													document
-															.getElementById('query_text').value = final_text;
+															.getElementById('query_text').value =
+															final_text;
 													//	refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
 												}
 											});
@@ -320,37 +329,41 @@ div.tab button.active {
 						});
 	}
 
-	function update_col_selectors(base_query, base_text, selected,
-			up_base_text, up_cols_text) {
+	function update_col_selectors(base_query, base_text, selected, up_base_text, up_cols_text) {
 		up_base_query = base_query.replace("value='' selected", "value=''");
-		up_base_query = up_base_query.replace("value='" + selected + "'",
-				"value='" + selected + "' selected");
+		up_base_query =
+				up_base_query.replace("value='" + selected + "'", "value='"
+						+ selected + "' selected");
 
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax.jsp?col_nms=1" + "&selected=" + selected,
 				true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				var cols_list = x.responseText;
-				var tbl_ptrn = /[$]tableA.[$]col./g;
-				up_base_query = up_base_query.replace(/[$]tableA.[$]cols/g,
-						cols_list);
-				cols_list = cols_list.replace(/columns/g, 'column');
-				up_base_query = up_base_query.replace(tbl_ptrn, cols_list);
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						var cols_list = x.responseText;
+						var tbl_ptrn = /[$]tableA.[$]col./g;
+						up_base_query =
+								up_base_query.replace(/[$]tableA.[$]cols/g,
+										cols_list);
+						cols_list = cols_list.replace(/columns/g, 'column');
+						up_base_query =
+								up_base_query.replace(tbl_ptrn, cols_list);
 
-				var i = 0;
-				while (up_base_query.includes("id='column'")) {
-					up_base_query = up_base_query.replace("id='column'",
-							"id='column_" + (++i) + "'");
+						var i = 0;
+						while (up_base_query.includes("id='column'")) {
+							up_base_query =
+									up_base_query.replace("id='column'",
+											"id='column_" + (++i) + "'");
+						}
+
+						$("#makeQuery").html(up_base_query);
+
+						refresh_selectors(base_query, base_text, up_base_query,
+								up_base_text, up_cols_text)
+					}
 				}
-
-				$("#makeQuery").html(up_base_query);
-
-				refresh_selectors(base_query, base_text, up_base_query,
-						up_base_text, up_cols_text)
-			}
-		}
 	}
 </script>
 <script>
@@ -413,14 +426,16 @@ div.tab button.active {
 			x.open("GET", "index_ajax.jsp?inpQuery=" + str + "&projId="
 					+ projId, true)
 			x.send(null)
-			x.onreadystatechange = function() {
-				if (x.readyState == 4) {
-					document.getElementById("makeQuery").innerHTML = x.responseText;
-					refresh_selectors(x.responseText, str, x.responseText, str,
-							'');
+			x.onreadystatechange =
+					function() {
+						if (x.readyState == 4) {
+							document.getElementById("makeQuery").innerHTML =
+									x.responseText;
+							refresh_selectors(x.responseText, str,
+									x.responseText, str, '');
 
-				}
-			}
+						}
+					}
 		} else
 			document.getElementById("makeQuery").innerHTML = str;
 
@@ -433,12 +448,12 @@ div.tab button.active {
 		var finalQuery = ""
 		if (document.getElementById(tbl_nm_id).innerHTML
 				.match("[$]db.[$]table[A-Z]")) {
-			document.getElementById(tbl_nm_id).innerHTML = db_nm + "." + tbl_nm
-					+ "<b class='caret'></b>"
+			document.getElementById(tbl_nm_id).innerHTML =
+					db_nm + "." + tbl_nm + "<b class='caret'></b>"
 			//finalQuery=document.getElementById("query_text").value.replace(tbl_nm_id,"<span id='"+tbl_nm_id+"query_text'>"+db_nm+"."+tbl_nm+"</span>")
 		} else {
-			document.getElementById(tbl_nm_id).innerHTML = db_nm + "." + tbl_nm
-					+ "<b class='caret'></b>"
+			document.getElementById(tbl_nm_id).innerHTML =
+					db_nm + "." + tbl_nm + "<b class='caret'></b>"
 			//document.getElementById(tbl_nm_id+"query_text").innerHTML = db_nm+"."+tbl_nm
 		}
 
@@ -453,34 +468,37 @@ div.tab button.active {
 				+ "&col_id=" + col_id + "&proj_id=" + proj_id + "&check=col",
 				true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				var elems = document.getElementsByTagName("span");
-				var cols = x.responseText.split(",")
-				var finalCols = ""
-				for (var i = 0; i < elems.length; i++) {
-					if (elems[i].id.includes(col_id)) {
-						finalCols = ""
-						for (var j = 0; j < cols.length - 1; j++) {
-							finalCols = finalCols
-									+ "<a href='#' onclick=setQueryColValue('"
-									+ elems[i].id + "','" + cols[j] + "')>"
-									+ cols[j] + "</a>" + ",";
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						var elems = document.getElementsByTagName("span");
+						var cols = x.responseText.split(",")
+						var finalCols = ""
+						for (var i = 0; i < elems.length; i++) {
+							if (elems[i].id.includes(col_id)) {
+								finalCols = ""
+								for (var j = 0; j < cols.length - 1; j++) {
+									finalCols =
+											finalCols
+													+ "<a href='#' onclick=setQueryColValue('"
+													+ elems[i].id + "','"
+													+ cols[j] + "')>" + cols[j]
+													+ "</a>" + ",";
+								}
+								document.getElementById(elems[i].id).innerHTML =
+										finalCols.substring(0,
+												finalCols.length - 1);
+
+							}
 						}
-						document.getElementById(elems[i].id).innerHTML = finalCols
-								.substring(0, finalCols.length - 1);
-
 					}
-				}
-			}
 
-		}
+				}
 	}
 
 	function setQueryColValue(col_id, colValue) {
-		document.getElementById("fullCols").innerHTML = document
-				.getElementById("fullCols").innerHTML
-				+ colValue + ",";
+		document.getElementById("fullCols").innerHTML =
+				document.getElementById("fullCols").innerHTML + colValue + ",";
 		document.getElementById("colId").value = col_id
 	}
 
@@ -488,8 +506,9 @@ div.tab button.active {
 		var cols = document.getElementById("fullCols").innerHTML
 		var colId = document.getElementById("colId").value
 		cols = cols.substring(0, cols.length - 1)
-		var query = document.getElementById("query_text").value.replace(colId,
-				cols)
+		var query =
+				document.getElementById("query_text").value
+						.replace(colId, cols)
 		document.getElementById("query_text").value = query
 		document.getElementById("fullCols").innerHTML = ""
 	}
@@ -501,11 +520,13 @@ div.tab button.active {
 
 	function editQuery() {
 		if (document.getElementById("query_text").style.display == "none") {
-			document.getElementById("query_text").style.display = "inline-block"
+			document.getElementById("query_text").style.display =
+					"inline-block"
 			document.getElementById("main_panel").style.display = "none"
 		} else {
 			document.getElementById("query_text").style.display = "none"
-			document.getElementById("main_panel").style.display = "inline-block"
+			document.getElementById("main_panel").style.display =
+					"inline-block"
 		}
 	}
 
@@ -517,17 +538,20 @@ div.tab button.active {
 		else {
 			//	document.getElementById(url_type + "_name").innerHTML = "Retrieving spreadsheet details..";
 			spreadsheet_id = document.getElementById(url_type + "_url").value;
-			document.getElementById(url_type + "_url").value = "Retrieving spreadsheet details..";
+			document.getElementById(url_type + "_url").value =
+					"Retrieving spreadsheet details..";
 			var x = new XMLHttpRequest()
 			x.open("GET", "index_ajax2.jsp?title=1&spreadsheet_id="
 					+ spreadsheet_id, true)
 			x.send(null)
-			x.onreadystatechange = function() {
-				if (x.readyState == 4) {
-					//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-					document.getElementById(url_type + "_url").value = x.responseText;
-				}
-			}
+			x.onreadystatechange =
+					function() {
+						if (x.readyState == 4) {
+							//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+							document.getElementById(url_type + "_url").value =
+									x.responseText;
+						}
+					}
 		}
 	}
 	function hideDiv(divName) {
@@ -546,13 +570,16 @@ div.tab button.active {
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?testsheets=1&p_id=" + sel_proj, true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-				document.getElementById("selected_testsheet").innerHTML = x.responseText;
-				document.getElementById("selected_worksheet").innerHTML = "<option selected disabled>Worksheet Name</option>";
-			}
-		}
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+						document.getElementById("selected_testsheet").innerHTML =
+								x.responseText;
+						document.getElementById("selected_worksheet").innerHTML =
+								"<option selected disabled>Worksheet Name</option>";
+					}
+				}
 
 	}
 	function getWorkSheets() {
@@ -560,13 +587,15 @@ div.tab button.active {
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?worksheets=1&s_id=" + sel_ts, true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-				document.getElementById("selected_worksheet").innerHTML = x.responseText;
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+						document.getElementById("selected_worksheet").innerHTML =
+								x.responseText;
 
-			}
-		}
+					}
+				}
 	}
 </script>
 
@@ -580,8 +609,8 @@ div.tab button.active {
 		}
 		tablinks = document.getElementsByClassName("tablinks");
 		for (i = 0; i < tablinks.length; i++) {
-			tablinks[i].className = tablinks[i].className
-					.replace(" active", "");
+			tablinks[i].className =
+					tablinks[i].className.replace(" active", "");
 		}
 		document.getElementById(cityName).style.display = "block";
 		evt.currentTarget.className += " active";
@@ -604,7 +633,8 @@ div.tab button.active {
 			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 			</label>
 			<%
-				Credential credential = (Credential) request.getSession().getAttribute("credential");
+				Credential credential = (Credential) request.getSession()
+						.getAttribute("credential");
 
 				Long active_time = null;
 				if (credential != null)
@@ -665,8 +695,7 @@ div.tab button.active {
 								<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
 										DDLs</a></li>
 							</ul></li>
-						<li class="dropdown"><a href="datafit.jsp"
-							style="color: white">Data Fit</a></li>
+
 						<li class="dropdown"><a href="cross_section.jsp"
 							style="color: white">Cross Section</a></li>
 						<li class="dropdown"><a href="history.jsp"
@@ -728,9 +757,11 @@ div.tab button.active {
 				<ul class="ver_nav_bar" id="proj_cases_ul">
 					<%
 						if (request.getSession().getAttribute("proj_id") != null) {
-							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+							int active_proj = Integer.parseInt(request.getSession()
+									.getAttribute("proj_id").toString());
 
-							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+							List<String[]> proj_cases = new ArrayList<String[]>(
+									ob.getCases(active_proj));
 
 							for (String[] c : proj_cases) {
 					%>
@@ -748,7 +779,7 @@ div.tab button.active {
 		</div>
 	</div>
 	<div id='clipboard'
-		style="border: 1px solid black; float: right; height: 500px; width: 200px">Clipboard</div>
+		style="display: none; border: 1px solid black; float: right; height: 500px; width: 200px">Clipboard</div>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-2"></div>
@@ -1034,7 +1065,8 @@ div.tab button.active {
 						</select> <br>
 
 					</div>
-					<div style="width: 500px; padding-left: 80px;padding-right: 20px; display: table-cell">
+					<div
+						style="width: 500px; padding-left: 80px; padding-right: 20px; display: table-cell">
 						<h4>Hive table</h4>
 						<select class="form-control" placeholder="select project"
 							id="selected_project" onchange="getTestSheets()">

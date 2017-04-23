@@ -23,7 +23,7 @@
 
 <style>
 #comparetbl_wrapper{
-width:800px
+width:100%
 }
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
@@ -109,8 +109,7 @@ width:800px
 										Sheet</a></li>
 								<li><a href="">Verify DDLs</a></li>
 							</ul></li>
-						<li class="dropdown"><a href="datafit.jsp"
-							style="color: white">Data Fit</a></li>
+						
 						<li class="dropdown"><a href="cross_section.jsp"
 							style="color: white">Cross Section</a></li>
 						<li class="dropdown"><a href="history.jsp"
@@ -210,14 +209,14 @@ width:800px
 
 
 
-		<table id="comparetbl" class="table" style="width: 800px">
+		<table id="comparetbl" class="table" style="width: 100%">
 
 			<thead>
 				<tr>
-					<th>Hive Ser</th>
+					<th>Hive S.no</th>
 					<th>Hive Column</th>
 					<th>Hive Datatype</th>
-					<th>STM Ser</th>
+					<th>STM S.no</th>
 					<th>STM Column</th>
 					<th>STM Datatype</th>
 					<th>Remarks</th>
@@ -301,9 +300,9 @@ width:800px
 													.equals(stmColumns.get(k)[2])) {
 										flag = true;
 										String[] total = new String[7];
-										total[0] = "-";
-										total[1] = "-";
-										total[2] = "-";
+										total[0] = "";
+										total[1] = "";
+										total[2] = "";
 										total[3] = stmColumns.get(breaker)[0];
 										total[4] = stmColumns.get(breaker)[1];
 										total[5] = stmColumns.get(breaker)[2];
@@ -336,9 +335,9 @@ width:800px
 									total[0] = hiveColumns.get(i)[0];
 									total[1] = hiveColumns.get(i)[1];
 									total[2] = hiveColumns.get(i)[2];
-									total[3] = "-";
-									total[4] = "-";
-									total[5] = "-";
+									total[3] = "";
+									total[4] = "";
+									total[5] = "";
 									if (stmSet.contains(hiveColumns.get(i)[1]
 											.concat(hiveColumns.get(i)[2])))
 										total[6] = "Order issue";
@@ -363,9 +362,9 @@ width:800px
 						} catch (IndexOutOfBoundsException ex) {
 							if (breaker < stmColumns.size()) {
 								String[] total = new String[7];
-								total[0] = "-";
-								total[1] = "-";
-								total[2] = "-";
+								total[0] = "";
+								total[1] = "";
+								total[2] = "";
 								total[3] = stmColumns.get(breaker)[0];
 								total[4] = stmColumns.get(breaker)[1];
 								total[5] = stmColumns.get(breaker)[2];
@@ -390,9 +389,9 @@ width:800px
 								total[0] = hiveColumns.get(i)[0];
 								total[1] = hiveColumns.get(i)[1];
 								total[2] = hiveColumns.get(i)[2];
-								total[3] = "-";
-								total[4] = "-";
-								total[5] = "-";
+								total[3] = "";
+								total[4] = "";
+								total[5] = "";
 								total[6] = "Not in Stm *";
 				%>
 				<tr>
