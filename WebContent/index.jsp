@@ -257,12 +257,14 @@ header .navbar-nav>li {
 		// Loop through all list items, and hide those who don't match the search query
 		for (i = 0; i < li.length; i++) {
 			a = li[i].getElementsByTagName("a")[0];
-			if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+			if (a.innerHTML.toUpperCase().indexOf(filter) > -1
+					|| li[i].title.toUpperCase().indexOf(filter) > -1) {
 				//alert(i)
 				li[i].style.display = "";
 			} else {
 				li[i].style.display = "none";
 			}
+
 		}
 
 		ul = document.getElementById("proj_cases_ul");
@@ -271,7 +273,8 @@ header .navbar-nav>li {
 		// Loop through all list items, and hide those who don't match the search query
 		for (i = 0; i < li.length; i++) {
 			a = li[i].getElementsByTagName("a")[0];
-			if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+			if (a.innerHTML.toUpperCase().indexOf(filter) > -1
+					|| li[i].title.toUpperCase().indexOf(filter) > -1) {
 				//alert(i)
 				li[i].style.display = "";
 			} else {
@@ -559,7 +562,7 @@ header .navbar-nav>li {
 	</header>
 
 	<div class="ver_nav_bar">
-		<input type="text" id="myInput" onkeyup="myFunction()"
+		<input type="search" id="myInput" oninput="myFunction()"
 			placeholder="Search...">
 
 		<ul class="nav nav-tabs">

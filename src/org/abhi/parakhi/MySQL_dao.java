@@ -60,7 +60,7 @@ public class MySQL_dao {
 
 	public String[] getProjDtls(int proj_id) {
 		ResultSet resultSet = null;
-		String[] p_dtls =new String[3];
+		String[] p_dtls = new String[3];
 
 		try {
 			connection = dataSource.getConnection();
@@ -165,7 +165,10 @@ public class MySQL_dao {
 			while (resultSet.next()) {
 				s = new String[4];
 				s[0] = resultSet.getString(1);
-				s[1] = resultSet.getString(2);
+				if (resultSet.getString(2).length() > 50)
+					s[1] = resultSet.getString(2).substring(0, 50).concat("..");
+				else
+					s[1] = resultSet.getString(2);
 				s[2] = resultSet.getString(3);
 				s[3] = resultSet.getString(4);
 				cases.add(s);
