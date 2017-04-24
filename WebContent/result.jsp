@@ -11,25 +11,34 @@
 <head>
 <title>Parakhi - 0.7</title>
 
-<!-- css -->
-<link href="template_files/bootstrap.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
+	type="text/css" />
 <link href="template_files/style.css" rel="stylesheet" />
-<link href="template_files/bootstrap_multiselect.min.css"
-	rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/jquery.dataTables.min.css"
+	type="text/css">
+<link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css" />
+
 
 <script type="text/javascript" src="/Parakhi/js/google_sheets_api.js"></script>
 <script type="text/javascript" src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="/Parakhi/js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="/Parakhi/js/jquery.tablesorter.min.js"></script>
+<script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
+
 
 
 <script>
 	$(document).ready(function() {
-		$("#res_tbl").tablesorter();
+		$('#res_tbl').DataTable({
+			searching : false,
+			lengthChange : false,
+			pageLength : 25,
+			info : false,
+
+		});
 	});
 </script>
+
 <script>
 	function pushToSheet2() {
 
@@ -367,6 +376,7 @@
 		}
 	}
 </script>
+
 <style>
 body {
 	font-family: "Lato", sans-serif;
@@ -419,7 +429,8 @@ ul.tab li a:focus, .active {
 </head>
 <body>
 
-	<header>
+	<header
+		style="position: fixed;width:100%;z-index: 99;background-color:whitesmoke">
 	<div class="navbar navbar-inverse navbar-static-top">
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
@@ -502,26 +513,24 @@ ul.tab li a:focus, .active {
 			</ul>
 		</div>
 	</div>
-	</header>
 
 
-	<br>
-	<input type="button" name="back" class="back-button" value="< Back"
-		onclick="history.back()">
-	<!-- Push function defined in google api js -->
-	<input type="button" id="push-div" onclick="pushToSheet2()"
-		class="push-button" style="display: inline" value="Push Result">
-	<!-- Do not change this buttons ID -->
-	<button id="authorize-div" class="push-button" style="display: none"
-		onclick="handleAuthClick(event)">Authorize to push</button>
+	<input type="button" name="back" class="btn btn-primary" value="< Back"
+		onclick="history.back()" style="margin: 10px; float: left"> <input
+		type="button" class="btn btn-success" id="push-div"
+		onclick="pushToSheet2()"
+		style="display: inline; margin: 10px; float: right"
+		value="Push Result">
 
-	<button id="trace-div" class="push-button" style="display: inline"
-		href="" onmouseover="traceRows2()" data-toggle="modal"
+	<button id="trace-div" class="btn btn-primary"
+		style="display: inline; margin: 10px; float: right" href=""
+		onmouseover="traceRows2()" data-toggle="modal"
 		data-target="#traceModal">Trace</button>
+	<br>
+	<br>
 
-	<pre id="output" style="display: none">Working..</pre>
-	<br>
-	<br>
+	<pre id="output" style="display: none">Working..</pre> <br>
+
 	<%
 		String query = request.getAttribute("user_query").toString();
 		String queried_tbl;
@@ -542,15 +551,18 @@ ul.tab li a:focus, .active {
 		<li><a href="javascript:void(0)" class="tablinks"
 			onclick="openTab(event, 'Log')">Log</a></li>
 	</ul>
-
-	<div id="Query" class="tabcontent">
+	</header>
+	<div id="Query" class="tabcontent"
+		style="width: 99%; padding-top: 200px;; border-width: 0px">
 
 		<pre id="query"><%=query%></pre>
 		<pre id="queried_tbl" style="display: none"><%=queried_tbl%></pre>
 	</div>
 
-	<div id="Result" class="tabcontent" style="overflow-x: auto">
-		<table id="res_tbl" class="tablesorter" cellspacing="1">
+	<div id="Result" class="tabcontent"
+		style="overflow-x: auto; min-width: 99%; width: auto; height: auto; padding-top: 200px;; border-width: 0px">
+		<table id="res_tbl" class="table table-striped table-hover"
+			cellspacing="0">
 			<%
 				ResultSet res = (ResultSet) request.getAttribute("result");
 				ResultSetMetaData rsmd = res.getMetaData();
@@ -562,13 +574,13 @@ ul.tab li a:focus, .active {
 			%>
 			<thead>
 				<tr id="row_0">
-					<th class="header"></th>
+					<th>#</th>
 					<%
 						for (int i = 1; i <= columnsNumber; i++) {
-					%><th class="header"><%=rsmd.getColumnName(i).substring(dot_pos)%></th>
+					%><th><%=rsmd.getColumnName(i).substring(dot_pos)%></th>
 					<%
 						}
-					%><th class="header">Trace</th>
+					%><th>Trace</th>
 				</tr>
 			</thead>
 
@@ -578,11 +590,11 @@ ul.tab li a:focus, .active {
 				<%
 					while (res.next()) {
 				%><tr id="row_<%=res.getRow()%>">
-					<td style="padding: 6px"><%=res.getRow()%></td>
+					<td><%=res.getRow()%></td>
 					<%
 						for (int c = 1; c <= columnsNumber; c++) {
 					%>
-					<td><%=res.getString(c)%></td>
+					<td class="text-nowrap"><%=res.getString(c)%></td>
 
 					<%
 						}
@@ -598,7 +610,8 @@ ul.tab li a:focus, .active {
 		</table>
 	</div>
 
-	<div id="Log" class="tabcontent">
+	<div id="Log" class="tabcontent"
+		style="width: 99%; padding-top: 200px; border-width: 0px">
 		<%
 			String logs = request.getAttribute("query_log").toString();
 			System.out.println(logs);

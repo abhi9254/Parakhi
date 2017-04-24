@@ -18,8 +18,7 @@
 <link rel="stylesheet" href="css/jquery.dataTables.min.css"
 	type="text/css">
 <link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css">
-<link id="t-colors" href="template_files/default.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" type="text/css"/>
 
 <style>
 #comparetbl_wrapper {
@@ -48,7 +47,8 @@ header .navbar-nav>li {
 	$(document).ready(function() {
 		$('#comparetbl').DataTable({
 			order : [],
-			paging : false
+			paging : false,
+			info :false
 		});
 	});
 </script>

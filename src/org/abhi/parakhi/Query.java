@@ -29,7 +29,7 @@ public class Query extends HttpServlet {
 			Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
 			//	Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
 			HiveStatement stmt = (HiveStatement) con.createStatement();
-			String query = request.getParameter("query_text");
+			String query = request.getParameter("query_text") + " limit 100";
 			ResultSet res = stmt.executeQuery(query);
 		//	String log=stmt.getLog().toString();
 			String log = "log disabaed"	;		

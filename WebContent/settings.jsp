@@ -7,13 +7,12 @@
 <head>
 <title>Parakhi - 0.7</title>
 
-<link rel="stylesheet" href="/Parakhi/animate.css" type="text/css" />
+
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css" />
+<link href="template_files/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css" />
 
-<link rel="stylesheet" href="/Parakhi/style.css" type="text/css" />
-<style>
-</style>
 
 <script type="text/javascript" src="/Parakhi/js/google_sheets_api.js"></script>
 <script src="/Parakhi/js/jquery-3.1.1.min.js"></script>
@@ -106,29 +105,8 @@
 		}
 	}
 </script>
-<meta charset="utf-8">
-<title>Parakhi - 0.7</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Parakhi" />
-<!-- css -->
-<link href="template_files/bootstrap.min.css" rel="stylesheet" />
-<link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css">
-<style>
-header .navbar {
-	min-height: 51px;
-}
 
-header .navbar-nav>li {
-	padding-bottom: 4px;
-	padding-top: 5px;
-}
 
-.navbar-inverse {
-	background-color: #353535;
-	border-color: #080808;
-}
-</style>
 </head>
 <body>
 
@@ -306,8 +284,9 @@ header .navbar-nav>li {
 
 					<div id="authorization-div" style="display: none"></div>
 					<form action="Oauth2Servlet">
-						<label> Authorize Parakhi to use Google sheets</label> <small>(Do not use Kohls account)</small><br> <input
-							class="btn btn-primary" type="submit" value="Authorize" />
+						<label> Authorize Parakhi to use Google sheets</label> <small>(Do
+							not use Kohls account)</small><br> <input class="btn btn-primary"
+							type="submit" value="Authorize" />
 					</form>
 					<br>
 
