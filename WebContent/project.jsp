@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
 	type="text/css">
 <link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css">
+<link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css" />
 
 <style>
 header .navbar {

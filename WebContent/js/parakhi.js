@@ -23,3 +23,27 @@ function openCity(evt, cityName) {
 	document.getElementById(cityName).style.display = "block";
 	evt.currentTarget.className += " active";
 }
+
+function fetchSheetDetails(url_type) {
+
+	if (document.getElementById(url_type + "_url").value == "")
+		document.getElementById(url_type + "_url").placeholder = "Empty url";
+
+	else {
+		spreadsheet_url = document.getElementById(url_type + "_url").value;
+		document.getElementById(url_type + "_url").value = "";
+		document.getElementById(url_type + "_url").placeholder = "Retrieving spreadsheet details..";
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?title=1&spreadsheet_id="
+				+ spreadsheet_url, true)
+		x.send(null)
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				document.getElementById(url_type + "_title_success").value = x.responseText;
+				document.getElementById(url_type + "_url_success").value = spreadsheet_url;
+				document.getElementById(url_type + "_url").value = "";
+				document.getElementById(url_type + "_url").placeholder = x.responseText;
+			}
+		}
+	}
+}

@@ -19,11 +19,12 @@
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="css/chosen.css" type="text/css">
 <link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/style.css" type="text/css" />
 
 
 
 <style>
+
 .leftSection {
 	font-size: large;
 	color: red;
@@ -89,26 +90,14 @@
 	left: -6px;
 }
 
-header .navbar {
-	min-height: 51px;
-}
-
-header .navbar-nav>li {
-	padding-bottom: 4px;
-	padding-top: 5px;
-}
-
-.navbar-inverse {
-	background-color: #353535;
-	border-color: #080808;
-}
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/chosen.jquery.min.js" type="text/javascript"></script>
 <script src="js/parakhi.js" type="text/javascript"></script>
 <script>
-	function refresh_selectors(base_query, base_text, up_base_query, up_base_text, up_cols_text) {
+	function refresh_selectors(base_query, base_text, up_base_query,
+			up_base_text, up_cols_text) {
 		$(document)
 				.ready(
 						function() {
@@ -119,16 +108,13 @@ header .navbar-nav>li {
 											'change',
 											function(evt, params) {
 												var selected = $(this).val();
-												up_base_text =
-														base_text
-																.replace(
-																		' $db.$tableA ',
-																		" "
-																				+ selected
-																				+ " ");
+												up_base_text = base_text
+														.replace(
+																' $db.$tableA ',
+																" " + selected
+																		+ " ");
 												document
-														.getElementById('query_text').value =
-														up_base_text;
+														.getElementById('query_text').value = up_base_text;
 												update_col_selectors(
 														base_query, base_text,
 														selected, up_base_text,
@@ -140,11 +126,10 @@ header .navbar-nav>li {
 											'change',
 											function(evt, params) {
 												var selected = $(this).val();
-												up_cols_text =
-														up_base_text
-																.replace(
-																		/[$]tableA.[$]cols/g,
-																		selected);
+												up_cols_text = up_base_text
+														.replace(
+																/[$]tableA.[$]cols/g,
+																selected);
 												var mid_text = up_cols_text;
 												var total = $('.column').length;
 												//	for(i=1; i<total; i++){
@@ -153,20 +138,18 @@ header .navbar-nav>li {
 												//	}
 												for (i = 1; i < total; i++) {
 													if ($('#column_' + i).val() != '')
-														mid_text =
-																mid_text
-																		.replace(
-																				'$tableA.$col'
-																						+ i,
-																				$(
-																						'#column_'
-																								+ i)
-																						.val());
+														mid_text = mid_text
+																.replace(
+																		'$tableA.$col'
+																				+ i,
+																		$(
+																				'#column_'
+																						+ i)
+																				.val());
 												}
 
 												document
-														.getElementById('query_text').value =
-														mid_text;
+														.getElementById('query_text').value = mid_text;
 												refresh_selectors(base_query,
 														base_text,
 														up_base_query,
@@ -179,28 +162,25 @@ header .navbar-nav>li {
 											function(evt, params) {
 
 												var selected = $(this).val();
-												var select_id =
-														$(this).prop('id')
-																.charAt(7);
+												var select_id = $(this).prop(
+														'id').charAt(7);
 												var total = $('.column').length;
 												var final_text = up_cols_text;
 												if (select_id != '') {
 													for (i = 1; i < total; i++) {
 														if ($('#column_' + i)
 																.val() != null)
-															final_text =
-																	final_text
-																			.replace(
-																					'$tableA.$col'
-																							+ i,
-																					$(
-																							'#column_'
-																									+ i)
-																							.val());
+															final_text = final_text
+																	.replace(
+																			'$tableA.$col'
+																					+ i,
+																			$(
+																					'#column_'
+																							+ i)
+																					.val());
 													}
 													document
-															.getElementById('query_text').value =
-															final_text;
+															.getElementById('query_text').value = final_text;
 													//	refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
 												}
 											});
@@ -208,41 +188,37 @@ header .navbar-nav>li {
 						});
 	}
 
-	function update_col_selectors(base_query, base_text, selected, up_base_text, up_cols_text) {
+	function update_col_selectors(base_query, base_text, selected,
+			up_base_text, up_cols_text) {
 		up_base_query = base_query.replace("value='' selected", "value=''");
-		up_base_query =
-				up_base_query.replace("value='" + selected + "'", "value='"
-						+ selected + "' selected");
+		up_base_query = up_base_query.replace("value='" + selected + "'",
+				"value='" + selected + "' selected");
 
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax.jsp?col_nms=1" + "&selected=" + selected,
 				true)
 		x.send(null)
-		x.onreadystatechange =
-				function() {
-					if (x.readyState == 4) {
-						var cols_list = x.responseText;
-						var tbl_ptrn = /[$]tableA.[$]col./g;
-						up_base_query =
-								up_base_query.replace(/[$]tableA.[$]cols/g,
-										cols_list);
-						cols_list = cols_list.replace(/columns/g, 'column');
-						up_base_query =
-								up_base_query.replace(tbl_ptrn, cols_list);
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				var cols_list = x.responseText;
+				var tbl_ptrn = /[$]tableA.[$]col./g;
+				up_base_query = up_base_query.replace(/[$]tableA.[$]cols/g,
+						cols_list);
+				cols_list = cols_list.replace(/columns/g, 'column');
+				up_base_query = up_base_query.replace(tbl_ptrn, cols_list);
 
-						var i = 0;
-						while (up_base_query.includes("id='column'")) {
-							up_base_query =
-									up_base_query.replace("id='column'",
-											"id='column_" + (++i) + "'");
-						}
-
-						$("#makeQuery").html(up_base_query);
-
-						refresh_selectors(base_query, base_text, up_base_query,
-								up_base_text, up_cols_text)
-					}
+				var i = 0;
+				while (up_base_query.includes("id='column'")) {
+					up_base_query = up_base_query.replace("id='column'",
+							"id='column_" + (++i) + "'");
 				}
+
+				$("#makeQuery").html(up_base_query);
+
+				refresh_selectors(base_query, base_text, up_base_query,
+						up_base_text, up_cols_text)
+			}
+		}
 	}
 </script>
 <script>
@@ -297,16 +273,14 @@ header .navbar-nav>li {
 			x.open("GET", "index_ajax.jsp?inpQuery=" + str + "&projId="
 					+ projId, true)
 			x.send(null)
-			x.onreadystatechange =
-					function() {
-						if (x.readyState == 4) {
-							document.getElementById("makeQuery").innerHTML =
-									x.responseText;
-							refresh_selectors(x.responseText, str,
-									x.responseText, str, '');
+			x.onreadystatechange = function() {
+				if (x.readyState == 4) {
+					document.getElementById("makeQuery").innerHTML = x.responseText;
+					refresh_selectors(x.responseText, str, x.responseText, str,
+							'');
 
-						}
-					}
+				}
+			}
 		} else
 			document.getElementById("makeQuery").innerHTML = str;
 
@@ -319,12 +293,12 @@ header .navbar-nav>li {
 		var finalQuery = ""
 		if (document.getElementById(tbl_nm_id).innerHTML
 				.match("[$]db.[$]table[A-Z]")) {
-			document.getElementById(tbl_nm_id).innerHTML =
-					db_nm + "." + tbl_nm + "<b class='caret'></b>"
+			document.getElementById(tbl_nm_id).innerHTML = db_nm + "." + tbl_nm
+					+ "<b class='caret'></b>"
 			//finalQuery=document.getElementById("query_text").value.replace(tbl_nm_id,"<span id='"+tbl_nm_id+"query_text'>"+db_nm+"."+tbl_nm+"</span>")
 		} else {
-			document.getElementById(tbl_nm_id).innerHTML =
-					db_nm + "." + tbl_nm + "<b class='caret'></b>"
+			document.getElementById(tbl_nm_id).innerHTML = db_nm + "." + tbl_nm
+					+ "<b class='caret'></b>"
 			//document.getElementById(tbl_nm_id+"query_text").innerHTML = db_nm+"."+tbl_nm
 		}
 
@@ -339,37 +313,34 @@ header .navbar-nav>li {
 				+ "&col_id=" + col_id + "&proj_id=" + proj_id + "&check=col",
 				true)
 		x.send(null)
-		x.onreadystatechange =
-				function() {
-					if (x.readyState == 4) {
-						var elems = document.getElementsByTagName("span");
-						var cols = x.responseText.split(",")
-						var finalCols = ""
-						for (var i = 0; i < elems.length; i++) {
-							if (elems[i].id.includes(col_id)) {
-								finalCols = ""
-								for (var j = 0; j < cols.length - 1; j++) {
-									finalCols =
-											finalCols
-													+ "<a href='#' onclick=setQueryColValue('"
-													+ elems[i].id + "','"
-													+ cols[j] + "')>" + cols[j]
-													+ "</a>" + ",";
-								}
-								document.getElementById(elems[i].id).innerHTML =
-										finalCols.substring(0,
-												finalCols.length - 1);
-
-							}
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				var elems = document.getElementsByTagName("span");
+				var cols = x.responseText.split(",")
+				var finalCols = ""
+				for (var i = 0; i < elems.length; i++) {
+					if (elems[i].id.includes(col_id)) {
+						finalCols = ""
+						for (var j = 0; j < cols.length - 1; j++) {
+							finalCols = finalCols
+									+ "<a href='#' onclick=setQueryColValue('"
+									+ elems[i].id + "','" + cols[j] + "')>"
+									+ cols[j] + "</a>" + ",";
 						}
-					}
+						document.getElementById(elems[i].id).innerHTML = finalCols
+								.substring(0, finalCols.length - 1);
 
+					}
 				}
+			}
+
+		}
 	}
 
 	function setQueryColValue(col_id, colValue) {
-		document.getElementById("fullCols").innerHTML =
-				document.getElementById("fullCols").innerHTML + colValue + ",";
+		document.getElementById("fullCols").innerHTML = document
+				.getElementById("fullCols").innerHTML
+				+ colValue + ",";
 		document.getElementById("colId").value = col_id
 	}
 
@@ -377,9 +348,8 @@ header .navbar-nav>li {
 		var cols = document.getElementById("fullCols").innerHTML
 		var colId = document.getElementById("colId").value
 		cols = cols.substring(0, cols.length - 1)
-		var query =
-				document.getElementById("query_text").value
-						.replace(colId, cols)
+		var query = document.getElementById("query_text").value.replace(colId,
+				cols)
 		document.getElementById("query_text").value = query
 		document.getElementById("fullCols").innerHTML = ""
 	}
@@ -391,40 +361,15 @@ header .navbar-nav>li {
 
 	function editQuery() {
 		if (document.getElementById("query_text").style.display == "none") {
-			document.getElementById("query_text").style.display =
-					"inline-block"
+			document.getElementById("query_text").style.display = "inline-block"
 			document.getElementById("main_panel").style.display = "none"
 		} else {
 			document.getElementById("query_text").style.display = "none"
-			document.getElementById("main_panel").style.display =
-					"inline-block"
+			document.getElementById("main_panel").style.display = "inline-block"
 		}
 	}
 
-	function fetchSheetDetails(url_type) {
 
-		if (document.getElementById(url_type + "_url").value == "")
-			document.getElementById(url_type + "_name").innerHTML = "Empty url";
-
-		else {
-			//	document.getElementById(url_type + "_name").innerHTML = "Retrieving spreadsheet details..";
-			spreadsheet_id = document.getElementById(url_type + "_url").value;
-			document.getElementById(url_type + "_url").value =
-					"Retrieving spreadsheet details..";
-			var x = new XMLHttpRequest()
-			x.open("GET", "index_ajax2.jsp?title=1&spreadsheet_id="
-					+ spreadsheet_id, true)
-			x.send(null)
-			x.onreadystatechange =
-					function() {
-						if (x.readyState == 4) {
-							//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-							document.getElementById(url_type + "_url").value =
-									x.responseText;
-						}
-					}
-		}
-	}
 	function hideDiv(divName) {
 		if (divName == 'excel') {
 			document.getElementById("excel").style.display = "none";
@@ -441,16 +386,13 @@ header .navbar-nav>li {
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?testsheets=1&p_id=" + sel_proj, true)
 		x.send(null)
-		x.onreadystatechange =
-				function() {
-					if (x.readyState == 4) {
-						//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-						document.getElementById("selected_testsheet").innerHTML =
-								x.responseText;
-						document.getElementById("selected_worksheet").innerHTML =
-								"<option selected disabled>Worksheet Name</option>";
-					}
-				}
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+				document.getElementById("selected_testsheet").innerHTML = x.responseText;
+				document.getElementById("selected_worksheet").innerHTML = "<option selected disabled>Worksheet Name</option>";
+			}
+		}
 
 	}
 	function getWorkSheets() {
@@ -458,21 +400,18 @@ header .navbar-nav>li {
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?worksheets=1&s_id=" + sel_ts, true)
 		x.send(null)
-		x.onreadystatechange =
-				function() {
-					if (x.readyState == 4) {
-						//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-						document.getElementById("selected_worksheet").innerHTML =
-								x.responseText;
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+				document.getElementById("selected_worksheet").innerHTML = x.responseText;
 
-					}
-				}
+			}
+		}
 	}
 </script>
 
-
-
 </head>
+
 <body>
 
 	<header>
@@ -480,8 +419,7 @@ header .navbar-nav>li {
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession()
-					.getAttribute("credential");
+			Credential credential = (Credential) request.getSession().getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -599,11 +537,9 @@ header .navbar-nav>li {
 				<ul class="ver_nav_bar" id="proj_cases_ul">
 					<%
 						if (request.getSession().getAttribute("proj_id") != null) {
-							int active_proj = Integer.parseInt(request.getSession()
-									.getAttribute("proj_id").toString());
+							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
 
-							List<String[]> proj_cases = new ArrayList<String[]>(
-									ob.getCases(active_proj));
+							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
 
 							for (String[] c : proj_cases) {
 					%>
@@ -690,103 +626,7 @@ header .navbar-nav>li {
 		</div>
 
 	</div>
-	<div class="modal fade" id="myModal" role="dialog">
-		<div class="modal-dialog modal-lg">
-
-			<!-- Modal content-->
-			<div class="panel panel-primary">
-				<div class="panel panel-heading">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title" style="color: white">New Project</h4>
-				</div>
-				<div class="modal-body">
-
-					<div class="panel panel-body">
-						<ul class="nav nav-tabs" style="border-bottom: none;">
-							<li class="active" style="background-color: white; padding: 0px"><a
-								data-toggle="tab" href="#google" onclick="hideDiv('excel')"
-								style="color: black; background-color: white">Google sheet</a></li>
-							<li style="background-color: white; padding: 0px"><a
-								data-toggle="tab" href="#excel" onclick="hideDiv('google')"
-								style="color: black; background-color: white">Excel</a></li>
-						</ul>
-						<div class="tab-content">
-							<div class="panel panel-primary" style="height: 400px">
-								<div class="tab-pane fade in active" id="google"
-									style="background-color: white; width: 100%;">
-									<form action="CreateProject" method='post'>
-										<input type="text" name="pid" placeholder="Project id"
-											class="form-control"
-											style="width: 19%; display: inline-block" /> <input
-											type="text" name="pname" placeholder="Project name"
-											class="form-control"
-											style="width: 80%; display: inline-block" /> <br> <br>
-										<textarea name="pdesc" style="resize: none" rows="5"
-											placeholder="Project Description" class="form-control"></textarea>
-										<br> <input type="text" name="testSheet_url"
-											id="testSheet_url" placeholder="Test Sheet url"
-											class="form-control"
-											style="width: 90%; display: inline-block" /><input
-											type="button" class="btn" style="color: black"
-											value="Inspect" onclick="fetchSheetDetails('testSheet')" />
-										<br>
-										<div id="testSheet_name"></div>
-										<br> <input type="text" name="stm_url" id="stm_url"
-											placeholder="STM url" class="form-control"
-											style="width: 90%; display: inline-block" /> <input
-											type="button" class="btn" style="color: black"
-											value="Inspect" onclick="fetchSheetDetails('stm')" /> <br>
-										<div id="stm_name"></div>
-										<br> <input type="submit" class="btn btn-primary"
-											value="Create Project">
-										<button type="button" class="btn btn-default"
-											data-dismiss="modal">Cancel</button>
-
-									</form>
-								</div>
-								<div id="excel" class="tab-pane fade"
-									style="background-color: white; width: 100%; display: none">
-									<form action="#" method='post'>
-										<input type="text" name="pid" placeholder="Project id"
-											class="form-control"
-											style="width: 19%; display: inline-block" /> <input
-											type="text" name="pname" placeholder="Project name"
-											class="form-control"
-											style="width: 80%; display: inline-block" /> <br> <br>
-										<textarea name="pdesc" style="resize: none" rows="5"
-											placeholder="Project Description" class="form-control"></textarea>
-										<br> <input type="text" name="testSheet_file"
-											id="testSheet_file" placeholder="Test Sheet file (.xls)"
-											class="form-control"
-											style="width: 90%; display: inline-block" /><input
-											type="button" class="btn" style="color: black" value="Browse" />
-										<br>
-										<div id="testSheet_name"></div>
-										<br> <input type="text" name="stm_file" id="stm_file"
-											placeholder="STM file (.xls)" class="form-control"
-											style="width: 90%; display: inline-block" /> <input
-											type="button" class="btn" style="color: black" value="Browse" />
-										<br> <br> <input type="submit"
-											class="btn btn-primary" value="Create Project">
-										<button type="button" class="btn btn-default"
-											data-dismiss="modal">Cancel</button>
-									</form>
-
-								</div>
-							</div>
-
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-
+	
 
 	<div class="modal fade" id="styledProject" role="dialog">
 		<div class="modal-dialog modal-lg">
@@ -802,7 +642,7 @@ header .navbar-nav>li {
 			<div id="New" class="tabcontent">
 				<h3>New project</h3>
 				<br>
-				<form action="#" method='post'>
+				<form action="CreateProject" method='post'>
 					<input type="text" name="pid" placeholder="Project id"
 						class="form-control" style="width: 18.5%; display: inline-block" />&nbsp;
 					<input type="text" name="pname" placeholder="Project name"
@@ -818,16 +658,20 @@ header .navbar-nav>li {
 					Sheet <br> <br>
 
 					<div id="google_selector">
-						<input type="text" name="testSheet_url" id="testSheet_url"
+						<input type="text" id="testSheet_url"
 							placeholder="Test Sheet url" class="form-control"
 							style="width: 80%; display: inline-block" />&nbsp; <input
-							type="button" class="btn" style="color: black" value="Inspect" />
+							type="button" class="btn" style="color: black" value="Inspect" onclick="fetchSheetDetails('testSheet')" />
+							<input type="text" name= "testSheet_url" id="testSheet_url_success" hidden="hidden"/>
+							<input type="text" name= "testSheet_title" id="testSheet_title_success" hidden="hidden"/>
 						<br>
 						<div id="testSheet_name"></div>
-						<br> <input type="text" name="stm_url" id="stm_url"
+						<br> <input type="text" id="stm_url"
 							placeholder="STM url" class="form-control"
 							style="width: 80%; display: inline-block" />&nbsp; <input
-							type="button" class="btn" style="color: black" value="Inspect" />
+							type="button" class="btn" style="color: black" value="Inspect"  onclick="fetchSheetDetails('stm')"/>
+							<input type="text" name= "stm_url" id="stm_url_success" hidden="hidden"/>
+							<input type="text" name= "stm_title" id="stm_title_success" hidden="hidden"/>
 					</div>
 
 

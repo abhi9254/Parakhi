@@ -34,34 +34,6 @@
 	height: 220px;
 }
 
-.push-button {
-	background-color: #008CBA;
-	border: none;
-	float: right;
-	color: white;
-	padding: 10px 20px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	margin-right: 10px;
-	cursor: pointer;
-	height: 40px;
-}
-
-.back-button {
-	background-color: #008CBA;
-	border: none;
-	color: white;
-	padding: 10px 20px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	margin-left: 10px;
-	cursor: pointer;
-	height: 40px;
-}
 
 body {
 	margin: 0px
@@ -138,30 +110,3 @@ li a:hover:not (.inactive ) {
 	color: white;
 }
 
-table.tablesorter {
-	border-collapse: collapse;
-	width: 100%;
-	text-align: left;
-}
-
-table.tablesorter thead tr .headerSortUp {
-	background-color: #dcd9d9;
-}
-
-table.tablesorter thead tr .headerSortDown {
-	background-color: #e6e3e3;
-}
-
-table.tablesorter thead tr .header {
-	cursor: pointer;
-}
-
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	text-align: left;
-	padding: 6px;
-	background-color: #eceaea
-}
-
-table.tablesorter tbody tr:nth-child(even) {
-	background-color: #f2f2f2
-}

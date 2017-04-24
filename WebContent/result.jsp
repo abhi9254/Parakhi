@@ -10,19 +10,21 @@
 <html>
 <head>
 <title>Parakhi - 0.7</title>
-<link rel="stylesheet" href="/Parakhi/style.css" type="text/css">
+
+<!-- css -->
+<link href="template_files/bootstrap.min.css" rel="stylesheet" />
+<link href="template_files/style.css" rel="stylesheet" />
+<link href="template_files/bootstrap_multiselect.min.css"
+	rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+
 <script type="text/javascript" src="/Parakhi/js/google_sheets_api.js"></script>
 <script type="text/javascript" src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="/Parakhi/js/bootstrap.min.js"></script>
 <script type="text/javascript"
 	src="/Parakhi/js/jquery.tablesorter.min.js"></script>
 
-<!-- css -->
-<link href="template_files/bootstrap.min.css" rel="stylesheet" />
-<link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css">
-<link href="template_files/bootstrap_multiselect.min.css"
-	rel="stylesheet" type="text/css" />
+
 <script>
 	$(document).ready(function() {
 		$("#res_tbl").tablesorter();
@@ -416,101 +418,91 @@ ul.tab li a:focus, .active {
 
 </head>
 <body>
-	<div id="wrapper">
-		<!-- start header -->
-		<header>
-		<div class="navbar navbar-inverse navbar-static-top">
-			<label style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
-			</label>
-			<%
-				Credential credential = (Credential) request.getSession().getAttribute("credential");
 
-				Long active_time = null;
-				if (credential != null)
-					active_time = credential.getExpiresInSeconds();
-				if (active_time != null && active_time > 0) {
-			%>
+	<header>
+	<div class="navbar navbar-inverse navbar-static-top">
+		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
+		</small>
+		<%
+			Credential credential = (Credential) request.getSession().getAttribute("credential");
 
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Active <%=(active_time) / 60%> min
-			</label>
-			<%
-				} else {
-			%>
-			<label style="color: white">User: <%=request.getSession().getAttribute("user_id")%>,
-				Token: Inactive
-			</label>
-			<%
-				}
-			%>
+			Long active_time = null;
+			if (credential != null)
+				active_time = credential.getExpiresInSeconds();
+			if (active_time != null && active_time > 0) {
+		%>
 
-			<div class="container" style="float: right; color: white">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="dropdown"><a href="index.jsp" style="color: white">Home</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle "
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Project <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="#" data-toggle="modal"
-									data-target="#styledProject">Styled Project</a></li>
-								<li><a href="#" data-toggle="modal"
-									data-target="#onSwitchModal">Switch Project</a></li>
-								<li><a href="#" data-toggle="modal" data-target="#myModal">New
-										Project</a></li>
-								<li><a href="project.jsp">View Project</a></li>
-							</ul></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-							data-close-others="false" style="color: white">Sheets <span
-								class="glyphicon glyphicon-chevron-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
-										Test Sheet</a></li>
-								<li><a target="_blank"
-									href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
-										STM</a></li>
-								<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
-										Sheet</a></li>
-								<li><a href="">Verify DDLs</a></li>
-							</ul></li>
-						
-						<li class="dropdown"><a href="cross_section.jsp"
-							style="color: white">Cross Section</a></li>
-						<li class="dropdown"><a href="history.jsp"
-							style="color: white">History</a></li>
-						<li class="dropdown"><a href="settings.jsp"
-							style="color: white">Settings</a></li>
+		<small style="color: white"> Token: Active <%=(active_time) / 60%>
+			min
+		</small>
 
-						<%
-							if (request.getSession().getAttribute("user_id") == null) {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Login</a></li>
-						<%
-							} else {
-						%>
-						<li class=""><a href="login.jsp" style="color: white">Logout</a></li>
-						<%
-							}
-						%>
-					</ul>
-				</div>
-			</div>
+		<%
+			} else {
+		%>
+		<small style="color: white"> Token: Inactive </small>
+		<%
+			}
+		%>
+
+		<div class="container" style="float: right">
+			<ul class="nav navbar-nav" style="float: right; color: white">
+				<li class="dropdown"><a href="index.jsp" style="color: white"><span
+						class="glyphicon glyphicon-home"></span>&nbsp;Home </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle "
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Project
+						<span class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">Switch Project</a></li>
+						<li><a href="#" data-toggle="modal"
+							data-target="#styledProject">New Project</a></li>
+						<li><a href="project.jsp">View Project</a></li>
+					</ul></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-book"></span>&nbsp;Sheets <span
+						class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE">View
+								Test Sheet</a></li>
+						<li><a target="_blank"
+							href="https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit">View
+								STM</a></li>
+						<li><a href="" data-toggle="modal" data-target="#myModal2">Rerun
+								Sheet</a></li>
+						<li><a href="" data-toggle="modal" data-target="#verifyddl">Verify
+								DDLs</a></li>
+					</ul></li>
+
+				<li class="dropdown"><a href="cross_section.jsp"
+					style="color: white"><span class="glyphicon glyphicon-record"></span>&nbsp;Cross
+						Section</a></li>
+				<li class="dropdown"><a href="history.jsp" style="color: white"><span
+						class="glyphicon glyphicon-time"></span>&nbsp;History</a></li>
+				<li class="dropdown"><a href="settings.jsp"
+					style="color: white"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a></li>
+
+				<%
+					if (request.getSession().getAttribute("user_id") == null) {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
+				<%
+					} else {
+				%>
+				<li class=""><a href="login.jsp" style="color: white"><span
+						class="glyphicon glyphicon-user"></span>&nbsp;Logout</a></li>
+				<%
+					}
+				%>
+			</ul>
 		</div>
-		</header>
-		<!-- end header -->
-
 	</div>
-
+	</header>
 
 
 	<br>

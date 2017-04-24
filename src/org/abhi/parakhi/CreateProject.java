@@ -23,10 +23,15 @@ public class CreateProject extends HttpServlet {
 		String p_name = request.getParameter("pname");
 		String p_desc = request.getParameter("pdesc");
 		String stm_url = request.getParameter("stm_url");
-		String[] selected_ws = request.getParameterValues("ws");
+		String stm_title = request.getParameter("stm_title");
+		String ts_url = request.getParameter("testSheet_url");
+		String ts_title = request.getParameter("testSheet_title");
+		String[] selected_ws = new String[1];
+		selected_ws[0] = "db_gold.gold_sales_dly";
+		// request.getParameterValues("ws");
 
-		System.out.println(p_id +":"+ p_name +":   "+ stm_url);
-		
+		// System.out.println(p_id +":"+ p_name +": "+ stm_url+"\n"+ts_url);
+
 		Matcher m = p.matcher(stm_url);
 		System.out.println("Worksheets selected");
 		for (String ws : selected_ws)
@@ -35,23 +40,26 @@ public class CreateProject extends HttpServlet {
 		if (m.find()) {
 			// System.out.println(m.group());
 			stm_sheet_id = m.group().substring(15, m.group().length() - 1);
-			System.out.println("Spreadsheet Id retrieved: " + stm_sheet_id);
+			System.out.println("Stm Id retrieved: " + stm_sheet_id);
 		}
 
 		SheetsAPI ob = new SheetsAPI();
 
-		// String stm_title = ob.getSheetTitle(stm_sheet_id);
-		List<List<String>> parse_headers = ob.readSheetData((String) request.getSession().getAttribute("token"),
-				stm_sheet_id, selected_ws[0] + "!A1:M4");
-		// Reading headers of STM
-		StringBuilder s = new StringBuilder("");
-		for (List<String> row : parse_headers) {
-			for (String cell : row) {
-				s.append(cell + " ");
-			}
-		}
-		System.out.println(s.toString());
+		// String stm_title =
+		// ob.getSheetTitle(request.getSession().getAttribute("user_id").toString(),
+		// (String) request.getSession().getAttribute("token"), stm_sheet_id);
+		// String ts_title =
+		// ob.getSheetTitle(request.getSession().getAttribute("user_id").toString(),
+		// (String) request.getSession().getAttribute("token"), stm_sheet_id);
 
+		/*
+		 * List<List<String>> parse_headers = ob.readSheetData((String)
+		 * request.getSession().getAttribute("token"), stm_sheet_id,
+		 * selected_ws[0] + "!A1:M4"); // Reading headers of STM StringBuilder s
+		 * = new StringBuilder(""); for (List<String> row : parse_headers) { for
+		 * (String cell : row) { s.append(cell + " "); } }
+		 * System.out.println(s.toString());
+		 */
 		// Read source databases and tables from STM by interactive
 		// column-selection
 		String src_range = selected_ws[0] + "!A4:K12";
@@ -65,12 +73,16 @@ public class CreateProject extends HttpServlet {
 		// }
 
 		MySQL_dao ob2 = new MySQL_dao();
+		ob2.insertIntoStmSheets(p_id, p_name, p_desc, stm_title, stm_url);
+		ob2.insertIntoTestSheets(p_id, p_name, p_desc, ts_title, ts_url);
 		for (List<String> row : stm) {
 			ob2.insertIntoProjects(p_id, p_name, p_desc, row.get(1), row.get(2));
 			ob2.insertIntoTables(p_id, row.get(1), row.get(2), row.get(3));
 			ob2.insertIntoSTMs(stm_sheet_id, selected_ws[0], "1.0", row.get(0), row.get(1), row.get(2), row.get(3),
-					row.get(4), row.get(5), row.get(6), row.get(7), row.get(8), row.get(9), row.get(10));
+					row.get(4), row.get(5), row.get(6), row.get(7), row.get(8), row.get(9), "Test comment");
 		}
+		request.getSession().setAttribute("proj_id", p_id);
+		request.getSession().setAttribute("proj_nm", p_name);
 		response.sendRedirect("project.jsp");
 	}
 

@@ -5,29 +5,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Parakhi - 0.7</title>
 
-<link rel="stylesheet" href="/Parakhi/animate.css" type="text/css">
+<link rel="stylesheet" href="/Parakhi/animate.css" type="text/css" />
 <link rel="stylesheet" href="/Parakhi/css/bootstrap.min.css"
-	type="text/css">
+	type="text/css" />
 
-<link rel="stylesheet" href="/Parakhi/style.css" type="text/css">
+<link rel="stylesheet" href="/Parakhi/style.css" type="text/css" />
 <style>
-header .navbar {
-	min-height: 51px;
-	max-height: 51px;
-}
-
-header .navbar-nav>li {
-	padding-bottom: 4px;
-	padding-top: 5px;
-}
-
-.navbar-inverse {
-	background-color: #252525;
-	border-color: #080808;
-}
 </style>
 
 <script type="text/javascript" src="/Parakhi/js/google_sheets_api.js"></script>
@@ -321,7 +306,7 @@ header .navbar-nav>li {
 
 					<div id="authorization-div" style="display: none"></div>
 					<form action="Oauth2Servlet">
-						<label> Authorize Parakhi to use Google sheets</label><br> <input
+						<label> Authorize Parakhi to use Google sheets</label> <small>(Do not use Kohls account)</small><br> <input
 							class="btn btn-primary" type="submit" value="Authorize" />
 					</form>
 					<br>
