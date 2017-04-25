@@ -34,6 +34,7 @@
 			lengthChange : false,
 			pageLength : 25,
 			info : false,
+			pagingType : "full"
 
 		});
 	});
@@ -267,13 +268,13 @@
 
 				//turn display: inline to debug
 				document.getElementById(tbl_nm).innerHTML +=
-						"<textarea id=query_"
+						"<input type='submit' value='Trace' class='btn btn-success' style='float: right; display:inline'><input type='button' class='btn btn-primary' style='margin-right:10px;float:right;display:inline' value='Preview' onclick=previewTraceQuery('"
 								+ tbl_nm
-								+ " style='display:none;width:50%;height:100px' name = 'query_text'>"
-								+ query
-								+ "</textarea><input type='submit' value='Trace' class='btn btn-info' style='float: right; display:inline-block'><input type='button' value='Preview' onclick=previewTraceQuery('"
+								+ "') class='btn'/>"
+								+ "<br><br><textarea id=query_"
 								+ tbl_nm
-								+ "') class='btn' style='float: right;display:inline-block'/>"
+								+ " style='display:none;width:50%;height:75px' name = 'query_text'>"
+								+ query + "</textarea>"
 
 			}
 		}
@@ -553,14 +554,14 @@ ul.tab li a:focus, .active {
 	</ul>
 	</header>
 	<div id="Query" class="tabcontent"
-		style="width: 99%; padding-top: 200px;; border-width: 0px">
+		style="width: 99%; padding-top: 180px;; border-width: 0px">
 
 		<pre id="query"><%=query%></pre>
 		<pre id="queried_tbl" style="display: none"><%=queried_tbl%></pre>
 	</div>
 
 	<div id="Result" class="tabcontent"
-		style="overflow-x: auto; min-width: 99%; width: auto; height: auto; padding-top: 200px;; border-width: 0px">
+		style="overflow-x: auto; min-width: 99%; width: auto; height: auto; padding-top: 180px;; border-width: 0px">
 		<table id="res_tbl" class="table table-striped table-hover"
 			cellspacing="0">
 			<%
@@ -611,7 +612,7 @@ ul.tab li a:focus, .active {
 	</div>
 
 	<div id="Log" class="tabcontent"
-		style="width: 99%; padding-top: 200px; border-width: 0px">
+		style="width: 99%; padding-top: 180px; border-width: 0px">
 		<%
 			String logs = request.getAttribute("query_log").toString();
 			System.out.println(logs);

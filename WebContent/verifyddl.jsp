@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="css/jquery.dataTables.min.css"
 	type="text/css">
 <link href="template_files/style.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" type="text/css"/>
+<link rel="stylesheet" href="css/style.css" type="text/css" />
 
 <style>
 #comparetbl_wrapper {
@@ -48,7 +48,7 @@ header .navbar-nav>li {
 		$('#comparetbl').DataTable({
 			order : [],
 			paging : false,
-			info :false
+			info : false
 		});
 	});
 </script>
@@ -144,16 +144,20 @@ header .navbar-nav>li {
 
 	<div style="margin: 20px">
 		<%
-			String stm_table = request.getParameter("stm_tbl");
 			String hive_table = request.getParameter("hive_tbl");
+			out.println("<label>Hive: " + hive_table + "</label><br>");
+
+			String stm_table = request.getParameter("stm_tbl");
+			out.println("<label>Stm: " + stm_table + "</label><br><br>");
+
 			boolean match = true;
 
 			List<String[]> stmColumns = new ArrayList<String[]>();
 			List<String[]> hiveColumns = new ArrayList<String[]>();
 
 			MySQL_dao ob = new MySQL_dao();
-			List<String[]> stmCols = new ArrayList<String[]>(ob.getStmTgtCols(
-					"1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A"));
+			List<String[]> stmCols = new ArrayList<String[]>(
+					ob.getStmTgtCols(stm_table));
 			for (String[] stmCol : stmCols) {
 				stmColumns.add(stmCol);
 			}
@@ -170,7 +174,7 @@ header .navbar-nav>li {
 						"jdbc:hive2://localhost:10000/default", "hive", "");
 				Statement stmt = (Statement) con.createStatement();
 
-				String query = "describe " + "db_gold.gold_product_sku";
+				String query = "describe " + hive_table;
 				//"db_insight.insight_monetization_all_transaction";
 				ResultSet hiveCols = stmt.executeQuery(query);
 				while (hiveCols.next()) {
@@ -202,7 +206,6 @@ header .navbar-nav>li {
 			} else
 				match = false;
 
-			out.println("<h5>Table: db_gold.gold_product_sku</h5>");
 			out.print("<h4 style='display:inline'>Verification: </h4>");
 			if (match)
 				out.println(

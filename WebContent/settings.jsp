@@ -243,6 +243,29 @@
 		</div>
 
 
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse5" style="display: block; text-decoration: none">Hive
+						Query</a>
+				</h4>
+			</div>
+			<div id="collapse5" class="panel-collapse collapse">
+				<div class="panel-body" style="margin-left: 10px">
+					<label style="display: inline">Use default Limit in queries</label>&nbsp;&nbsp;
+					<select class="form-control" style="width: 100px; display: inline">
+						<option>None</option>
+						<option>10</option>
+						<option selected>100</option>
+					</select><br>
+				</div>
+			</div>
+		</div>
+
+
+
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">

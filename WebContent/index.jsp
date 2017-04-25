@@ -24,7 +24,6 @@
 
 
 <style>
-
 .leftSection {
 	font-size: large;
 	color: red;
@@ -89,15 +88,13 @@
 	top: 11px;
 	left: -6px;
 }
-
 </style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/chosen.jquery.min.js" type="text/javascript"></script>
 <script src="js/parakhi.js" type="text/javascript"></script>
 <script>
-	function refresh_selectors(base_query, base_text, up_base_query,
-			up_base_text, up_cols_text) {
+	function refresh_selectors(base_query, base_text, up_base_query, up_base_text, up_cols_text) {
 		$(document)
 				.ready(
 						function() {
@@ -108,13 +105,16 @@
 											'change',
 											function(evt, params) {
 												var selected = $(this).val();
-												up_base_text = base_text
-														.replace(
-																' $db.$tableA ',
-																" " + selected
-																		+ " ");
+												up_base_text =
+														base_text
+																.replace(
+																		' $db.$tableA ',
+																		" "
+																				+ selected
+																				+ " ");
 												document
-														.getElementById('query_text').value = up_base_text;
+														.getElementById('query_text').value =
+														up_base_text;
 												update_col_selectors(
 														base_query, base_text,
 														selected, up_base_text,
@@ -126,10 +126,11 @@
 											'change',
 											function(evt, params) {
 												var selected = $(this).val();
-												up_cols_text = up_base_text
-														.replace(
-																/[$]tableA.[$]cols/g,
-																selected);
+												up_cols_text =
+														up_base_text
+																.replace(
+																		/[$]tableA.[$]cols/g,
+																		selected);
 												var mid_text = up_cols_text;
 												var total = $('.column').length;
 												//	for(i=1; i<total; i++){
@@ -138,18 +139,20 @@
 												//	}
 												for (i = 1; i < total; i++) {
 													if ($('#column_' + i).val() != '')
-														mid_text = mid_text
-																.replace(
-																		'$tableA.$col'
-																				+ i,
-																		$(
-																				'#column_'
-																						+ i)
-																				.val());
+														mid_text =
+																mid_text
+																		.replace(
+																				'$tableA.$col'
+																						+ i,
+																				$(
+																						'#column_'
+																								+ i)
+																						.val());
 												}
 
 												document
-														.getElementById('query_text').value = mid_text;
+														.getElementById('query_text').value =
+														mid_text;
 												refresh_selectors(base_query,
 														base_text,
 														up_base_query,
@@ -162,25 +165,28 @@
 											function(evt, params) {
 
 												var selected = $(this).val();
-												var select_id = $(this).prop(
-														'id').charAt(7);
+												var select_id =
+														$(this).prop('id')
+																.charAt(7);
 												var total = $('.column').length;
 												var final_text = up_cols_text;
 												if (select_id != '') {
 													for (i = 1; i < total; i++) {
 														if ($('#column_' + i)
 																.val() != null)
-															final_text = final_text
-																	.replace(
-																			'$tableA.$col'
-																					+ i,
-																			$(
-																					'#column_'
-																							+ i)
-																					.val());
+															final_text =
+																	final_text
+																			.replace(
+																					'$tableA.$col'
+																							+ i,
+																					$(
+																							'#column_'
+																									+ i)
+																							.val());
 													}
 													document
-															.getElementById('query_text').value = final_text;
+															.getElementById('query_text').value =
+															final_text;
 													//	refresh_selectors(base_query,base_text,up_base_query,up_base_text,up_cols_text);
 												}
 											});
@@ -188,37 +194,41 @@
 						});
 	}
 
-	function update_col_selectors(base_query, base_text, selected,
-			up_base_text, up_cols_text) {
+	function update_col_selectors(base_query, base_text, selected, up_base_text, up_cols_text) {
 		up_base_query = base_query.replace("value='' selected", "value=''");
-		up_base_query = up_base_query.replace("value='" + selected + "'",
-				"value='" + selected + "' selected");
+		up_base_query =
+				up_base_query.replace("value='" + selected + "'", "value='"
+						+ selected + "' selected");
 
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax.jsp?col_nms=1" + "&selected=" + selected,
 				true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				var cols_list = x.responseText;
-				var tbl_ptrn = /[$]tableA.[$]col./g;
-				up_base_query = up_base_query.replace(/[$]tableA.[$]cols/g,
-						cols_list);
-				cols_list = cols_list.replace(/columns/g, 'column');
-				up_base_query = up_base_query.replace(tbl_ptrn, cols_list);
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						var cols_list = x.responseText;
+						var tbl_ptrn = /[$]tableA.[$]col./g;
+						up_base_query =
+								up_base_query.replace(/[$]tableA.[$]cols/g,
+										cols_list);
+						cols_list = cols_list.replace(/columns/g, 'column');
+						up_base_query =
+								up_base_query.replace(tbl_ptrn, cols_list);
 
-				var i = 0;
-				while (up_base_query.includes("id='column'")) {
-					up_base_query = up_base_query.replace("id='column'",
-							"id='column_" + (++i) + "'");
+						var i = 0;
+						while (up_base_query.includes("id='column'")) {
+							up_base_query =
+									up_base_query.replace("id='column'",
+											"id='column_" + (++i) + "'");
+						}
+
+						$("#makeQuery").html(up_base_query);
+
+						refresh_selectors(base_query, base_text, up_base_query,
+								up_base_text, up_cols_text)
+					}
 				}
-
-				$("#makeQuery").html(up_base_query);
-
-				refresh_selectors(base_query, base_text, up_base_query,
-						up_base_text, up_cols_text)
-			}
-		}
 	}
 </script>
 <script>
@@ -273,14 +283,16 @@
 			x.open("GET", "index_ajax.jsp?inpQuery=" + str + "&projId="
 					+ projId, true)
 			x.send(null)
-			x.onreadystatechange = function() {
-				if (x.readyState == 4) {
-					document.getElementById("makeQuery").innerHTML = x.responseText;
-					refresh_selectors(x.responseText, str, x.responseText, str,
-							'');
+			x.onreadystatechange =
+					function() {
+						if (x.readyState == 4) {
+							document.getElementById("makeQuery").innerHTML =
+									x.responseText;
+							refresh_selectors(x.responseText, str,
+									x.responseText, str, '');
 
-				}
-			}
+						}
+					}
 		} else
 			document.getElementById("makeQuery").innerHTML = str;
 
@@ -293,12 +305,12 @@
 		var finalQuery = ""
 		if (document.getElementById(tbl_nm_id).innerHTML
 				.match("[$]db.[$]table[A-Z]")) {
-			document.getElementById(tbl_nm_id).innerHTML = db_nm + "." + tbl_nm
-					+ "<b class='caret'></b>"
+			document.getElementById(tbl_nm_id).innerHTML =
+					db_nm + "." + tbl_nm + "<b class='caret'></b>"
 			//finalQuery=document.getElementById("query_text").value.replace(tbl_nm_id,"<span id='"+tbl_nm_id+"query_text'>"+db_nm+"."+tbl_nm+"</span>")
 		} else {
-			document.getElementById(tbl_nm_id).innerHTML = db_nm + "." + tbl_nm
-					+ "<b class='caret'></b>"
+			document.getElementById(tbl_nm_id).innerHTML =
+					db_nm + "." + tbl_nm + "<b class='caret'></b>"
 			//document.getElementById(tbl_nm_id+"query_text").innerHTML = db_nm+"."+tbl_nm
 		}
 
@@ -313,34 +325,37 @@
 				+ "&col_id=" + col_id + "&proj_id=" + proj_id + "&check=col",
 				true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				var elems = document.getElementsByTagName("span");
-				var cols = x.responseText.split(",")
-				var finalCols = ""
-				for (var i = 0; i < elems.length; i++) {
-					if (elems[i].id.includes(col_id)) {
-						finalCols = ""
-						for (var j = 0; j < cols.length - 1; j++) {
-							finalCols = finalCols
-									+ "<a href='#' onclick=setQueryColValue('"
-									+ elems[i].id + "','" + cols[j] + "')>"
-									+ cols[j] + "</a>" + ",";
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						var elems = document.getElementsByTagName("span");
+						var cols = x.responseText.split(",")
+						var finalCols = ""
+						for (var i = 0; i < elems.length; i++) {
+							if (elems[i].id.includes(col_id)) {
+								finalCols = ""
+								for (var j = 0; j < cols.length - 1; j++) {
+									finalCols =
+											finalCols
+													+ "<a href='#' onclick=setQueryColValue('"
+													+ elems[i].id + "','"
+													+ cols[j] + "')>" + cols[j]
+													+ "</a>" + ",";
+								}
+								document.getElementById(elems[i].id).innerHTML =
+										finalCols.substring(0,
+												finalCols.length - 1);
+
+							}
 						}
-						document.getElementById(elems[i].id).innerHTML = finalCols
-								.substring(0, finalCols.length - 1);
-
 					}
-				}
-			}
 
-		}
+				}
 	}
 
 	function setQueryColValue(col_id, colValue) {
-		document.getElementById("fullCols").innerHTML = document
-				.getElementById("fullCols").innerHTML
-				+ colValue + ",";
+		document.getElementById("fullCols").innerHTML =
+				document.getElementById("fullCols").innerHTML + colValue + ",";
 		document.getElementById("colId").value = col_id
 	}
 
@@ -348,8 +363,9 @@
 		var cols = document.getElementById("fullCols").innerHTML
 		var colId = document.getElementById("colId").value
 		cols = cols.substring(0, cols.length - 1)
-		var query = document.getElementById("query_text").value.replace(colId,
-				cols)
+		var query =
+				document.getElementById("query_text").value
+						.replace(colId, cols)
 		document.getElementById("query_text").value = query
 		document.getElementById("fullCols").innerHTML = ""
 	}
@@ -361,14 +377,15 @@
 
 	function editQuery() {
 		if (document.getElementById("query_text").style.display == "none") {
-			document.getElementById("query_text").style.display = "inline-block"
+			document.getElementById("query_text").style.display =
+					"inline-block"
 			document.getElementById("main_panel").style.display = "none"
 		} else {
 			document.getElementById("query_text").style.display = "none"
-			document.getElementById("main_panel").style.display = "inline-block"
+			document.getElementById("main_panel").style.display =
+					"inline-block"
 		}
 	}
-
 
 	function hideDiv(divName) {
 		if (divName == 'excel') {
@@ -386,27 +403,99 @@
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?testsheets=1&p_id=" + sel_proj, true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-				document.getElementById("selected_testsheet").innerHTML = x.responseText;
-				document.getElementById("selected_worksheet").innerHTML = "<option selected disabled>Worksheet Name</option>";
-			}
-		}
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						document.getElementById("selected_testsheet").innerHTML =
+								x.responseText;
+						document.getElementById("selected_worksheet").innerHTML =
+								"<option selected disabled>Worksheet Name</option>";
+					}
+				}
 
 	}
-	function getWorkSheets() {
-		var sel_ts = document.getElementById("selected_testsheet").value;
+	function getSTMsheets() {
+		var sel_proj = document.getElementById("selected_project2").value;
 		var x = new XMLHttpRequest()
-		x.open("GET", "index_ajax2.jsp?worksheets=1&s_id=" + sel_ts, true)
+		x.open("GET", "index_ajax2.jsp?stmsheets=1&p_id=" + sel_proj, true)
 		x.send(null)
-		x.onreadystatechange = function() {
-			if (x.readyState == 4) {
-				//	document.getElementById(url_type + "_name").innerHTML = x.responseText
-				document.getElementById("selected_worksheet").innerHTML = x.responseText;
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						document.getElementById("selected_stmsheet").innerHTML =
+								x.responseText;
+						document.getElementById("selected_worksheet2").innerHTML =
+								"<option selected disabled>Worksheet Name</option>";
+					}
+				}
 
-			}
+	}
+
+	function getWorkSheets(type) {
+		if (type == "ts") {
+			var sel_ts = document.getElementById("selected_testsheet").value;
+			var x = new XMLHttpRequest()
+			x.open("GET", "index_ajax2.jsp?worksheets=1&s_id=" + sel_ts, true)
+			x.send(null)
+			x.onreadystatechange =
+					function() {
+						if (x.readyState == 4) {
+							//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+							document.getElementById("selected_worksheet").innerHTML =
+									x.responseText;
+
+						}
+					}
 		}
+
+		else if (type == "ss") {
+			var sel_ss = document.getElementById("selected_stmsheet").value;
+			var x = new XMLHttpRequest()
+			x.open("GET", "index_ajax2.jsp?worksheets=1&s_id=" + sel_ss, true)
+			x.send(null)
+			x.onreadystatechange =
+					function() {
+						if (x.readyState == 4) {
+							//	document.getElementById(url_type + "_name").innerHTML = x.responseText
+							document.getElementById("selected_worksheet2").innerHTML =
+									x.responseText;
+
+						}
+					}
+		}
+	}
+
+	function getDatabases() {
+		var sel_proj = document.getElementById("selected_project3").value;
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?dbs=1&p_id=" + sel_proj, true)
+		x.send(null)
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						document.getElementById("selected_database").innerHTML =
+								x.responseText;
+						document.getElementById("selected_table").innerHTML =
+								"<option selected disabled>Table</option>";
+					}
+				}
+	}
+
+	function getDatabaseTables() {
+		var sel_proj = document.getElementById("selected_project3").value;
+		var sel_db = document.getElementById("selected_database").value;
+		var x = new XMLHttpRequest()
+		x.open("GET", "index_ajax2.jsp?tbls=1&p_id=" + sel_proj + "&db="
+				+ sel_db, true)
+		x.send(null)
+		x.onreadystatechange =
+				function() {
+					if (x.readyState == 4) {
+						document.getElementById("selected_table").innerHTML =
+								x.responseText;
+
+					}
+				}
 	}
 </script>
 
@@ -419,7 +508,8 @@
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession().getAttribute("credential");
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -537,9 +627,11 @@
 				<ul class="ver_nav_bar" id="proj_cases_ul">
 					<%
 						if (request.getSession().getAttribute("proj_id") != null) {
-							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+							int active_proj = Integer.parseInt(request.getSession()
+									.getAttribute("proj_id").toString());
 
-							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+							List<String[]> proj_cases = new ArrayList<String[]>(
+									ob.getCases(active_proj));
 
 							for (String[] c : proj_cases) {
 					%>
@@ -626,7 +718,7 @@
 		</div>
 
 	</div>
-	
+
 
 	<div class="modal fade" id="styledProject" role="dialog">
 		<div class="modal-dialog modal-lg">
@@ -658,20 +750,21 @@
 					Sheet <br> <br>
 
 					<div id="google_selector">
-						<input type="text" id="testSheet_url"
-							placeholder="Test Sheet url" class="form-control"
-							style="width: 80%; display: inline-block" />&nbsp; <input
-							type="button" class="btn" style="color: black" value="Inspect" onclick="fetchSheetDetails('testSheet')" />
-							<input type="text" name= "testSheet_url" id="testSheet_url_success" hidden="hidden"/>
-							<input type="text" name= "testSheet_title" id="testSheet_title_success" hidden="hidden"/>
-						<br>
+						<input type="text" id="testSheet_url" placeholder="Test Sheet url"
+							class="form-control" style="width: 80%; display: inline-block" />&nbsp;
+						<input type="button" class="btn" style="color: black"
+							value="Inspect" onclick="fetchSheetDetails('testSheet')" /> <input
+							type="text" name="testSheet_url" id="testSheet_url_success"
+							hidden="hidden" /> <input type="text" name="testSheet_title"
+							id="testSheet_title_success" hidden="hidden" /> <br>
 						<div id="testSheet_name"></div>
-						<br> <input type="text" id="stm_url"
-							placeholder="STM url" class="form-control"
-							style="width: 80%; display: inline-block" />&nbsp; <input
-							type="button" class="btn" style="color: black" value="Inspect"  onclick="fetchSheetDetails('stm')"/>
-							<input type="text" name= "stm_url" id="stm_url_success" hidden="hidden"/>
-							<input type="text" name= "stm_title" id="stm_title_success" hidden="hidden"/>
+						<br> <input type="text" id="stm_url" placeholder="STM url"
+							class="form-control" style="width: 80%; display: inline-block" />&nbsp;
+						<input type="button" class="btn" style="color: black"
+							value="Inspect" onclick="fetchSheetDetails('stm')" /> <input
+							type="text" name="stm_url" id="stm_url_success" hidden="hidden" />
+						<input type="text" name="stm_title" id="stm_title_success"
+							hidden="hidden" />
 					</div>
 
 
@@ -733,7 +826,7 @@
 					<div style="width: 400px; display: table-cell">
 						<h4>STM Definition</h4>
 						<select class="form-control" placeholder="select project"
-							id="selected_project" onchange="getTestSheets()">
+							id="selected_project2" onchange="getSTMsheets()">
 							<option selected disabled>Project Name</option>
 							<%
 								List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
@@ -743,40 +836,38 @@
 							<%
 								}
 							%>
-						</select> <br> <select class="form-control" id="selected_testsheet"
-							name="selected_testsheet" onchange="getWorkSheets()">
-							<option selected disabled>STMs</option>
-						</select><br> <select class="form-control" id="selected_worksheet"
-							name="selected_worksheet">
-							<option selected disabled>Table</option>
+						</select> <br> <select class="form-control" id="selected_stmsheet"
+							name="selected_stmsheet" onchange="getWorkSheets('ss')">
+							<option selected disabled>Stm Sheet</option>
+						</select><br> <select class="form-control" id="selected_worksheet2"
+							name="stm_tbl">
+							<option selected disabled>Worksheet Name</option>
 						</select> <br>
-
 					</div>
 					<div
 						style="width: 500px; padding-left: 80px; padding-right: 20px; display: table-cell">
 						<h4>Hive table</h4>
 						<select class="form-control" placeholder="select project"
-							id="selected_project" onchange="getTestSheets()">
+							id="selected_project3" onchange="getDatabases()">
 							<option selected disabled>Project Name</option>
 							<%
-								//	List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
 								for (String[] p : projects) {
 							%>
 							<option value="<%=p[0]%>"><%=p[1]%></option>
 							<%
 								}
 							%>
-						</select> <br> <select class="form-control" id="selected_testsheet"
-							name="selected_testsheet" onchange="getWorkSheets()">
+						</select> <br> <select class="form-control" id="selected_database"
+							name="selected_database" onchange="getDatabaseTables()">
 							<option selected disabled>Database</option>
-						</select><br> <select class="form-control" id="selected_worksheet"
-							name="selected_worksheet">
+						</select><br> <select class="form-control" id="selected_table"
+							name="hive_tbl">
 							<option selected disabled>Table</option>
 						</select> <br>
 					</div>
-					<br> <input type="checkbox" value="colOrder" />Check columns
-					order<br> <br> <input type="submit" value="Compare"
-						class="btn btn-info">
+					<br> <input type="checkbox" checked disabled value="colOrder" />Check
+					columns order<br> <br> <input type="submit"
+						value="Compare" class="btn btn-info">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					<br>
 				</form>
@@ -809,7 +900,7 @@
 								}
 							%>
 						</select> <br> <select class="form-control" id="selected_testsheet"
-							name="selected_testsheet" onchange="getWorkSheets()">
+							name="selected_testsheet" onchange="getWorkSheets('ts')">
 							<option selected disabled>Test Sheet</option>
 						</select><br> <select class="form-control" id="selected_worksheet"
 							name="selected_worksheet">

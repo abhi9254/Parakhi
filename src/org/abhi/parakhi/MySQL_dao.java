@@ -195,7 +195,8 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT case_query FROM parakhi.mytests where case_id=" + case_id;
+			String query = "SELECT case_query FROM parakhi.mytests where case_id="
+					+ case_id;
 			resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
@@ -222,7 +223,8 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT db_nm FROM parakhi.mytables where project_id=" + proj_id;
+			String query = "SELECT DISTINCT db_nm FROM parakhi.mytables where project_id="
+					+ proj_id;
 			resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
@@ -249,8 +251,8 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT tbl_nm FROM parakhi.mytables where project_id=" + proj_id + " and db_nm='"
-					+ db_nm + "'";
+			String query = "SELECT DISTINCT tbl_nm FROM parakhi.mytables where project_id="
+					+ proj_id + " and db_nm='" + db_nm + "'";
 			resultSet = statement.executeQuery(query);
 			List<String> tbls = new ArrayList<String>();
 			while (resultSet.next()) {
@@ -317,7 +319,8 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT target_col_nm FROM parakhi.mystms where stm_nm='" + db_nm_tbl_nm + "'";
+			String query = "SELECT DISTINCT target_col_nm FROM parakhi.mystms where stm_nm='"
+					+ db_nm_tbl_nm + "'";
 			resultSet = statement.executeQuery(query);
 
 			while (resultSet.next()) {
@@ -339,13 +342,15 @@ public class MySQL_dao {
 
 	}
 
-	public boolean insertIntoProjects(Integer p_id, String p_name, String p_desc, String db_name, String tbl_name) {
+	public boolean insertIntoProjects(Integer p_id, String p_name,
+			String p_desc, String db_name, String tbl_name) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "INSERT INTO parakhi.myprojects VALUES(" + p_id + ",'" + p_name + "','" + p_desc + "','"
-					+ db_name + "','" + tbl_name + "')";
+			String query = "INSERT INTO parakhi.myprojects VALUES(" + p_id
+					+ ",'" + p_name + "','" + p_desc + "','" + db_name + "','"
+					+ tbl_name + "')";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -356,13 +361,14 @@ public class MySQL_dao {
 		return returnCode;
 	}
 
-	public boolean insertIntoTables(Integer p_id, String db_name, String tbl_name, String col_name) {
+	public boolean insertIntoTables(Integer p_id, String db_name,
+			String tbl_name, String col_name) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "INSERT INTO parakhi.mytables VALUES(" + p_id + ",'" + db_name + "','" + tbl_name + "','"
-					+ col_name + "')";
+			String query = "INSERT INTO parakhi.mytables VALUES(" + p_id + ",'"
+					+ db_name + "','" + tbl_name + "','" + col_name + "')";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -373,13 +379,15 @@ public class MySQL_dao {
 		return returnCode;
 	}
 
-	public boolean insertIntoStmSheets(int p_id, String p_name, String p_desc, String stm_title, String stm_url) {
+	public boolean insertIntoStmSheets(int p_id, String p_name, String p_desc,
+			String stm_title, String stm_url) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "INSERT INTO parakhi.mystmsheets VALUES(" + p_id + ",'" + p_name + "','" + p_desc + "','"
-					+ stm_title + "','" + stm_url + "')";
+			String query = "INSERT INTO parakhi.mystmsheets VALUES(" + p_id
+					+ ",'" + p_name + "','" + p_desc + "','" + stm_title + "','"
+					+ stm_url + "')";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -389,15 +397,16 @@ public class MySQL_dao {
 		}
 		return returnCode;
 	}
-	
-	
-	public boolean insertIntoTestSheets(int p_id, String p_name, String p_desc, String ts_title, String ts_url) {
+
+	public boolean insertIntoTestSheets(int p_id, String p_name, String p_desc,
+			String ts_title, String ts_url) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "INSERT INTO parakhi.mytestsheets VALUES(" + p_id + ",'" + p_name + "','" + p_desc + "','"
-					+ ts_title + "','" + ts_url + "')";
+			String query = "INSERT INTO parakhi.mytestsheets VALUES(" + p_id
+					+ ",'" + p_name + "','" + p_desc + "','" + ts_title + "','"
+					+ ts_url + "')";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -407,19 +416,23 @@ public class MySQL_dao {
 		}
 		return returnCode;
 	}
-	
-	public boolean insertIntoSTMs(String stm_id, String stm_nm, String stm_version, String serial_no,
-			String source_db_nm, String source_tbl_nm, String source_col_nm, String source_data_typ,
-			String transformation, String target_db_nm, String target_tbl_nm, String target_col_nm,
-			String target_data_typ, String comment) {
+
+	public boolean insertIntoSTMs(String stm_id, String stm_nm,
+			String stm_version, String serial_no, String source_db_nm,
+			String source_tbl_nm, String source_col_nm, String source_data_typ,
+			String transformation, String target_db_nm, String target_tbl_nm,
+			String target_col_nm, String target_data_typ, String comment) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "INSERT INTO parakhi.mystms VALUES('" + stm_id + "','" + stm_nm + "','" + stm_version + "','"
-					+ serial_no + "','" + source_db_nm + "','" + source_tbl_nm + "','" + source_col_nm + "','"
-					+ source_data_typ + "',\"" + transformation + "\",'" + target_db_nm + "','" + target_tbl_nm + "','"
-					+ target_col_nm + "','" + target_data_typ + "','" + comment + "')";
+			String query = "INSERT INTO parakhi.mystms VALUES('" + stm_id
+					+ "','" + stm_nm + "','" + stm_version + "','" + serial_no
+					+ "','" + source_db_nm + "','" + source_tbl_nm + "','"
+					+ source_col_nm + "','" + source_data_typ + "',\""
+					+ transformation + "\",'" + target_db_nm + "','"
+					+ target_tbl_nm + "','" + target_col_nm + "','"
+					+ target_data_typ + "','" + comment + "')";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -437,7 +450,8 @@ public class MySQL_dao {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 
-			String query = "select user_id from parakhi.myusers WHERE user_id = '" + user_id + "'";
+			String query = "select user_id from parakhi.myusers WHERE user_id = '"
+					+ user_id + "'";
 			System.out.println(query);
 			res = statement.executeQuery(query);
 			if (!res.next())
@@ -457,7 +471,8 @@ public class MySQL_dao {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 
-			String query = "select refresh_token from parakhi.myusers WHERE user_id = '" + user_id + "'";
+			String query = "select refresh_token from parakhi.myusers WHERE user_id = '"
+					+ user_id + "'";
 			// System.out.println(query);
 			res = statement.executeQuery(query);
 			if (res.next())
@@ -472,13 +487,14 @@ public class MySQL_dao {
 		return token;
 	}
 
-	public boolean insertIntoUsers(String user_id, String access_token, String refresh_token) {
+	public boolean insertIntoUsers(String user_id, String access_token,
+			String refresh_token) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "INSERT INTO parakhi.myusers VALUES('" + user_id + "','" + access_token + "','"
-					+ refresh_token + "')";
+			String query = "INSERT INTO parakhi.myusers VALUES('" + user_id
+					+ "','" + access_token + "','" + refresh_token + "')";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -489,13 +505,15 @@ public class MySQL_dao {
 		return returnCode;
 	}
 
-	public boolean updateIntoUsers(String user_id, String access_token, String refresh_token) {
+	public boolean updateIntoUsers(String user_id, String access_token,
+			String refresh_token) {
 		boolean returnCode = true;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "UPDATE parakhi.myusers SET access_token = '" + access_token + "',refresh_token = '"
-					+ refresh_token + " where user_id = '" + user_id + "'";
+			String query = "UPDATE parakhi.myusers SET access_token = '"
+					+ access_token + "',refresh_token = '" + refresh_token
+					+ " where user_id = '" + user_id + "'";
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -529,14 +547,17 @@ public class MySQL_dao {
 
 	}
 
-	public List<String> traceTblNm_for_Src_Cols(String trace_tbl_nm, String src_tbl_nm) {
+	public List<String> traceTblNm_for_Src_Cols(String trace_tbl_nm,
+			String src_tbl_nm) {
 		System.out.println("in col trace dao");
 		List<String> tbl_nms = new ArrayList<String>();
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
 			String query = "select DISTINCT source_col_nm from parakhi.mystms where CONCAT(TRIM(target_db_nm),'.',TRIM(target_tbl_nm)) = '"
-					+ trace_tbl_nm + "' AND CONCAT(source_db_nm,'.',source_tbl_nm)='" + src_tbl_nm + "'";
+					+ trace_tbl_nm
+					+ "' AND CONCAT(source_db_nm,'.',source_tbl_nm)='"
+					+ src_tbl_nm + "'";
 			System.out.println(query);
 			ResultSet resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
@@ -557,7 +578,8 @@ public class MySQL_dao {
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "UPDATE parakhi.mytasks SET progress = " + progress + " where task_id = " + task_id;
+			String query = "UPDATE parakhi.mytasks SET progress = " + progress
+					+ " where task_id = " + task_id;
 			System.out.println(query);
 			statement.executeUpdate(query);
 			connection.close();
@@ -600,15 +622,15 @@ public class MySQL_dao {
 		return tasks;
 	}
 
-	public List<String[]> getStmTgtCols(String stm_id) {
+	public List<String[]> getStmTgtCols(String stm_nm) {
 
 		ResultSet resultSet = null;
 		List<String[]> tgtCols = new ArrayList<String[]>();
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT serial_no,target_col_nm,target_data_typ FROM parakhi.mystms where stm_id = '"
-					+ stm_id + "' order by CAST(serial_no AS UNSIGNED INTEGER)";
+			String query = "SELECT DISTINCT serial_no,target_col_nm,target_data_typ FROM parakhi.mystms where stm_nm = '"
+					+ stm_nm + "' order by CAST(serial_no AS UNSIGNED INTEGER)";
 			resultSet = statement.executeQuery(query);
 			String[] s;
 
