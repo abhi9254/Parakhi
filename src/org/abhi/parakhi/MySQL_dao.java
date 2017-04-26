@@ -313,13 +313,13 @@ public class MySQL_dao {
 
 	}
 
-	public List<String> getTbl_Columns(String db_nm_tbl_nm) {
+	public List<String> getTbl_Columns(int proj_id, String db_nm_tbl_nm) {
 		ResultSet resultSet = null;
 		List<String> col_nms = new ArrayList<String>();
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.createStatement();
-			String query = "SELECT DISTINCT target_col_nm FROM parakhi.mystms where stm_nm='"
+			String query = "SELECT DISTINCT col_nm FROM parakhi.mytables where project_id='"+proj_id+"' and CONCAT(db_nm, '.', tbl_nm )='"
 					+ db_nm_tbl_nm + "'";
 			resultSet = statement.executeQuery(query);
 
@@ -622,6 +622,38 @@ public class MySQL_dao {
 		return tasks;
 	}
 
+	public List<String[]> getStmTgtTbls(String stm_id) {
+
+		ResultSet resultSet = null;
+		List<String[]> tgtTbls = new ArrayList<String[]>();
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+			String query = "SELECT DISTINCT target_tbl_nm FROM parakhi.mystms where stm_id = '"
+					+ stm_id + "'";
+			resultSet = statement.executeQuery(query);
+			String[] s;
+
+			while (resultSet.next()) {
+				s = new String[1];
+				s[0] = resultSet.getString(1);
+				tgtTbls.add(s);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return tgtTbls;
+	}
+	
+	
 	public List<String[]> getStmTgtCols(String stm_nm) {
 
 		ResultSet resultSet = null;

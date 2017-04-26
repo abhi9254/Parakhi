@@ -15,21 +15,6 @@
 <link href="template_files/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="/Parakhi/css/style.css" type="text/css" />
 
-<style>
-header .navbar {
-	min-height: 51px;
-}
-
-header .navbar-nav>li {
-	padding-bottom: 4px;
-	padding-top: 5px;
-}
-
-.navbar-inverse {
-	background-color: #353535;
-	border-color: #080808;
-}
-</style>
 
 <script src="/Parakhi/js/jquery-3.1.1.min.js"></script>
 <script src="/Parakhi/js/bootstrap.min.js"></script>
@@ -37,6 +22,17 @@ header .navbar-nav>li {
 
 <script>
 function showProjectDetails(proj_id){
+	
+	var w = new XMLHttpRequest()
+	w.open("GET", "index_ajax2.jsp?about=1&proj_id=" + proj_id,
+			true)
+	w.send(null)
+	w.onreadystatechange = function() {
+		if (w.readyState == 4) {
+			document.getElementById("about").innerHTML = w.responseText;
+		}
+	}
+	
 	document.getElementById("tables_list").innerHTML='';
 	var x = new XMLHttpRequest()
 	x.open("GET", "index_ajax2.jsp?tables=1&proj_id=" + proj_id,
@@ -93,8 +89,7 @@ function myFunction(id) {
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession()
-					.getAttribute("credential");
+			Credential credential = (Credential) request.getSession().getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -210,8 +205,7 @@ function myFunction(id) {
 						boolean activeSession = false;
 						int pid = 0;
 						if (request.getSession().getAttribute("proj_id") != null) {
-							pid = Integer.parseInt(request.getSession()
-									.getAttribute("proj_id").toString());
+							pid = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
 							activeSession = true;
 
 						}
@@ -241,8 +235,26 @@ function myFunction(id) {
 			</div>
 			<div id="collapse2" class="panel-collapse collapse">
 				<div id="stmsheets_list"
-					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-					a project..</div>
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
+					<%
+						if (activeSession && pid != 0) {
+							List<String[]> ss_list = new ArrayList<String[]>(ob.getSTMsheets(pid));
+
+							for (String[] ss : ss_list) {
+					%>
+					<%=ss[1]%>
+					<a href='' style='float: right;'>Remove</a> <a href=''
+						style='float: right; margin-right: 10px'>Refresh</a> <a
+						target='_blank' href='<%=ss[2]%>'
+						style='float: right; margin-right: 10px'>View</a>
+					<%
+						}
+						} else {
+					%>Select a project..
+					<%
+						}
+					%>
+				</div>
 				<a href="" style="float: right; margin-right: 50px">Add</a><br>
 			</div>
 		</div>
@@ -257,8 +269,28 @@ function myFunction(id) {
 			</div>
 			<div id="collapse3" class="panel-collapse collapse">
 				<div id="testsheets_list"
-					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-					a project..</div>
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
+
+					<%
+						if (activeSession && pid != 0) {
+							List<String[]> ts_list = new ArrayList<String[]>(ob.getTestsheets(pid));
+
+							for (String[] ts : ts_list) {
+					%>
+					<%=ts[1]%>
+					<a href='' style='float: right;'>Remove</a> <a href=''
+						style='float: right; margin-right: 10px'>Refresh</a> <a
+						target='_blank' href='<%=ts[2]%>'
+						style='float: right; margin-right: 10px'>View</a>
+
+					<%
+						}
+						} else {
+					%>Select a project..
+					<%
+						}
+					%>
+				</div>
 				<a href="" style="float: right; margin-right: 50px">Add</a><br>
 			</div>
 		</div>
@@ -273,8 +305,37 @@ function myFunction(id) {
 			</div>
 			<div id="collapse4" class="panel-collapse collapse">
 				<div id="tables_list"
-					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">Select
-					a project..</div>
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
+
+
+					<%
+						if (activeSession && pid != 0) {
+							List<String> db_list = new ArrayList<String>(ob.getProjDbNames(pid));
+
+							for (String db : db_list) {
+					%>
+					<b><%=db%></b><br>
+					<%
+						String[] tables = ob.getDbTblNames(pid, db);
+
+								for (int i = 0; i < tables.length; i++) {
+					%>
+					Table:
+					<%=tables[i]%>, Frequency: daily <a href='' style='float: right'>Remove</a>
+					<a href='' style='float: right; margin-right: 10px'>Refresh</a> <br>
+					<%
+						}
+							}
+						} else {
+					%>Select a project..
+					<%
+						}
+					%>
+
+
+
+				</div>
+				<a href="" style="float: right; margin-right: 50px">Add</a><br>
 			</div>
 		</div>
 
@@ -370,7 +431,6 @@ function myFunction(id) {
 			</div>
 		</div>
 	</div>
-
 </body>
 
 </html>

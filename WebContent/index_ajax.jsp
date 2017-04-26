@@ -32,11 +32,16 @@
 		outRes.println(rep);
 	}
 
-	if (request.getParameter("selected") != null) {
+	if (request.getParameter("col_nms") != null && request.getParameter("selected") != null) {
 		String db_nm_tbl_nm = request.getParameter("selected");
 
 		MySQL_dao ob = new MySQL_dao();
-		List<String> cols = new ArrayList<String>(ob.getTbl_Columns(db_nm_tbl_nm));
+		int proj_id = 0;
+		if (request.getSession().getAttribute("proj_id") != null) {
+			proj_id = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+		}
+
+		List<String> cols = new ArrayList<String>(ob.getTbl_Columns(proj_id, db_nm_tbl_nm));
 
 		StringBuilder s = new StringBuilder("");
 		StringBuilder all = new StringBuilder("");

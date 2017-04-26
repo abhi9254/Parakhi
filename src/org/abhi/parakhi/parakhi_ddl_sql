@@ -53,17 +53,15 @@ case_author VARCHAR(50));
 
 truncate table mytests;
 
-insert into mytests values(1,0,"Generic","Check for Null or blank","Check for null or blank in column values of datatype String","select $cols from $table WHERE $col is NULL or $col=''","admin");
-insert into mytests values(2,0,"Generic","Check for Non Numeric value","Check for non-numeric values(characters/symbols) in column values of datatype String","select $cols from $table WHERE $col  REGEXP '[^.0-9]'","admin");
+insert into mytests values(1,0,"Generic","Check for Null or blank","Check for null or blank in column values of datatype String","select $tableA.$cols from $db.$tableA where $tableA.$col1 is NULL or $tableA.$col2 = [quot][quot]","admin");
+insert into mytests values(2,0,"Generic","Check for Non Numeric value","Check for non-numeric values(characters/symbols) in column values of datatype String","select $tableA.$cols from $db.$tableA where $tableA.$col1 REGEXP [quot][^0-9][quot]","admin");
 insert into mytests values(3,0,"Generic","Check for Date format","Check for date formats in column values of datatype String/Date","select $cols from $table WHERE $col not like $dateFormat","admin");
 insert into mytests values(4,0,"Generic","Source minus Target","Check missing values in Target from Source","Select left.$cols1 from (Select DISTINCT $tableA.$col1 from $db.$tableA )left LEFT OUTER JOIN (Select DISTINCT $tableB.$col2 from $db.$tableB )right ON left.$col1=right.$col2 WHERE right.$col2 IS NULL","admin");
 insert into mytests values(5,0,"Generic","Check for Distinct lengths","Check for multiple length values in a column whose length should be fixed","Select DISTINCT length($col) from $table","admin");
-insert into mytests values(6,0,"Generic","Check for duplicate records","Check for full duplicated rows","Select $cols,count(*) as cnt from $table \nGROUP BY $cols HAVING cnt > 1","admin");
+insert into mytests values(6,0,"Generic","Check for duplicate records","Check for full duplicated rows","select $tableA.$cols , count(*) as cnt from $db.$tableA GROUP BY $tableA.$cols HAVING cnt > 1","admin");
 
-//insert into mytests values(4,0,"Generic","Source minus Target","Check missing values in Target from Source","Select left.$cols1 from \n(Select DISTINCT $tableA.$col1 from $tableA )left \nLEFT OUTER JOIN \n(Select DISTINCT $tableB.$col2 from $tableB )right \nON left.$col1=right.$col2 \nWHERE right.$col2 IS NULL","admin");
 
 ////-------MYCASEVARS
-
 
 create table mycasevars(
 case_id INT,
@@ -89,16 +87,16 @@ insert into mycasevars values(3,3,"$dateformat");
 create table mytables(
 project_id INT,
 db_nm VARCHAR(100),
-tbl_nm VARCHAR(200),c
+tbl_nm VARCHAR(200),
 col_nm VARCHAR(200));
 
 
-insert into mytables values(100,"db_gold","gold_sku_product","sku_id");
-insert into mytables values(100,"db_gold","gold_sku_product","dept_nm");
-insert into mytables values(100,"db_gold","gold_sku_product","gma_nm");
-insert into mytables values(100,"db_gold","gold_sku_product","age_grp");
-insert into mytables values(101,"db_gold","gold_sales_dly","trn_nbr");
-insert into mytables values(101,"db_gold","gold_sales_dly","trn_dte");
+insert into mytables values(0,"db_gold","gold_sku_product","sku_id");
+insert into mytables values(0,"db_gold","gold_sku_product","dept_nm");
+insert into mytables values(0,"db_gold","gold_sku_product","gma_nm");
+insert into mytables values(0,"db_gold","gold_sku_product","age_grp");
+insert into mytables values(0,"db_gold","gold_sales_dly","trn_nbr");
+insert into mytables values(0,"db_gold","gold_sales_dly","trn_dte");
 
 
 ////-------MYSTMS

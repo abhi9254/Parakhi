@@ -21,6 +21,8 @@ public class Login extends HttpServlet {
 
 		if ("parakhi".equals(uname) && "abc".equals(pass)) {
 			request.getSession().setAttribute("user_id", uname);
+			request.getSession().setAttribute("proj_id", "0");
+			request.getSession().setAttribute("proj_nm", "Generic");
 			response.sendRedirect("index.jsp");
 		} else {
 			response.sendRedirect("login.jsp");

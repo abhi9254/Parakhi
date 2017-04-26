@@ -171,7 +171,7 @@ header .navbar-nav>li {
 			}
 			try {
 				Connection con = DriverManager.getConnection(
-						"jdbc:hive2://localhost:10000/default", "hive", "");
+						"jdbc:hive2://10.200.99.242:10000/default", "hive", "");
 				Statement stmt = (Statement) con.createStatement();
 
 				String query = "describe " + hive_table;

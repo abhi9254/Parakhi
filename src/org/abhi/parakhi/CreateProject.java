@@ -52,7 +52,7 @@ public class CreateProject extends HttpServlet {
 		// ob.getSheetTitle(request.getSession().getAttribute("user_id").toString(),
 		// (String) request.getSession().getAttribute("token"), stm_sheet_id);
 
-		/*
+		/*//parse headers of sheet
 		 * List<List<String>> parse_headers = ob.readSheetData((String)
 		 * request.getSession().getAttribute("token"), stm_sheet_id,
 		 * selected_ws[0] + "!A1:M4"); // Reading headers of STM StringBuilder s
