@@ -25,21 +25,7 @@
 	width: 100%
 }
 </style>
-<style>
-header .navbar {
-	min-height: 51px;
-}
 
-header .navbar-nav>li {
-	padding-bottom: 4px;
-	padding-top: 5px;
-}
-
-.navbar-inverse {
-	background-color: #353535;
-	border-color: #080808;
-}
-</style>
 <script src="js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
@@ -170,9 +156,10 @@ header .navbar-nav>li {
 				e.printStackTrace();
 			}
 			try {
-				Connection con = DriverManager.getConnection(
-						"jdbc:hive2://10.200.99.242:10000/default", "hive", "");
-				Statement stmt = (Statement) con.createStatement();
+			//	Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
+			Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
+					
+			Statement stmt = (Statement) con.createStatement();
 
 				String query = "describe " + hive_table;
 				//"db_insight.insight_monetization_all_transaction";

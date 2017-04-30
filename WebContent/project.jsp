@@ -310,13 +310,13 @@ function myFunction(id) {
 
 					<%
 						if (activeSession && pid != 0) {
-							List<String> db_list = new ArrayList<String>(ob.getProjDbNames(pid));
+							List<String> src_db_list = new ArrayList<String>(ob.getProjDbNames(pid));
 
-							for (String db : db_list) {
+							for (String src_db : src_db_list) {
 					%>
-					<b><%=db%></b><br>
+					<b>Source: <%=src_db%></b><br>
 					<%
-						String[] tables = ob.getDbTblNames(pid, db);
+						String[] tables = ob.getDbTblNames(pid, src_db);
 
 								for (int i = 0; i < tables.length; i++) {
 					%>

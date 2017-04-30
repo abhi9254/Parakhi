@@ -1,3 +1,5 @@
+
+
 function setActiveProj(proj_id, proj_nm) {
 	var x = new XMLHttpRequest()
 	x.open("GET", "index_ajax2.jsp?setProj=1&proj_id=" + proj_id + "&proj_nm="

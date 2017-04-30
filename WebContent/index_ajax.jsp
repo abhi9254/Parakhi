@@ -27,7 +27,7 @@
 		}
 		s.append("</optgroup></select>");
 
-		String db_text = "$db.$tableA";
+		//String db_text = "$db.$tableA";
 		String rep = inpQuery.replace("$db.$tableA", s);
 		outRes.println(rep);
 	}

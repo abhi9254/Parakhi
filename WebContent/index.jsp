@@ -214,7 +214,7 @@
 				$("#makeQuery").html(up_base_query);
 
 				refresh_selectors(base_query, base_text, up_base_query,
-						up_base_text, up_cols_text)
+						up_base_text, up_cols_text);
 			}
 		}
 	}
@@ -399,7 +399,7 @@
 		x.onreadystatechange = function() {
 			if (x.readyState == 4) {
 				document.getElementById("selected_stmsheet").innerHTML = x.responseText;
-				document.getElementById("selected_worksheet2").innerHTML = "<option selected disabled>Table Name</option>";
+				document.getElementById("selected_worksheet").innerHTML = "<option selected disabled>Table Name</option>";
 			}
 		}
 
@@ -414,7 +414,6 @@
 		x.onreadystatechange = function() {
 			if (x.readyState == 4) {
 				document.getElementById("selected_worksheet").innerHTML = x.responseText;
-
 			}
 		}
 	}
@@ -563,6 +562,10 @@
 			<div id="generic" class="tab-pane fade in active">
 				<ul class="ver_nav_bar" id="cases_ul">
 					<%
+					int active_proj=0;
+					if (request.getSession().getAttribute("proj_id") != null) {
+						active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+					}
 						MySQL_dao ob = new MySQL_dao();
 						List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
 
@@ -570,7 +573,7 @@
 					%>
 					<li class="ver_li" title="<%=c[2]%>"><a
 						class="ver_li inactive" href="#"
-						onclick="enterQuery('<%=c[3]%>','0')" style="font-size: large"><%=c[1]%></a></li>
+						onclick="enterQuery('<%=c[3]%>',<%=active_proj%>)" style="font-size: large"><%=c[1]%></a></li>
 
 					<%
 						}
@@ -587,9 +590,6 @@
 			<div id="project" class="tab-pane fade">
 				<ul class="ver_nav_bar" id="proj_cases_ul">
 					<%
-						if (request.getSession().getAttribute("proj_id") != null) {
-							int active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
-
 							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
 
 							for (String[] c : proj_cases) {
@@ -600,7 +600,7 @@
 
 					<%
 						}
-						}
+						
 					%>
 				</ul>
 			</div>
@@ -851,7 +851,6 @@
 							id="selected_project" onchange="getTestSheets()">
 							<option selected disabled>Project Name</option>
 							<%
-								//	List<String[]> projects = new ArrayList<String[]>(ob.getProjects());
 								for (String[] p : projects) {
 							%>
 							<option value="<%=p[0]%>"><%=p[1]%></option>
@@ -859,7 +858,7 @@
 								}
 							%>
 						</select> <br> <select class="form-control" id="selected_testsheet"
-							name="selected_testsheet" onchange="getWorkSheets('ts')">
+							name="selected_testsheet" onchange="getWorkSheets()">
 							<option selected disabled>Test Sheet</option>
 						</select><br> <select class="form-control" id="selected_worksheet"
 							name="selected_worksheet">

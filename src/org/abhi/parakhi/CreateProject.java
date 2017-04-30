@@ -16,7 +16,8 @@ public class CreateProject extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Pattern p = Pattern.compile("spreadsheets/d/.*/");
 	private String stm_sheet_id;
-
+	private String test_sheet_id;
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		Integer p_id = Integer.parseInt(request.getParameter("pid"));
@@ -43,6 +44,13 @@ public class CreateProject extends HttpServlet {
 			System.out.println("Stm Id retrieved: " + stm_sheet_id);
 		}
 
+		m=p.matcher(ts_url);
+		
+		if (m.find()) {
+			// System.out.println(m.group());
+			test_sheet_id = m.group().substring(15, m.group().length() - 1);
+			}
+		
 		SheetsAPI ob = new SheetsAPI();
 
 		// String stm_title =
@@ -52,12 +60,12 @@ public class CreateProject extends HttpServlet {
 		// ob.getSheetTitle(request.getSession().getAttribute("user_id").toString(),
 		// (String) request.getSession().getAttribute("token"), stm_sheet_id);
 
-		/*//parse headers of sheet
-		 * List<List<String>> parse_headers = ob.readSheetData((String)
-		 * request.getSession().getAttribute("token"), stm_sheet_id,
-		 * selected_ws[0] + "!A1:M4"); // Reading headers of STM StringBuilder s
-		 * = new StringBuilder(""); for (List<String> row : parse_headers) { for
-		 * (String cell : row) { s.append(cell + " "); } }
+		/*
+		 * //parse headers of sheet List<List<String>> parse_headers =
+		 * ob.readSheetData((String) request.getSession().getAttribute("token"),
+		 * stm_sheet_id, selected_ws[0] + "!A1:M4"); // Reading headers of STM
+		 * StringBuilder s = new StringBuilder(""); for (List<String> row :
+		 * parse_headers) { for (String cell : row) { s.append(cell + " "); } }
 		 * System.out.println(s.toString());
 		 */
 		// Read source databases and tables from STM by interactive
@@ -73,11 +81,14 @@ public class CreateProject extends HttpServlet {
 		// }
 
 		MySQL_dao ob2 = new MySQL_dao();
-		ob2.insertIntoStmSheets(p_id, p_name, p_desc, stm_title, stm_url);
-		ob2.insertIntoTestSheets(p_id, p_name, p_desc, ts_title, ts_url);
+		ob2.insertIntoStmSheets(p_id, p_name, stm_sheet_id, stm_title, stm_url);
+		ob2.insertIntoTestSheets(p_id, p_name, test_sheet_id, ts_title, ts_url);
+		
 		for (List<String> row : stm) {
+			ob2.insertIntoProjects(p_id, p_name, p_desc, row.get(6), row.get(7));
 			ob2.insertIntoProjects(p_id, p_name, p_desc, row.get(1), row.get(2));
 			ob2.insertIntoTables(p_id, row.get(1), row.get(2), row.get(3));
+			ob2.insertIntoTables(p_id, row.get(6), row.get(7), row.get(8));
 			ob2.insertIntoSTMs(stm_sheet_id, selected_ws[0], "1.0", row.get(0), row.get(1), row.get(2), row.get(3),
 					row.get(4), row.get(5), row.get(6), row.get(7), row.get(8), row.get(9), "Test comment");
 		}

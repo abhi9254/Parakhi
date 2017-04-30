@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 	<Resource name="mysql_pool" auth="Container" type="javax.sql.DataSource"
-		username="abhishek.A" password="abhishek.A" driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://10.200.99.242:3306/parakhi" maxTotal="10" maxIdle="4" />
+		username="root" password="cloudera" driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/parakhi" maxTotal="10" maxIdle="4" />
 </Context>

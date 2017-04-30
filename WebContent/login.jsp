@@ -8,6 +8,7 @@
 <title>Parakhi - 0.7</title>
 </head>
 <body>
+
 	<form action="Login" method="post"
 		style="position: fixed; width: 300px; margin-left: 25%; margin-top: 20px">
 		<img src="res/images/parrot.jpg" alt="Grey parrot" style="width:300px;height:200px;opacity: 0.5;" onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.5';">
@@ -27,5 +28,6 @@
 			type="button" value="Register" class="btn btn-info" style="float:right;width:49%"/>
 		
 	</form>
+	
 </body>
 </html>

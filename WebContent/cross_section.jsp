@@ -63,7 +63,7 @@ header .navbar-nav>li {
 	}
 </script>
 </head>
-
+<body>
 <header>
 <div class="navbar navbar-inverse navbar-static-top">
 	<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
