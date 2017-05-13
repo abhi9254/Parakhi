@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@page import="com.google.api.client.auth.oauth2.Credential"%>
 <%@ page
-	import="org.abhi.parakhi.MySQL_dao,java.util.ArrayList,java.util.List"%>
+	import="org.abhi.parakhi.MySQL_dao,org.abhi.parakhi.CoordinatorAPI,java.util.ArrayList,java.util.List"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -170,7 +170,9 @@ function myFunction(id) {
 	</header>
 
 
-	<ul class="ver_nav_bar" style="overflow-y:auto;list-style-type: none;padding: 0;height:calc(100vh - 98px)" id="projects_ul">
+	<ul class="ver_nav_bar"
+		style="overflow-y: auto; list-style-type: none; padding: 0; height: calc(100vh - 51px)"
+		id="projects_ul">
 		<input type="text" id="myInput" onkeyup="myFunction()"
 			placeholder="Search...">
 		<%
@@ -350,9 +352,18 @@ function myFunction(id) {
 				</h4>
 			</div>
 			<div id="collapse5" class="panel-collapse collapse">
-				<div id="tables_list"
-					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
-					Placeholder</div>
+				<div id="flows_list"
+					style="width: 70%; padding: 10px; margin: 0px; display: inline-block; float: top">
+					<%
+						CoordinatorAPI ob2 = new CoordinatorAPI();
+						String batch_id = ob2.getLastSuccessfulRunBatchId("DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_FLOW_ID",
+								"DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_JOB_ID");
+					%>
+					<label>DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_FLOW_ID : </label>
+					DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_JOB_ID <label>Last
+						Successful batch : </label>
+					<%=batch_id%>
+				</div>
 			</div>
 		</div>
 

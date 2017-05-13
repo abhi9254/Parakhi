@@ -359,7 +359,7 @@
 				<div class="panel-body" style="margin-left: 10px">
 
 					<input type="text" class="form-control" id="coordinator_url"
-						placeholder="Coordinator IP : port" value=""
+						placeholder="Coordinator IP : port" value="http://10.200.99.242:9002"
 						style="width: 800px; display: inline-block" /> <input
 						type="button" class="btn btn-primary" value="Connect" onclick="" />
 					<br>

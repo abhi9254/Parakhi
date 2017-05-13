@@ -871,12 +871,13 @@
 							style="width: 20%; display: inline" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output
 						Range <select class="form-control"
 							style="width: 100px; display: inline"><option>auto</option>
-							<option disabled>custom</select> &nbsp;<input type="text" disabled
-							name="op_range" class="form-control" placeholder="Output Range"
-							style="display: inline; width: 20%" /><br> <br> <input
-							type="checkbox" disabled style="vertical-align: sub;">
-						Override Column(s)&nbsp; <input type="text" class="form-control"
-							list="cols" name="overridden_cols" placeholder="column_name"
+							<option disabled>custom</select> &nbsp;<input type="text"
+							disabled name="op_range" class="form-control"
+							placeholder="Output Range" style="display: inline; width: 20%" /><br>
+						<br> <input type="checkbox" disabled
+							style="vertical-align: sub;"> Override Column(s)&nbsp; <input
+							type="text" class="form-control" list="cols"
+							name="overridden_cols" placeholder="column_name"
 							style="width: 15%; display: inline" />&nbsp;
 						<datalist id="cols">
 						<option>batch_id</option>
