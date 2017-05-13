@@ -560,7 +560,7 @@
 		</ul>
 		<div class="tab-content">
 			<div id="generic" class="tab-pane fade in active">
-				<ul class="ver_nav_bar" id="cases_ul">
+				<ul style="overflow-y:auto;list-style-type: none;padding: 0;height:calc(100vh - 140px)" id="cases_ul">
 					<%
 					int active_proj=0;
 					if (request.getSession().getAttribute("proj_id") != null) {
@@ -588,7 +588,7 @@
 
 
 			<div id="project" class="tab-pane fade">
-				<ul class="ver_nav_bar" id="proj_cases_ul">
+				<ul style="overflow-y:auto;list-style-type: none;padding: 0;height:calc(100vh - 140px)" id="proj_cases_ul">
 					<%
 							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
 

@@ -1,0 +1,168 @@
+
+
+
+
+use parakhi;
+
+////-------MYPROJECTS
+
+create table myprojects(
+project_id INT,
+project_name VARCHAR(100),
+project_desc VARCHAR(500),
+database_nm VARCHAR(100),
+table_nm VARCHAR(200));
+
+insert into myprojects values(100,"Ad Monetization","Ad campaigns revenue and effectiveness measured","db_gold","gold_product_sku");
+insert into myprojects values(101,"Native App","Application sessions and clicks browsing","db_stage","gold_native_app_denorm");
+
+
++------------+-----------------+-------------------------------------------------+-------------+--------------------------------------+
+| project_id | project_name    | project_desc                                    | database_nm | table_nm                             |
++------------+-----------------+-------------------------------------------------+-------------+--------------------------------------+
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_gold     | gold_product_sku                     |
+|        101 | Native App      | Application sessions and clicks browsing        | db_stage    | gold_native_app_denorm               |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_gold     | gold_dfp_denorm                      |
+|        102 | Carrier phase 2 | Shipments tracking                              | db_gold     | gold_carrier_dtls                    |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_stage    | raw_dfp_lineitems                    |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_stage    | raw_dfp_creatives                    |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_stage    | raw_dfp_orders                       |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_stage    | raw_signal_impressions               |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_stage    | raw_signal_clickthrough              |
+|        102 | Carrier phase 2 | Shipments tracking                              | db_stage    | raw_fedex_tracking                   |
+|        102 | Carrier phase 2 | Shipments tracking                              | db_stage    | raw_ups_tracking                     |
+|        102 | Carrier phase 2 | Shipments tracking                              | db_stage    | raw_usps_tracking                    |
+|        102 | Carrier phase 2 | Shipments tracking                              | db_insight  | insight_carrier_logistics_tracking   |
+|        100 | Ad Monetization | Ad campaigns revenue and effectiveness measured | db_insight  | insight_impressions_clickthrough_dly 
+
+
+
+
+
+////-------MYTESTS
+
+create table mytests(
+case_id INT,
+project_id INT,
+project_name VARCHAR(100),
+case_name VARCHAR(100),
+case_desc VARCHAR(500),
+case_query VARCHAR(500),
+case_author VARCHAR(50));
+
+
+truncate table mytests;
+
+insert into mytests values(1,0,"Generic","Check for Null or blank","Check for null or blank in column values of datatype String","select $tableA.$cols from $db.$tableA where $tableA.$col1 is NULL or $tableA.$col2 = [quot][quot]","admin");
+insert into mytests values(2,0,"Generic","Check for Non Numeric value","Check for non-numeric values(characters/symbols) in column values of datatype String","select $tableA.$cols from $db.$tableA where $tableA.$col1 REGEXP [quot][^0-9][quot]","admin");
+insert into mytests values(3,0,"Generic","Check for Date format","Check for date formats in column values of datatype String/Date","select $cols from $table WHERE $col not like $dateFormat","admin");
+insert into mytests values(4,0,"Generic","Source minus Target","Check missing values in Target from Source","Select left.$cols1 from (Select DISTINCT $tableA.$col1 from $db.$tableA )left LEFT OUTER JOIN (Select DISTINCT $tableB.$col2 from $db.$tableB )right ON left.$col1=right.$col2 WHERE right.$col2 IS NULL","admin");
+insert into mytests values(5,0,"Generic","Check for Distinct lengths","Check for multiple length values in a column whose length should be fixed","Select DISTINCT length($col) from $table","admin");
+insert into mytests values(6,0,"Generic","Check for duplicate records","Check for full duplicated rows","select $tableA.$cols , count(*) as cnt from $db.$tableA GROUP BY $tableA.$cols HAVING cnt > 1","admin");
+
+
+////-------MYCASEVARS
+
+create table mycasevars(
+case_id INT,
+occur_at INT,
+user_var VARCHAR(100));
+
+truncate table mycasevars;
+
+insert into mycasevars values(1,3,"$cols");
+insert into mycasevars values(1,1,"$table");
+insert into mycasevars values(1,2,"$col");
+insert into mycasevars values(2,3,"$cols");
+insert into mycasevars values(2,1,"$table");
+insert into mycasevars values(2,2,"$col");
+insert into mycasevars values(3,4,"$cols");
+insert into mycasevars values(3,1,"$table");
+insert into mycasevars values(3,2,"$col");
+insert into mycasevars values(3,3,"$dateformat");
+
+
+////-------MYTABLES
+
+create table mytables(
+project_id INT,
+db_nm VARCHAR(100),
+tbl_nm VARCHAR(200),
+col_nm VARCHAR(200));
+
+
+insert into mytables values(0,"db_gold","gold_sku_product","sku_id");
+insert into mytables values(0,"db_gold","gold_sku_product","dept_nm");
+insert into mytables values(0,"db_gold","gold_sku_product","gma_nm");
+insert into mytables values(0,"db_gold","gold_sku_product","age_grp");
+insert into mytables values(0,"db_gold","gold_sales_dly","trn_nbr");
+insert into mytables values(0,"db_gold","gold_sales_dly","trn_dte");
+
+
+////-------MYSTMS
+
+create table mystms(
+stm_id VARCHAR(200),
+stm_nm VARCHAR(300),
+stm_version VARCHAR(50),
+serial_no VARCHAR(10),
+source_db_nm VARCHAR(100),
+source_tbl_nm VARCHAR(200),
+source_col_nm VARCHAR(200),
+source_data_typ VARCHAR(100),
+transformation VARCHAR(400),
+target_db_nm VARCHAR(100),
+target_tbl_nm VARCHAR(200),
+target_col_nm VARCHAR(200),
+target_data_typ VARCHAR(100),
+comment VARCHAR(300));
+
+
+insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','1','db_gold','gold_cust_sales_trans_dtls','demand_dt','String','Direct Mapping','db_insight','insight_monetization_all_transaction','Trans_Date','String','Demand_date format is yyyy-mm-dd');
+insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','2','db_gold','gold_dfp_denorm','advertiser_id','int','Direct Mapping','db_insight','insight_monetization_all_transaction','dfp_advertiser_ID','int','Max (advertiser_iD) based on DFP_vendor_nm link');
+insert into mystms values('test','db_insight.insight_monetization_all_transaction','1.0','3','db_gold','gold_dfp_denorm','company_name','String','Direct Mapping','db_insight','insight_monetization_all_transaction','dfp_advertiser_nm','String','Advertiser_nm associated with Advertiser_id');
+insert into mystms values('1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A','db_gold.gold_product_sku','1.0','10','db_stage','raw_product','p','string','FLATTEN(p)','db_gold','gold_product_sku','p4','string','dummy comment');
+insert into mystms values('1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A','db_gold.gold_product_sku','1.0','5','db_stage','raw_product','gender','string','Direct Mapping','db_gold','gold_product_sku','gender','string','dummy comment');
+
+
+
+////-------MYSTMSHEETS
+
+create table mystmsheets(
+project_id INT,
+project_name VARCHAR(100),
+stm_sheet_id VARCHAR(100),
+stm_sheet_title VARCHAR(200),
+stm_sheet_url VARCHAR(300));
+
+insert into mystmsheets values(100,"Ad Monetization","1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A","My sample STM for Parakhi","https://docs.google.com/spreadsheets/d/1o38ctGSfl3tm2_MnIbK4GxhDpJRl5lsFz4TkcfWFu8A/edit#gid=29414504");
+
+
+
+
+
+
+////-------MYTESTSHEETS
+
+create table mytestsheets(
+project_id INT,
+project_name VARCHAR(100),
+test_sheet_id VARCHAR(100),
+test_sheet_title VARCHAR(200),
+test_sheet_url VARCHAR(300));
+
+insert into mytestsheets values(100,"Ad Monetization","16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE","My sample Test Sheet","https://docs.google.com/spreadsheets/d/16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE/edit#gid=247511847");
+
+
+
+
+
+////-------MYTASKS
+
+create table mytasks(
+task_id INT,
+progress INT);
+
+
+
+insert into mytasks values(110886,0);

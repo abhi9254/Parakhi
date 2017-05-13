@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.apache.hive.jdbc.HiveStatement;
 
 //@WebServlet("/Query")
@@ -27,12 +29,14 @@ public class Query extends HttpServlet {
 		}
 		try {
 			Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
-		//	Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
+			// Connection con =
+			// DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default",
+			// "hive", "");
 			HiveStatement stmt = (HiveStatement) con.createStatement();
 			String query = request.getParameter("query_text") + " limit 100";
 			ResultSet res = stmt.executeQuery(query);
-		//	String log=stmt.getLog().toString();
-			String log = "log disabaed"	;		
+			// String log=stmt.getLog().toString();
+			String log = "log disabaed";
 			request.setAttribute("result", res);
 			request.setAttribute("user_query", query);
 			request.setAttribute("query_log", log);
@@ -40,10 +44,18 @@ public class Query extends HttpServlet {
 			rd.forward(request, response);
 			res.close();
 			con.close();
+
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			String query = request.getParameter("query_text") + " limit 100";
+			// String log=stmt.getLog().toString();
+			String log = "log disabaed";
+			request.setAttribute("user_query", query);
+			request.setAttribute("query_log", log);
+			request.setAttribute("error_msg", ex.toString());
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/hiveError.jsp");
+			rd.forward(request, response);
+
 		}
 
-		
 	}
 }

@@ -170,7 +170,7 @@ function myFunction(id) {
 	</header>
 
 
-	<ul class="ver_nav_bar" id="projects_ul">
+	<ul class="ver_nav_bar" style="overflow-y:auto;list-style-type: none;padding: 0;height:calc(100vh - 98px)" id="projects_ul">
 		<input type="text" id="myInput" onkeyup="myFunction()"
 			placeholder="Search...">
 		<%
@@ -338,6 +338,24 @@ function myFunction(id) {
 				<a href="" style="float: right; margin-right: 50px">Add</a><br>
 			</div>
 		</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse5" style="display: block; text-decoration: none">Coordinator
+						Feed</a>
+				</h4>
+			</div>
+			<div id="collapse5" class="panel-collapse collapse">
+				<div id="tables_list"
+					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
+					Placeholder</div>
+			</div>
+		</div>
+
 
 	</div>
 

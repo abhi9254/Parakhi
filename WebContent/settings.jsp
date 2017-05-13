@@ -22,13 +22,11 @@
 		var x = new XMLHttpRequest()
 		x.open("GET", "index_ajax2.jsp?del_user_id=" + user_id, true)
 		x.send(null)
-		x.onreadystatechange =
-				function() {
-					if (x.readyState == 4) {
-						document.getElementById("del_result").innerHTML =
-								x.responseText;
-					}
-				}
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				document.getElementById("del_result").innerHTML = x.responseText;
+			}
+		}
 	}
 	function testConnection() {
 		document.getElementById("con_test").innerHTML = "Checking.."
@@ -47,8 +45,7 @@
 	}
 	function testHiveConnection() {
 		document.getElementById("hive_con_test").innerHTML = "Checking.."
-		hive_connection_url =
-				document.getElementById("hive_connection_url").value;
+		hive_connection_url = document.getElementById("hive_connection_url").value;
 		hive_user = document.getElementById("hive_user").value;
 		hive_pwd = document.getElementById("hive_pwd").value;
 		var x = new XMLHttpRequest()
@@ -56,13 +53,11 @@
 				+ hive_connection_url + "&hive_user=" + hive_user
 				+ "&hive_pwd=" + hive_pwd, true)
 		x.send(null)
-		x.onreadystatechange =
-				function() {
-					if (x.readyState == 4) {
-						document.getElementById("hive_con_test").innerHTML =
-								x.responseText;
-					}
-				}
+		x.onreadystatechange = function() {
+			if (x.readyState == 4) {
+				document.getElementById("hive_con_test").innerHTML = x.responseText;
+			}
+		}
 
 	}
 
@@ -72,22 +67,18 @@
 			document.getElementById("sheet_name").innerHTML = "Empty url";
 
 		else {
-			document.getElementById("sheet_name").innerHTML =
-					"Retrieving spreadsheet details..";
+			document.getElementById("sheet_name").innerHTML = "Retrieving spreadsheet details..";
 			spreadsheet_id = document.getElementById("sheet_url").value;
 			var x = new XMLHttpRequest()
 			x.open("GET", "index_ajax2.jsp?title=1&spreadsheet_id="
 					+ spreadsheet_id, true)
 			x.send(null)
-			x.onreadystatechange =
-					function() {
-						if (x.readyState == 4) {
-							document.getElementById("sheet_name").innerHTML =
-									x.responseText;
-						}
-					}
-			document.getElementById("sheet_ws").innerHTML =
-					"Checking worksheets..";
+			x.onreadystatechange = function() {
+				if (x.readyState == 4) {
+					document.getElementById("sheet_name").innerHTML = x.responseText;
+				}
+			}
+			document.getElementById("sheet_ws").innerHTML = "Checking worksheets..";
 			fetchWorksheets();
 		}
 	}
@@ -115,8 +106,7 @@
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession()
-					.getAttribute("credential");
+			Credential credential = (Credential) request.getSession().getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -352,6 +342,28 @@
 		</div>
 
 
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapse6" style="display: block; text-decoration: none">Coordinator
+						settings</a>
+				</h4>
+			</div>
+			<div id="collapse6" class="panel-collapse collapse">
+				<div class="panel-body" style="margin-left: 10px">
+
+					<input type="text" class="form-control" id="coordinator_url"
+						placeholder="Coordinator IP : port" value=""
+						style="width: 800px; display: inline-block" /> <input
+						type="button" class="btn btn-primary" value="Connect" onclick="" />
+					<br>
+
+
+				</div>
+			</div>
+		</div>
 
 	</div>
 

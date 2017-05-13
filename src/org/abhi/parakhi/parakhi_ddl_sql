@@ -38,7 +38,10 @@ insert into mytests values(3,0,"Generic","Check for Date format","Check for date
 insert into mytests values(4,0,"Generic","Source minus Target","Check missing values in Target from Source","Select left.$cols1 from (Select DISTINCT $tableA.$col1 from $db.$tableA )left LEFT OUTER JOIN (Select DISTINCT $tableB.$col2 from $db.$tableB )right ON left.$col1=right.$col2 WHERE right.$col2 IS NULL","admin");
 insert into mytests values(5,0,"Generic","Check for Distinct lengths","Check for multiple length values in a column whose length should be fixed","Select DISTINCT length($col) from $table","admin");
 insert into mytests values(6,0,"Generic","Check for duplicate records","Check for full duplicated rows","select $tableA.$cols , count(*) as cnt from $db.$tableA GROUP BY $tableA.$cols HAVING cnt > 1","admin");
-
+insert into mytests values(7,0,"Generic","Check for leading/trailing spaces","Check for leading/trailing spaces in string","select $tableA.$cols from $db.$tableA where $tableA.$col1 like [quot] %[quot] OR $tableA.$col2 like [quot]% [quot]","admin");
+insert into mytests values(8,0,"Generic","Check for multiple space characters within the string","Check for multiple space characters within the string. This issue may cause joins to fail on such columns.","select $tableA.$cols from $db.$tableA where $tableA.$col1 like [quot]%  %[quot]","admin");
+insert into mytests values(9,0,"Generic","Check for non Uppercase values","Check for non Uppercase values in string","select $tableA.$cols from $db.$tableA where $tableA.$col1 not rlike [quot][A-Z][quot]","admin");
+insert into mytests values(10,0,"Generic","Check for non Lowercase values","Check for non Lowercase values in string","select $tableA.$cols from $db.$tableA where $tableA.$col1 not rlike [quot][a-z][quot]","admin");
 
 ////-------MYTABLES
 
