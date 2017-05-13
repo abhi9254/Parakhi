@@ -262,7 +262,6 @@
 		document.getElementById("query_text").innerHTML = ""
 
 		var str = inpQuery.replace(/\[quot\]/g, '\'')
-
 		document.getElementById("setQuery").value = str
 		document.getElementById("query_text").value = str
 
@@ -560,12 +559,14 @@
 		</ul>
 		<div class="tab-content">
 			<div id="generic" class="tab-pane fade in active">
-				<ul style="overflow-y:auto;list-style-type: none;padding: 0;height:calc(100vh - 140px)" id="cases_ul">
+				<ul
+					style="overflow-y: auto; list-style-type: none; padding: 0; height: calc(100vh - 140px)"
+					id="cases_ul">
 					<%
-					int active_proj=0;
-					if (request.getSession().getAttribute("proj_id") != null) {
-						active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
-					}
+						int active_proj = 0;
+						if (request.getSession().getAttribute("proj_id") != null) {
+							active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+						}
 						MySQL_dao ob = new MySQL_dao();
 						List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
 
@@ -573,7 +574,8 @@
 					%>
 					<li class="ver_li" title="<%=c[2]%>"><a
 						class="ver_li inactive" href="#"
-						onclick="enterQuery('<%=c[3]%>',<%=active_proj%>)" style="font-size: large"><%=c[1]%></a></li>
+						onclick="enterQuery('<%=c[3]%>',<%=active_proj%>)"
+						style="font-size: large"><%=c[1]%></a></li>
 
 					<%
 						}
@@ -588,11 +590,13 @@
 
 
 			<div id="project" class="tab-pane fade">
-				<ul style="overflow-y:auto;list-style-type: none;padding: 0;height:calc(100vh - 140px)" id="proj_cases_ul">
+				<ul
+					style="overflow-y: auto; list-style-type: none; padding: 0; height: calc(100vh - 140px)"
+					id="proj_cases_ul">
 					<%
-							List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+						List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
 
-							for (String[] c : proj_cases) {
+						for (String[] c : proj_cases) {
 					%>
 					<li class="ver_li" title="<%=c[2]%>"><a
 						class="ver_li inactive" href="#"
@@ -600,7 +604,6 @@
 
 					<%
 						}
-						
 					%>
 				</ul>
 			</div>
@@ -865,19 +868,36 @@
 							<option selected disabled>Worksheet Name</option>
 						</select> <br> <br> <input type="text" name="q_range"
 							class="form-control" placeholder="* Queries Range"
-							style="float: right" /><br> <br> <input type="text"
+							style="width: 20%; display: inline" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output
+						Range <select class="form-control"
+							style="width: 100px; display: inline"><option>auto</option>
+							<option disabled>custom</select> &nbsp;<input type="text" disabled
 							name="op_range" class="form-control" placeholder="Output Range"
-							style="float: right" /><br> <br> Override Date <input
-							class="form-control" type="text" placeholder="Start"
-							style="width: 15%; display: inline" /> <input type="text"
-							class="form-control" placeholder="End"
-							style="width: 15%; display: inline" /><br> <br> <input
-							class="checkbox-inline" type="checkbox" name='p_exec'
+							style="display: inline; width: 20%" /><br> <br> <input
+							type="checkbox" disabled style="vertical-align: sub;">
+						Override Column(s)&nbsp; <input type="text" class="form-control"
+							list="cols" name="overridden_cols" placeholder="column_name"
+							style="width: 15%; display: inline" />&nbsp;
+						<datalist id="cols">
+						<option>batch_id</option>
+						<option>load_ts</option>
+						<option>event_date</option>
+						<option>trans_date</option>
+						</datalist>
+
+						<input class="form-control" type="text" placeholder="value"
+							name="overridden_values" style="width: 25%; display: inline" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<h3 style="display: inline">
+							<a href="#"
+								style="text-decoration: none; vertical-align: middle;">+</a>
+						</h3>
+						<br> <br> <input class="checkbox-inline" type="checkbox"
+							name='p_exec' disabled style="vertical-align: sub;"
 							value="p_exec"> &nbsp;Parallel Exec <input
 							class="checkbox-inline" type="checkbox" name='write_once'
-							value="write_once" checked='true'> &nbsp;Post write<br>
-						<br> <input type="submit" value="Rerun" class="btn btn-info">
-						<br>
+							style="vertical-align: sub;" value="write_once" checked='true'>
+						&nbsp;Post write<br> <br> <input type="submit"
+							value="Rerun" class="btn btn-info"> <br>
 					</form>
 				</div>
 				<div class="modal-footer">

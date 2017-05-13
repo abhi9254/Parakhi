@@ -197,6 +197,10 @@
 			</div>
 			<div id="collapse4" class="panel-collapse collapse">
 				<div class="panel-body" style="margin-left: 10px">
+					<label style="display:inline">Hive Version :</label> <select class="form-control" style="width:100px;display:inline">
+					<option>0.11</option>
+					<option>0.13</option>
+					</select>
 					<h5>Toggle : HiveServer / HiveServer2</h5>
 					<h5>Parallel Hive connections : 2 (current)</h5>
 				</div>
