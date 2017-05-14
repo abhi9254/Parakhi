@@ -534,12 +534,12 @@
 					if (request.getSession().getAttribute("user_id") == null) {
 				%>
 				<li class=""><a href="login.jsp" style="color: white"><span
-						class="glyphicon glyphicon-user"></span>&nbsp;Login</a></li>
+						class="glyphicon glyphicon-log-in"></span>&nbsp;Login</a></li>
 				<%
 					} else {
 				%>
 				<li class=""><a href="login.jsp" style="color: white"><span
-						class="glyphicon glyphicon-user"></span>&nbsp;Logout</a></li>
+						class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a></li>
 				<%
 					}
 				%>

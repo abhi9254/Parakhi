@@ -9,7 +9,8 @@ import java.io.InputStreamReader;
 
 public class CoordinatorAPI {
 
-	public String getLastSuccessfulRunBatchId(String flow_id, String last_job_id) {
+	public String getLastSuccessfulRunBatchId(String flow_id,
+			String last_job_id) {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		String output = "";
 		try {
@@ -23,28 +24,33 @@ public class CoordinatorAPI {
 			HttpResponse httpResponse = httpclient.execute(target, getRequest);
 			HttpEntity entity = httpResponse.getEntity();
 
-			System.out.println("################# COORDINATOR API ########################");
+			System.out.println(
+					"################# COORDINATOR API ########################");
 
 			getRequest.abort();
 
-			String url = "/api/batchs/lastSuccessfulBatchId/dev/" + flow_id + "/" + last_job_id;
+			String url = "/api/batchs/lastSuccessfulBatchId/dev/" + flow_id
+					+ "/" + last_job_id;
 
 			HttpGet getRequest1 = new HttpGet(url);
 
 			System.out.println("executing request to " + target);
 
-			HttpResponse httpResponse1 = httpclient.execute(target, getRequest1);
+			HttpResponse httpResponse1 = httpclient.execute(target,
+					getRequest1);
 			HttpEntity entity1 = httpResponse1.getEntity();
 
-			BufferedReader br = new BufferedReader(new InputStreamReader((entity1.getContent())));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader((entity1.getContent())));
 
-		//	System.out.println("Output from Server .... \n");
-			String out="";
+			// System.out.println("Output from Server .... \n");
+			String out = "";
 			while ((out = br.readLine()) != null) {
-				output = output+out;
+				output = output + out;
 			}
 
 		} catch (Exception e) {
+			output = e.toString();
 			e.printStackTrace();
 		} finally {
 			httpclient.getConnectionManager().shutdown();

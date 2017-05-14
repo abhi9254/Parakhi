@@ -206,7 +206,7 @@
 		<table id="comparetbl" class="table" style="width: 100%">
 
 			<thead>
-				<tr>
+				<tr style="background-color: whitesmoke;">
 					<th>Hive S.no</th>
 					<th>Hive Column</th>
 					<th>Hive Datatype</th>
