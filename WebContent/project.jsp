@@ -89,7 +89,8 @@ function myFunction(id) {
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession().getAttribute("credential");
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -207,7 +208,8 @@ function myFunction(id) {
 						boolean activeSession = false;
 						int pid = 0;
 						if (request.getSession().getAttribute("proj_id") != null) {
-							pid = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+							pid = Integer.parseInt(request.getSession()
+									.getAttribute("proj_id").toString());
 							activeSession = true;
 
 						}
@@ -240,7 +242,8 @@ function myFunction(id) {
 					style="width: 40%; padding: 10px; margin: 0px; display: inline-block; float: top">
 					<%
 						if (activeSession && pid != 0) {
-							List<String[]> ss_list = new ArrayList<String[]>(ob.getSTMsheets(pid));
+							List<String[]> ss_list = new ArrayList<String[]>(
+									ob.getSTMsheets(pid));
 
 							for (String[] ss : ss_list) {
 					%>
@@ -275,7 +278,8 @@ function myFunction(id) {
 
 					<%
 						if (activeSession && pid != 0) {
-							List<String[]> ts_list = new ArrayList<String[]>(ob.getTestsheets(pid));
+							List<String[]> ts_list = new ArrayList<String[]>(
+									ob.getTestsheets(pid));
 
 							for (String[] ts : ts_list) {
 					%>
@@ -312,7 +316,8 @@ function myFunction(id) {
 
 					<%
 						if (activeSession && pid != 0) {
-							List<String> src_db_list = new ArrayList<String>(ob.getProjDbNames(pid));
+							List<String> src_db_list = new ArrayList<String>(
+									ob.getProjDbNames(pid));
 
 							for (String src_db : src_db_list) {
 					%>
@@ -356,11 +361,12 @@ function myFunction(id) {
 					style="width: 70%; padding: 10px; margin: 0px; display: inline-block; float: top">
 					<%
 						CoordinatorAPI ob2 = new CoordinatorAPI();
-						String batch_id = ob2.getLastSuccessfulRunBatchId("DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_FLOW_ID",
+						String batch_id = ob2.getLastSuccessfulRunBatchId(
+								"DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_FLOW_ID",
 								"DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_JOB_ID");
 					%>
-					<label>DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_FLOW_ID : </label>
-					DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_JOB_ID <label>Last
+					<label>DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_FLOW_ID
+						: </label> DATA_INGESTION_DEFAULT_AREA_LAND_DETAILS_L1_JOB_ID <br> <label>Last
 						Successful batch : </label>
 					<%=batch_id%>
 				</div>

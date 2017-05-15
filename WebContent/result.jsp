@@ -268,7 +268,7 @@
 
 				//turn display: inline to debug
 				document.getElementById(tbl_nm).innerHTML +=
-						"<input type='submit' value='Trace' class='btn btn-success' style='float: right; display:inline'><input type='button' class='btn btn-primary' style='margin-right:10px;float:right;display:inline' value='Preview' onclick=previewTraceQuery('"
+						"<input type='submit' value='Trace' class='btn btn-primary' style='float: right; display:inline'/><input type='button' class='btn' style='margin-right:10px;float:right;display:inline' value='Preview' onclick=previewTraceQuery('"
 								+ tbl_nm
 								+ "') class='btn'/>"
 								+ "<br><br><textarea id=query_"
@@ -516,17 +516,28 @@ ul.tab li a:focus, .active {
 	</div>
 
 
-	<input type="button" name="back" class="btn btn-primary" value="< Back"
-		onclick="history.back()" style="margin: 10px; float: left"> <input
-		type="button" class="btn btn-success" id="push-div"
-		onclick="pushToSheet2()"
-		style="display: inline; margin: 10px; float: right"
-		value="Push Result">
+	<button name="back" class="btn btn-primary" onclick="history.back()"
+		style="margin: 10px; float: left">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;Back
+	</button>
+
+	<button class="btn btn-success" id="push-div" onclick="pushToSheet2()"
+		style="display: inline; margin: 10px; float: right">
+		<span class="glyphicon glyphicon-menu-right"></span>&nbsp;Push Result
+	</button>
 
 	<button id="trace-div" class="btn btn-primary"
-		style="display: inline; margin: 10px; float: right" href=""
+		style="display: inline; margin: 10px; float: right" href="#"
 		onmouseover="traceRows2()" data-toggle="modal"
-		data-target="#traceModal">Trace</button>
+		data-target="#traceModal">
+		<span class="glyphicon glyphicon-eye-open"></span>&nbsp;Trace
+	</button>
+
+	<button class="btn btn-primary"
+		style="display: inline; margin: 10px; float: right" href="#">
+		<span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;Save
+	</button>
+
 	<br>
 	<br>
 
