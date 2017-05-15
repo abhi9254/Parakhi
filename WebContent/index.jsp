@@ -468,7 +468,8 @@
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession().getAttribute("credential");
+			Credential credential = (Credential) request.getSession()
+					.getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -565,7 +566,8 @@
 					<%
 						int active_proj = 0;
 						if (request.getSession().getAttribute("proj_id") != null) {
-							active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
+							active_proj = Integer.parseInt(request.getSession()
+									.getAttribute("proj_id").toString());
 						}
 						MySQL_dao ob = new MySQL_dao();
 						List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
@@ -594,7 +596,8 @@
 					style="overflow-y: auto; list-style-type: none; padding: 0; height: calc(100vh - 140px)"
 					id="proj_cases_ul">
 					<%
-						List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
+						List<String[]> proj_cases = new ArrayList<String[]>(
+								ob.getCases(active_proj));
 
 						for (String[] c : proj_cases) {
 					%>
@@ -631,7 +634,7 @@
 						style="resize: none; font-size: large; font-color: black; border: 1px solid #A9A9A9; border-left: 4px solid #A9A9A9; border-radius: 0px; height: 200px; display: none">select * from db_gold.gold_product_sku</textarea>
 
 					<input class="btn btn-success btn-lg" type="submit"
-						style="display: inline-block; vertical-align: top; height: 200px; width: 80px"
+						style="display: inline-block; vertical-align: top; height: 200px; width: 80px; border-radius: 0;"
 						value="Fire" />
 				</form>
 
