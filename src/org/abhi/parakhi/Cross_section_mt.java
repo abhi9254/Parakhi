@@ -39,8 +39,8 @@ public class Cross_section_mt extends HttpServlet {
 
 		if (i == 0) {
 			try {
-				Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
-				//	Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
+				//Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
+					Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
 				HiveStatement stmt = (HiveStatement) con.createStatement();
 				System.out.println(query);
 				System.out.println("Entered column index i==0 if block");

@@ -28,12 +28,19 @@ public class Query extends HttpServlet {
 			e.printStackTrace();
 		}
 		try {
-			Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
-			// Connection con =
-			// DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default",
-			// "hive", "");
+			 Connection con =
+			 DriverManager.getConnection("jdbc:hive2://localhost:10000/default",
+			 "hive", "");
+		//	Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
 			HiveStatement stmt = (HiveStatement) con.createStatement();
-			String query = request.getParameter("query_text") + " limit 100";
+			String query_ = request.getParameter("query_text");
+
+			String query;
+			if (query_.contains("show ") || query_.contains("describe ") || query_.contains("create ") || query_.contains("msck "))
+				query = query_;
+			else
+				query = query_ + " limit 100";
+
 			ResultSet res = stmt.executeQuery(query);
 			// String log=stmt.getLog().toString();
 			String log = "log disabaed";
