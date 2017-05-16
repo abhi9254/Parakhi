@@ -36,7 +36,7 @@ public class Query extends HttpServlet {
 			String query_ = request.getParameter("query_text");
 
 			String query;
-			if (query_.contains("show ") || query_.contains("describe ") || query_.contains("create ") || query_.contains("msck "))
+			if (query_.toLowerCase().contains("show ") || query_.toLowerCase().contains("describe ") || query_.toLowerCase().contains("create ") || query_.toLowerCase().contains("msck ") || query_.toLowerCase().contains("limit "))
 				query = query_;
 			else
 				query = query_ + " limit 100";

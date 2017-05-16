@@ -24,6 +24,15 @@
 
 
 <style>
+
+#query_text:focus {
+	outline: none;
+}
+
+#myInput:focus {
+	outline: none;
+}
+
 .leftSection {
 	font-size: large;
 	color: red;
@@ -880,8 +889,8 @@
 						<br> <input type="checkbox" disabled
 							style="vertical-align: sub;"> Override Column(s)&nbsp; <input
 							type="text" class="form-control" list="cols"
-							name="overridden_cols" placeholder="column_name"
-							style="width: 15%; display: inline" />&nbsp;
+							name="overridden_cols" placeholder="column name"
+							style="width: 20%; display: inline" />&nbsp;
 						<datalist id="cols">
 						<option>batch_id</option>
 						<option>load_ts</option>

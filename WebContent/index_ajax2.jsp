@@ -306,7 +306,7 @@
 		int last_row = ob.getLastRow((String) request.getSession().getAttribute("token"),
 		"16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE", "Second");
 		ob.writeSheetData(push_rows, (String) request.getSession().getAttribute("token"),
-		"16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE", "ROWS", "Second!F" + last_row);
+		"16Fy4uF1MVpAkoW-ads6XabQnuOK2HJQ63mn7FUnNjkE", "ROWS", "Second!B" + last_row);
 		outRes.println("Success");
 
 	}

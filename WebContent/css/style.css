@@ -25,6 +25,10 @@ header .navbar-nav>li {
 	height: 180px;
 }
 
+#query_text:focus {
+	outline: none;
+}
+
 #form1 {
 	margin-left: 16%;
 	margin-top: 40px;

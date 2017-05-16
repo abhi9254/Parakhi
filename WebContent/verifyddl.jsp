@@ -156,8 +156,8 @@
 				e.printStackTrace();
 			}
 			try {
-				Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
-			// Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
+				//	Connection con = DriverManager.getConnection("jdbc:hive2://10.200.99.242:10000/default", "hive", "");
+			 Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "hive", "");
 					
 			Statement stmt = (Statement) con.createStatement();
 
