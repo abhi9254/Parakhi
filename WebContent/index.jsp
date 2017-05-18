@@ -885,12 +885,12 @@
 							style="width: 100px; display: inline"><option>auto</option>
 							<option disabled>custom</select> &nbsp;<input type="text"
 							disabled name="op_range" class="form-control"
-							placeholder="Output Range" style="display: inline; width: 20%" /><br>
+							placeholder="Output Range" style="display: inline; width: 25%" /><br>
 						<br> <input type="checkbox" disabled
 							style="vertical-align: sub;"> Override Column(s)&nbsp; <input
 							type="text" class="form-control" list="cols"
 							name="overridden_cols" placeholder="column name"
-							style="width: 20%; display: inline" />&nbsp;
+							style="width: 25%; display: inline" />&nbsp;
 						<datalist id="cols">
 						<option>batch_id</option>
 						<option>load_ts</option>

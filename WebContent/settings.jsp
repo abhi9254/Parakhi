@@ -248,7 +248,22 @@
 			</div>
 			<div id="collapse5" class="panel-collapse collapse">
 				<div class="panel-body" style="margin-left: 10px">
-					<label style="display: inline">Use default Limit in queries</label>&nbsp;&nbsp;
+					<label style="display: inline">Active Queue</label>&nbsp;&nbsp;
+					<input
+							type="text" class="form-control" list="cols"
+							name="queue" placeholder="default"
+							style="width: 200px; display: inline" />&nbsp;
+						<datalist id="cols">
+						<option disabled>default</option>
+						<option>short_running</option>
+						<option>realtime</option>
+						<option>datameer</option>
+						<option>data_platform</option>
+						<option>long_running</option>
+						</datalist>
+						<br><br>
+						
+						<label style="display: inline">Use default Limit in queries</label>&nbsp;&nbsp;
 					<select class="form-control" style="width: 100px; display: inline">
 						<option>None</option>
 						<option>10</option>
