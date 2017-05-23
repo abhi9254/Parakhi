@@ -24,7 +24,6 @@
 
 
 <style>
-
 #query_text:focus {
 	outline: none;
 }
@@ -477,8 +476,7 @@
 		<small style="color: white">Project: <%=request.getSession().getAttribute("proj_nm")%>,
 		</small>
 		<%
-			Credential credential = (Credential) request.getSession()
-					.getAttribute("credential");
+			Credential credential = (Credential) request.getSession().getAttribute("credential");
 
 			Long active_time = null;
 			if (credential != null)
@@ -532,6 +530,18 @@
 								DDLs</a></li>
 					</ul></li>
 
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+					data-close-others="false" style="color: white"><span
+						class="glyphicon glyphicon-file"></span>&nbsp;Data V-8 <span
+						class="glyphicon glyphicon-chevron-down"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="stats.jsp">Metadata</a></li>
+						<li><a href="datafit.jsp">Transfer</a></li>
+					</ul></li>
+
+
+
 				<li class="dropdown"><a href="cross_section.jsp"
 					style="color: white"><span class="glyphicon glyphicon-record"></span>&nbsp;Cross
 						Section</a></li>
@@ -575,8 +585,7 @@
 					<%
 						int active_proj = 0;
 						if (request.getSession().getAttribute("proj_id") != null) {
-							active_proj = Integer.parseInt(request.getSession()
-									.getAttribute("proj_id").toString());
+							active_proj = Integer.parseInt(request.getSession().getAttribute("proj_id").toString());
 						}
 						MySQL_dao ob = new MySQL_dao();
 						List<String[]> cases = new ArrayList<String[]>(ob.getCases(0));
@@ -605,8 +614,7 @@
 					style="overflow-y: auto; list-style-type: none; padding: 0; height: calc(100vh - 140px)"
 					id="proj_cases_ul">
 					<%
-						List<String[]> proj_cases = new ArrayList<String[]>(
-								ob.getCases(active_proj));
+						List<String[]> proj_cases = new ArrayList<String[]>(ob.getCases(active_proj));
 
 						for (String[] c : proj_cases) {
 					%>
@@ -909,13 +917,16 @@
 							value="p_exec"> &nbsp;Parallel Exec <input
 							class="checkbox-inline" type="checkbox" name='write_once'
 							style="vertical-align: sub;" value="write_once" checked='true'>
-						&nbsp;Post write<br> <br> <input type="submit"
-							value="Rerun" class="btn btn-info"> <br>
+						&nbsp;Post write &nbsp;&nbsp;&nbsp;&nbsp;Schedule at <input type="text" class="form-control"
+							placeholder="yyyy-mm-dd HH:MM:SS" style="width: 35%;display:inline"/><br> <br><br><br>
+						<input type="submit" value="Rerun" class="btn btn-info">
+						<button class="btn btn-success" style="margin-left: 5px">Schedule</button>
+						<button type="button" class="btn btn-default"
+							style="margin-left: 5px" data-dismiss="modal">Cancel</button>
+						<br>
 					</form>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
+
 			</div>
 		</div>
 	</div>
